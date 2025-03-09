@@ -1,0 +1,137 @@
+/* ---- Réinitialisation de base ---- */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background-color: #222;
+}
+
+/* ---- Navigation ---- */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #111;
+    z-index: 1000;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 50px;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #ffcc00; /* Survol des liens de navigation */
+}
+
+/* ---- Section Projet Mobotix ---- */
+.project-details {
+    padding: 100px 50px;
+    background-color: #1a1a1a;
+    text-align: center;
+}
+
+.project-details h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #ffcc00; /* Titre doré */
+}
+
+.project-details p {
+    font-size: 18px;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+.project-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.project-content img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.project-content p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ddd;
+}
+
+
+/**/
+/* ---- Style du carrousel ---- */
+.carousel-container {
+    position: relative;
+    max-width: 85vw; /* Augmente la largeur au maximum possible */
+    max-height: 85vh; /* Augmente la hauteur */
+    margin: 30px auto;
+    overflow: hidden;
+    border-radius: 20px; /* Coins arrondis */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    background-color: transparent; /* Supprime le fond noir */
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 20px; /* Coins arrondis */
+}
+
+/* ---- Boutons de navigation ---- */
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 15px 20px; /* Augmente la taille des boutons */
+    cursor: pointer;
+    font-size: 30px; /* Agrandit l'icône */
+    border-radius: 50%;
+}
+
+.prev-btn { left: 20px; }
+.next-btn { right: 20px; }
+
+.prev-btn:hover, .next-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+/* ---- Footer ---- */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #111;
+    color: #ccc;
+}

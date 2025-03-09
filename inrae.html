@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet INRAE</title>
+    <link rel="stylesheet" href="inrae.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html#home">Accueil</a></li>
+                <li><a href="projects.html">Projets</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Section Projet INRAE -->
+    <section class="project-details">
+        <h1>Projet INRAE</h1>
+        <p>Comment accompagner les agriculteurs dans leur prise de décision d’adopter une technologie numérique ?</p>
+
+        <!-- Carrousel d'images -->
+        <div class="carousel-container">
+            <button class="prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+            <div class="carousel">
+                <!-- Les images seront chargées ici dynamiquement -->
+            </div>
+            <button class="next-btn" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Gaspard - Tous droits réservés.</p>
+    </footer>
+
+    <!-- Script pour charger dynamiquement les images -->
+    <script src="inrae.js"></script>
+
+</body>
+</html>

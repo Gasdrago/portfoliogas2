@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Gaspard</title>
+    <!-- Lien vers la feuille de style -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+    <!-- Navigation -->
+    <!-- Barre de navigation en haut, avec des liens vers les différentes sections -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Accueil</a></li>
+                <li><a href="#projects">Projets</a></li>
+                <li><a href="#design">Productions Design</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Section d'Accueil -->
+    <!-- Cette section inclut la vidéo en bannière, le texte d'introduction et une photo -->
+    <section id="home" class="intro">
+        <!-- Conteneur pour la vidéo d'introduction -->
+        <div class="video-banner-container">
+            <video autoplay muted loop playsinline class="video-banner">
+                <source src="adam&D.mp4" type="video/mp4">
+                <!-- Message de secours pour les navigateurs qui ne supportent pas les vidéos HTML5 -->
+                Votre navigateur ne supporte pas les vidéos HTML5.
+            </video>
+        </div>
+
+
+
+<!-- Vidéo en arrière-plan -->
+<div class="background-video-container">
+    <video autoplay muted loop playsinline class="background-video">
+        <source src="trounoirrr.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas les vidéos HTML5.
+    </video>
+</div>
+
+
+        <!-- Texte d'introduction -->
+        <div class="intro-content">
+            <h1 id="typed-title" class="hidden"></h1>
+            <h2>Designer Global et Ingénieur Informatique</h2>
+            <p>Je conçois des expériences numériques pour améliorer la vie des utilisateurs tout en travaillant sur des projets techniques et créatifs.</p>
+            <a href="cv.html" class="btn">Mon CV</a>
+        </div>
+        <!-- Photo personnelle -->
+        <div class="intro-photo">
+            <img src="bayle_gaspard_photo.jpg" alt="Photo de Gaspard">
+        </div>
+    </section>
+
+
+
+
+    <!-- Section Projets -->
+    <!-- Cette section affichera les projets techniques -->
+    <section id="projects" class="projects-section">
+        <div class="projects-header">
+            <h2>Mes Projets</h2>
+            <p>Découvrez quelques un de mes Projet realiser durant ma formation.</p>
+            <a href="projects.html" class="btn-view-all">Voir Tous</a>
+        </div>
+    
+        <div class="projects-grid">
+            <!-- Projet 1 -->
+            <div class="project-card">
+                <a href="renault.html">
+                    <img src="logoR.jpg" alt="Renault">
+                </a>
+                <a href="renault.html" class="project-link">Renault</a>
+                <p class="project-description">Comment créer le fusbury de l’interaction de la mobilité ?</p>
+            </div>
+    
+            <!-- Projet 2 -->
+            <div class="project-card">
+                <a href="mobotix.html">
+                    <img src="logoM.jpg" alt="Mobotix">
+                </a>
+                <a href="mobotix.html" class="project-link">Mobotix</a>
+                <p class="project-description">Comment faire de la caméra un outil pour l’utilisateur?</p>
+            </div>
+            
+          
+            <!-- Projet 3 -->
+            <div class="project-card">
+                <a href="inrae.html">
+                    <img src="logoI.jpeg" alt="INRAE">
+                </a>
+                <a href="inrae.html" class="project-link">INRAE</a>
+            
+                <p class="project-description">Comment accompagner les agriculteurs dans leur prise de décision d’adopter une technologie numérique ?
+                </div>
+            </a>
+        </div>
+    </section>
+    
+ 
+    
+
+
+
+
+
+
+
+<!-- Section Design Interactive -->
+<section id="design" class="design-section">
+    <div class="design-header">
+        <h2>Mes Créations Design</h2>
+        <p>Découvrez mes réalisations en 3D, typographie, illustration et vidéo.</p>
+    </div>
+
+    <div class="design-grid">
+        <div class="design-card" data-category="3D" onclick="openCarousel3D()">
+            <img src="3tie.jpg" alt="3D">
+            <h3>3D</h3>
+        </div>
+        <div class="design-card" data-category="Typographie" onclick="openCarousel()">
+            <img src="2pyra.png" alt="Typographie">
+            <h3>Typographie</h3>
+        </div>
+        <div class="design-card" data-category="Illustration">
+            <img src="1parfum.tiff" alt="Illustration">
+            <h3>Illustration</h3>
+        </div>
+        <div class="design-card" data-category="Vidéo">
+            <img src="4ange.png" alt="Vidéo">
+            <h3>Vidéo</h3>
+        </div>
+    </div>
+
+    <a href="design.html" class="btn-view-all">Voir Plus</a>
+</section>
+
+<!-- Popup du Carrousel 3D -->
+<div id="carousel-popup-3d" class="popup">
+    <span class="close-btn" onclick="closeCarousel3D()">&times;</span>
+    <div class="carousel-container">
+        <button class="prev-btn" onclick="moveSlide3D(-1)">&#10094;</button>
+        <div class="carousel-3d">
+            <!-- Les images seront ajoutées dynamiquement via JS -->
+        </div>
+        <button class="next-btn" onclick="moveSlide3D(1)">&#10095;</button>
+    </div>
+</div>
+
+<!-- Ajout du script spécifique au carrousel 3D -->
+<script src="3d.js"></script>
+
+<!-- Popup du Carrousel Typographie -->
+<div id="carousel-popup" class="popup">
+    <span class="close-btn" onclick="closeCarousel()">&times;</span>
+    <div class="carousel-container">
+        <button class="prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+        <div class="carousel">
+            <!-- Images ajoutées dynamiquement via JS -->
+        </div>
+        <button class="next-btn" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+</div>
+
+<!-- Ajout du script spécifique au carrousel Typographie -->
+<script src="typography.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Section Contact -->
+<section id="contact" class="contact-section">
+    <h2>Contact</h2>
+    <p>Si tu veux me contacter, utilise le formulaire ci-dessous :</p>
+    <form action="https://formspree.io/f/mqapzvjq" method="POST">
+        <input type="hidden" name="_language" value="fr"> <!-- Champ caché pour éviter les erreurs -->
+        <input type="text" name="name" placeholder="Nom" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <textarea name="message" placeholder="Message" required></textarea>
+        <button type="submit" class="btn">Envoyer</button>
+    </form>
+</section>
+
+
+<!---->
+<script>
+    document.querySelector("form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Empêche la redirection instantanée
+        let form = this;
+        let formData = new FormData(form);
+
+        fetch(form.action, {
+            method: form.method,
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                alert("Merci ! Votre message a bien été envoyé.");
+                form.reset(); // Réinitialiser le formulaire
+            } else {
+                alert("Oups ! Une erreur s'est produite. Essayez encore.");
+            }
+        }).catch(error => {
+            alert("Erreur réseau. Vérifiez votre connexion.");
+        });
+    });
+</script>
+
+
+<!-- Importation de Typed.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var typed = new Typed("#typed-title", {
+            strings: ["Bonjour, je suis Gaspard BAYLE", "Designer global / Ingenieur informatique", "Recherche un stage de 4 mois"],
+            typeSpeed: 40,  // Vitesse de frappe
+            backSpeed: 20,  // Vitesse de suppression
+            startDelay: 500, // Délai avant de commencer
+            backDelay: 1000, // Temps d’attente avant d’effacer
+            loop: false, // Ne pas boucler
+            showCursor: false, // Cacher le curseur
+            onComplete: function () {
+                document.querySelector("#typed-title").classList.remove("hidden");
+            }
+        });
+    });
+</script>
+
+
+    <!-- Footer -->
+    <!-- Pied de page avec un message de copyright -->
+    <footer>
+        <p>&copy; 2025 Gaspard - Tous droits réservés.</p>
+    </footer>
+</body>
+</html> 
