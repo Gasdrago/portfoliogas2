@@ -28,8 +28,8 @@ const skills = [
 
 // Parcours — du plus récent au plus ancien.
 const companyProjects = [
-  ...projects.map((p) => ({ year: p.year, name: p.client, discipline: p.discipline })),
-  ...otherProjects.filter((p) => p.year).map((p) => ({ year: p.year!, name: p.name, discipline: p.discipline })),
+  ...projects.map((p) => ({ year: p.year ?? '', name: p.client, discipline: p.discipline })),
+  ...otherProjects.map((p) => ({ year: p.year ?? '', name: p.name, discipline: p.discipline })),
 ].sort((a, b) => b.year.localeCompare(a.year));
 ---
 

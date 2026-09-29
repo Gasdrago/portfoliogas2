@@ -10,7 +10,7 @@ import { site } from '@/data/site';
 import mobotixSquare from '@/assets/crops/mobotix-app-square.jpg';
 import { href } from '@/lib/url';
 
-const [renault, inrae, mobotix] = projects;
+const [renault, inrae, mobotix, laposte, earth] = projects;
 
 const reel = [
   {
@@ -158,12 +158,12 @@ const personLd = {
   <section id="selection" class="section container" aria-labelledby="selection-title">
     <SectionHead index="01" label="Études de cas" id="selection-title">
       <Fragment slot="title">
-        <span class="line"><span>Trois projets,</span></span>
-        <span class="line"><span><em class="t-serif">trois échelles.</em></span></span>
+        <span class="line"><span>Cinq projets,</span></span>
+        <span class="line"><span><em class="t-serif">cinq terrains.</em></span></span>
       </Fragment>
       <p slot="aside">
-        Un poste de conduite, une plateforme de décision agricole, une caméra repensée : de l’objet à
-        l’interface, chaque projet part d’une question posée aux utilisateurs.
+        Un poste de conduite, une plateforme agricole, une caméra repensée, un assistant IA, une
+        filière du bâtiment : de l’objet au système, chaque projet part d’une question.
       </p>
     </SectionHead>
 
@@ -171,6 +171,8 @@ const personLd = {
       <ProjectCard project={renault} variant="feature" class="selection__feature" />
       <ProjectCard project={inrae} variant="wide" class="selection__a" />
       <ProjectCard project={mobotix} variant="tall" class="selection__b" />
+      <ProjectCard project={laposte} variant="tall" class="selection__c" />
+      <ProjectCard project={earth} variant="wide" class="selection__d" />
     </div>
   </section>
 
@@ -583,6 +585,15 @@ const personLd = {
 
     .selection :global(.selection__a) {
       grid-column: 1 / 8;
+    }
+
+    .selection :global(.selection__c) {
+      grid-column: 1 / 5;
+    }
+
+    .selection :global(.selection__d) {
+      grid-column: 6 / -1;
+      margin-top: var(--space-3xl);
     }
 
     .selection :global(.selection__b) {

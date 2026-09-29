@@ -23,7 +23,7 @@ const { people } = Astro.props;
           </span>
           <div>
             <h3 class="person__name">{p.name}</h3>
-            <p class="person__profile">{p.profile}</p>
+            {p.profile && <p class="person__profile">{p.profile}</p>}
           </div>
         </div>
         {p.quotes.length > 0 && (

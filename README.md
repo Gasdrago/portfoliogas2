@@ -48,7 +48,7 @@ src/
     brand/                              portrait, logos
   data/
     site.ts        identité, contact, formation (source : CV)
-    projects.ts    projets + autres projets (IDF)
+    projects.ts    projets (Renault, INRAE, Mobotix, La Poste, Earth to Earth) + autres (IDF)
     lab.ts         séries du Lab
   styles/
     tokens.css     design tokens : couleurs, thèmes projet, typo, espacements, motion

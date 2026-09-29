@@ -163,6 +163,44 @@
   color-scheme: dark;
 }
 
+/* Papier — retour à la surface par défaut au sein d'une page thématisée */
+[data-theme='paper'] {
+  --bg: var(--c-paper);
+  --bg-raised: var(--c-paper-2);
+  --fg: var(--c-ink);
+  --fg-muted: var(--c-ink-2);
+  --fg-subtle: var(--c-ink-3);
+  --accent: var(--c-signal);
+  --accent-text: var(--c-signal-ink);
+  --focus: var(--c-signal);
+  color-scheme: light;
+}
+
+/* La Poste — jaune et bleu de la marque, sur un papier chaud */
+[data-theme='laposte'] {
+  --bg: #f6f3ea;
+  --bg-raised: #ece6d4;
+  --fg: #141821;
+  --fg-muted: #373d4c;
+  --fg-subtle: #5b6172;
+  --accent: #ffc600;
+  --accent-text: #1f3fb0;
+  --focus: #1f3fb0;
+}
+
+/* Earth to Earth — graphite et violet EvoBIM */
+[data-theme='earth'] {
+  --bg: #111317;
+  --bg-raised: #1b1e25;
+  --fg: #f1f2f5;
+  --fg-muted: #c3c6d0;
+  --fg-subtle: #8f94a3;
+  --accent: #7b6cff;
+  --accent-text: #a79dff;
+  --focus: #a79dff;
+  color-scheme: dark;
+}
+
 [data-theme='inrae-light'] {
   --bg: #eef3ef;
   --bg-raised: #dfe9e3;

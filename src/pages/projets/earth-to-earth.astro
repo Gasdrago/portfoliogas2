@@ -1,0 +1,403 @@
+---
+import CaseStudy from '@/layouts/CaseStudy.astro';
+import CaseSection from '@/components/case/CaseSection.astro';
+import Numbered from '@/components/case/Numbered.astro';
+import Statement from '@/components/case/Statement.astro';
+import Stats from '@/components/case/Stats.astro';
+import Cards from '@/components/case/Cards.astro';
+import Figure from '@/components/Figure.astro';
+import { decks, slide, getProject } from '@/data/projects';
+
+const project = getProject('earth-to-earth');
+const s = (n: number) => slide(decks.earth, n);
+const lb = 'earth';
+
+// Filière intégrée — planches 14 à 16.
+const chain = [
+  {
+    step: 'Sourcing local',
+    text: 'Les matériaux proviennent de ressources régionales et sont tracés via une plateforme numérique, qui implique les futurs utilisateurs dès l’approvisionnement.',
+    goal: 'Réduire les coûts et le bilan carbone tout en garantissant un approvisionnement stable.',
+  },
+  {
+    step: 'Conception numérique',
+    text: 'Tous les acteurs collaborent sur un modèle BIM/IA servant de jumeau numérique, connecté à d’autres jumeaux locaux pour intégrer les données du territoire.',
+    goal: 'Réduire les allers-retours, les erreurs et les délais d’étude.',
+  },
+  {
+    step: 'Production modulaire',
+    text: 'Murs, planchers et toitures sont préfabriqués en usine. Les robots assemblent, les artisans finalisent et contrôlent : le chantier devient un simple site d’assemblage.',
+    goal: 'Réduire les délais de 50 % et sécuriser les conditions de travail.',
+  },
+  {
+    step: 'Assemblage rapide',
+    text: 'Les modules sont montés en quelques jours, avec un suivi digitalisé en temps réel et la supervision du maître d’œuvre.',
+    goal: 'Transparence, réduction des imprévus, communication fluide.',
+  },
+  {
+    step: 'Maintenance connectée',
+    text: 'Un jumeau numérique assure le suivi énergétique, la maintenance prédictive et des alertes automatiques. Des artisans locaux interviennent via un réseau régional, et les données d’usage améliorent les constructions futures.',
+    goal: 'Fermer la boucle : du sourcing à la maintenance, tout est interconnecté et évolutif.',
+  },
+];
+---
+
+<CaseStudy slug={project.slug} surface="dark" frameBg="#ffffff">
+  <!-- 01 — Brief ------------------------------------------------------- -->
+  <CaseSection index="01" label="Brief" title="Construire mieux, plus vite, plus longtemps." id="brief">
+    <p class="t-lead lead" data-reveal>
+      Le brief interrogeait toute une filière : comment organiser autrement la conception et la
+      réalisation de logements abordables ? Nous avons commencé par cartographier ceux qui la font.
+    </p>
+  </CaseSection>
+
+  <!-- 02 — Acteurs ----------------------------------------------------- -->
+  <CaseSection index="02" label="Recherches" title="Six familles d’acteurs, peu reliées." layout="full" id="acteurs">
+    <Cards
+      cards={[
+        { title: 'Usagers & société civile', text: 'Habitants, associations, opinion publique.' },
+        { title: 'Pouvoirs publics & régulation', text: 'État, collectivités, ADEME, urbanisme.' },
+        { title: 'Investisseurs & maîtrise d’ouvrage', text: 'Promoteurs, bailleurs sociaux et privés, banques, fonds d’investissement.' },
+        { title: 'Constructeurs & exécutants', text: 'Grands groupes BTP, PME/TPE locales, artisans, sous-traitants.' },
+        { title: 'Fournisseurs & industrie', text: 'Matériaux, technologies, impression 3D, robotisation, startups.' },
+        { title: 'Concepteurs & ingénierie', text: 'Architectes, bureaux d’études, designers, ingénieurs.' },
+      ]}
+    />
+    <Figure
+      src={s(4)}
+      alt="Carte d’interactions des acteurs de la construction : six familles disposées en cercle, reliées par des flèches."
+      caption="Carte d’interactions des acteurs"
+      sizes="(min-width: 1680px) 1600px, 100vw"
+      framed
+      lightbox={lb}
+    />
+  </CaseSection>
+
+  <!-- 03 — Interviews -------------------------------------------------- -->
+  <CaseSection index="03" label="Interviews" title="Quatre métiers, quatre contraintes." layout="full" id="interviews" theme="paper" surface="light">
+    <Cards
+      columns={2}
+      cards={[
+        {
+          title: 'Étudiant',
+          items: ['Besoin de modularité', 'Un bâtiment qui réponde aux envies du moment', 'Des délais de construction plus courts'],
+        },
+        {
+          title: 'Directeur des services techniques — collectivité',
+          items: ['Manque de financement', 'Délais de construction et de réalisation très longs', 'La loi ZAN : fin de l’extension des zones urbaines'],
+        },
+        {
+          title: 'Conductrice de travaux',
+          items: ['L’existant architectural doit être conservé', 'Le budget est déjà défini précisément'],
+        },
+        {
+          title: 'Architecte & maître d’œuvre',
+          items: [
+            'Cherche à résoudre la fragmentation du secteur',
+            '« Un bon architecte, c’est quelqu’un qui est à l’écoute des besoins. »',
+            'Il y a un caractère changeant dans la construction',
+            'Le BIM a facilité notre vie',
+          ],
+        },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 04 — Chiffres ---------------------------------------------------- -->
+  <CaseSection index="04" label="Chiffres clés" title="Rénover plutôt que démolir." id="chiffres">
+    <Stats
+      stats={[
+        { value: '53 %', label: 'du chiffre d’affaires du bâtiment en 2024 vient de l’entretien-rénovation, contre 47 % pour la construction neuve.' },
+        { value: '~22 Mt', label: 'de déchets de produits et matériaux de construction du bâtiment en France en 2023 — environ 6 000 piscines olympiques.' },
+        { value: '~2,9 M', label: 'de logements vacants en 2024, soit environ 7,9 % du parc résidentiel.' },
+      ]}
+      source="Source : batizoom.ademe.fr"
+    />
+  </CaseSection>
+
+  <!-- 05 — Références -------------------------------------------------- -->
+  <CaseSection index="05" label="Références" title="Des bâtiments qui changent de vie." layout="full" id="references">
+    <div class="split">
+      <Figure
+        src={s(7)}
+        alt="Bâtiments transformés : la gare d’Orsay devenue musée, une église gothique devenue Repton Park, une prison devenue le Liberty Hotel."
+        caption="Bâtiments transformés — Orsay, Repton Park, Liberty Hotel"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={s(8)}
+        alt="Bâtiments réhabilités : un moulin à Berre-les-Alpes, le calvaire de Lestelle-Bétharram, une grange pyramidale à Récy."
+        caption="Bâtiments réhabilités — Berre-les-Alpes, Bétharram, Récy"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <!-- 06 — Pain points ------------------------------------------------- -->
+  <CaseSection index="06" label="Pain points" title="Trois freins structurels." id="pain-points">
+    <Numbered
+      size="l"
+      columns={1}
+      items={[{ title: 'Durée de vie limitée du bâtiment' }, { title: 'Délais de construction' }, { title: 'Fragmentation du secteur' }]}
+    />
+  </CaseSection>
+
+  <Statement kicker="Problématique" text="Comment industrialiser la conception de bâtiments évolutifs ?" />
+
+  <!-- 07 — Inspirations ------------------------------------------------ -->
+  <CaseSection index="07" label="Inspirations" title="Ceux qui industrialisent déjà." id="inspirations">
+    <Numbered
+      items={[
+        { title: 'Energiesprong — Pays-Bas', text: 'Un seul consortium gère tout le cycle : rénovation en 5 à 10 jours.' },
+        { title: 'BoKlok — Suède', text: 'Industrialisation complète du logement préfabriqué : 30 % moins cher, 50 % plus rapide.' },
+        { title: 'Sekisui House — Japon', text: 'Une usine robotisée produit des maisons modulaires, standardisées mais personnalisables.' },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 08 — EvoBIM ------------------------------------------------------ -->
+  <section class="evobim" aria-labelledby="evobim-title">
+    <div class="container evobim__head">
+      <p class="t-meta" data-reveal><span class="t-index">08</span> Solution</p>
+      <h2 id="evobim-title" class="evobim__title" data-lines>
+        <span class="line"><span>EvoBIM</span></span>
+      </h2>
+      <p class="evobim__tag t-serif" data-reveal style="--i: 2">Penser en système. Construire l’avenir.</p>
+      <p class="t-lead" data-reveal style="--i: 3">
+        Deux axes : une filière intégrée, du sourcing à la maintenance, et un bâtiment évolutif qui
+        change d’usage au lieu d’être démoli.
+      </p>
+    </div>
+
+    <div class="container">
+      <ol role="list" class="chain">
+        {
+          chain.map((c, i) => (
+            <li class="chain__step" data-reveal style={`--i: ${i}`}>
+              <span class="chain__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="chain__title">{c.step}</h3>
+              <p class="t-body">{c.text}</p>
+              <p class="chain__goal">
+                <span class="t-meta">Objectif</span> {c.goal}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- 09 — Bâtiment évolutif ------------------------------------------- -->
+  <CaseSection index="09" label="Bâtiment évolutif" title="Personnalisé… mais industriel." id="evolutif">
+    <p class="t-lead lead" data-reveal>
+      Les besoins spécifiques sont traduits en modules standardisés, combinables et adaptables. La
+      réponse est personnalisée, mais la fabrication reste optimisée grâce à un catalogue industriel
+      commun.
+    </p>
+    <ul role="list" class="tags" data-reveal style="--i: 1">
+      {['Logement', 'Bureaux', 'Tiers-lieu', 'Résidence étudiante', 'Équipement public'].map((t) => <li class="tag">{t}</li>)}
+    </ul>
+    <p class="t-body" data-reveal style="--i: 2">
+      <strong>Objectif :</strong> éviter la démolition, anticiper les mutations sociales et prolonger la
+      durée de vie utile du bâtiment.
+    </p>
+  </CaseSection>
+
+  <!-- 10 — Le BIM ------------------------------------------------------ -->
+  <CaseSection index="10" label="Le BIM" title="D’un outil d’experts à un outil commun." layout="full" id="bim">
+    <div class="split">
+      <div class="bim">
+        <Figure
+          src={s(17)}
+          alt="Le BIM aujourd’hui : un logiciel de maquette 3D collaborative utilisé par les architectes, ingénieurs et constructeurs."
+          caption="Avant — architectes, ingénieurs, constructeurs"
+          sizes="(min-width: 768px) 50vw, 100vw"
+          framed
+          lightbox={lb}
+        />
+        <ul role="list" class="bim__list">
+          <li>Maquette 3D collaborative</li>
+          <li>Centraliser toutes les données du projet</li>
+          <li>Coordonner les acteurs, réduire les erreurs</li>
+          <li>Réalité augmentée et IA pour visualiser, planifier, maintenir</li>
+        </ul>
+      </div>
+      <div class="bim">
+        <Figure
+          src={s(18)}
+          alt="Le BIM avec EvoBIM : une interface ouverte à tous les acteurs, avec jumeau numérique du bâtiment et curseur d’évolution."
+          caption="Après — tous les acteurs"
+          sizes="(min-width: 768px) 50vw, 100vw"
+          framed
+          lightbox={lb}
+        />
+        <ul role="list" class="bim__list">
+          <li>Des jumeaux numériques suivent le bâtiment tout au long de son cycle de vie</li>
+          <li>Les données d’usage sont intégrées</li>
+          <li>Les IA proposent et ajustent selon les contraintes écologiques, esthétiques ou budgétaires</li>
+          <li>La réalité mixte fait participer les futurs usagers avant la construction</li>
+        </ul>
+      </div>
+    </div>
+    <div class="split">
+      <Figure
+        src={s(20)}
+        alt="Avant EvoBIM : les six familles d’acteurs, reliées de proche en proche."
+        caption="Avant EvoBIM"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={s(21)}
+        alt="Après EvoBIM : les six familles d’acteurs reliées à une plateforme centrale."
+        caption="Après EvoBIM"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <!-- 11 — Storyboard -------------------------------------------------- -->
+  <CaseSection index="11" label="Storyboard" title="Le cycle de vie, avant et après." layout="full" id="storyboard">
+    <Figure
+      src={s(23)}
+      alt="Storyboard avant/après du cycle de vie d’un bâtiment : de la programmation à la fin de vie, puis la version EvoBIM avec programmation intelligente, préproduction modulaire, exploitation connectée et recyclage."
+      sizes="(min-width: 1680px) 1600px, 100vw"
+      framed
+      lightbox={lb}
+    />
+    <ul role="list" class="tags" data-reveal>
+      {
+        ['Gain de temps', 'Conception locale', 'Communication facilitée', 'Adaptation continue du modèle', 'Maintenance assurée'].map(
+          (t) => <li class="tag">{t}</li>,
+        )
+      }
+    </ul>
+  </CaseSection>
+
+  <!-- 12 — Business model ---------------------------------------------- -->
+  <CaseSection index="12" label="Business model" title="Un modèle de filière." layout="full" id="business-model">
+    <Cards
+      cards={[
+        { title: 'Partenaires', text: 'Collectivités, bailleurs, BTP, industriels hors site, fournisseurs locaux, acteurs BIM/IA.' },
+        { title: 'Activités clés', text: 'Conception BIM/IA, production modulaire, assemblage rapide, plateforme digitale, maintenance prédictive.' },
+        { title: 'Ressources clés', text: 'Plateforme EvoBIM, modules, usines hors site, réseau local.' },
+        { title: 'Distribution', text: 'Plateforme EvoBIM, partenaires BTP, marketplace modulaire.' },
+        { title: 'Segments de marché', text: 'Collectivités, bailleurs, promoteurs, entreprises, opérateurs de tiers-lieux.' },
+        { title: 'Relation clients', text: 'Accompagnement complet, plateforme unique, transparence coûts/délais, maintenance connectée.' },
+        { title: 'Structure de coûts', text: 'Plateforme EvoBIM, hors site, modules, assemblage, cloud/maintenance, R&D IA.' },
+        { title: 'Sources de revenus', text: 'Modules, bâtiments, transformations d’usage, abonnements, consulting, maintenance.' },
+      ]}
+    />
+  </CaseSection>
+</CaseStudy>
+
+<style>
+  .lead {
+    max-width: 46ch;
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .evobim {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .evobim__head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .evobim__title {
+    font-size: clamp(3rem, 1rem + 9vw, 11rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    color: var(--accent-text);
+  }
+
+  .evobim__tag {
+    font-size: var(--step-3);
+    line-height: 1.05;
+  }
+
+  .chain {
+    display: grid;
+    gap: var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .chain {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .chain {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  .chain__step {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border-top: 2px solid var(--accent);
+  }
+
+  .chain__n {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--accent-text);
+  }
+
+  .chain__title {
+    font-size: var(--step-1);
+    line-height: 1.15;
+  }
+
+  .chain__goal {
+    display: grid;
+    gap: var(--space-3xs);
+    margin-top: var(--space-2xs);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--border);
+    font-size: var(--step--1);
+  }
+
+  .bim {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  .bim__list {
+    border-top: 1px solid var(--border);
+  }
+
+  .bim__list li {
+    padding-block: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-muted);
+  }
+</style>

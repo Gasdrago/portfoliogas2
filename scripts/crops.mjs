@@ -11,6 +11,12 @@ const crops = [
   { src: 'mobotix/20.png', out: 'mobotix-app-square.jpg', left: 330, top: 40, width: 840, height: 840 },
   // Rendu 3D du volant, sans le bloc de texte de la planche.
   { src: 'renault/29.png', out: 'renault-volant.jpg', left: 0, top: 60, width: 1020, height: 1020 },
+  // Post-it, la mascotte IA de La Poste (planche « Les principes »).
+  { src: 'la-poste/23.png', out: 'laposte-postit.jpg', left: 40, top: 60, width: 696, height: 870 },
+  // EvoBIM : logo et illustration, sans le titre de planche.
+  { src: 'earth-to-earth/12.png', out: 'earth-evobim.jpg', left: 214, top: 240, width: 1492, height: 840 },
+  // Interface BIM 4.0 à l'écran.
+  { src: 'earth-to-earth/18.png', out: 'earth-bim.jpg', left: 540, top: 400, width: 840, height: 525 },
 ];
 
 for (const c of crops) {

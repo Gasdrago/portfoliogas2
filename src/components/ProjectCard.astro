@@ -26,6 +26,8 @@ const position = {
   'renault-center-view': 'center 45%',
   inrae: 'center',
   'mobotix-sun-scan': 'center',
+  'la-poste': 'center',
+  'earth-to-earth': 'center',
 }[project.slug];
 ---
 
@@ -50,7 +52,7 @@ const position = {
       <p class="pcard__meta t-meta" data-reveal>
         <span class="t-index">{project.index}</span>
         <span>{project.client}</span>
-        <span class="pcard__year">{project.year}</span>
+        {project.year && <span class="pcard__year">{project.year}</span>}
       </p>
       <Heading class="pcard__title" data-reveal style="--i: 1">
         <span>{project.title}</span>
@@ -76,6 +78,14 @@ const position = {
 
   .pcard[data-project-theme='mobotix'] {
     --card-accent: #ff5a1f;
+  }
+
+  .pcard[data-project-theme='laposte'] {
+    --card-accent: #ffc600;
+  }
+
+  .pcard[data-project-theme='earth'] {
+    --card-accent: #7b6cff;
   }
 
   .pcard__link {

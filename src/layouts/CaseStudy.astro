@@ -3,6 +3,7 @@ import Base from '@/layouts/Base.astro';
 import CaseHero from '@/components/case/CaseHero.astro';
 import DeckGallery from '@/components/case/DeckGallery.astro';
 import NextProject from '@/components/case/NextProject.astro';
+import PrototypeLink from '@/components/case/PrototypeLink.astro';
 import { getProject, getNextProject } from '@/data/projects';
 
 interface Props {
@@ -21,7 +22,7 @@ const next = getNextProject(slug);
 
 <Base
   title={`${project.client} — ${project.title}`}
-  description={`${project.summary} Étude de cas ${project.discipline.toLowerCase()}, ${project.year}.`}
+  description={`${project.summary} Étude de cas — ${project.discipline.toLowerCase()}${project.year ? `, ${project.year}` : ''}.`}
   image={project.cover}
   theme={project.theme}
 >
@@ -29,6 +30,7 @@ const next = getNextProject(slug);
   <article class="case" data-surface={surface} style={frameBg ? `--frame-bg: ${frameBg}` : undefined}>
     <CaseHero project={project} position={heroPosition} />
     <slot />
+    <PrototypeLink project={project} />
     <DeckGallery project={project} />
   </article>
   <NextProject project={next} />

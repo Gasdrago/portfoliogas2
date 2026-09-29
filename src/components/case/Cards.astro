@@ -1,0 +1,87 @@
+---
+/** Grille de cartes titrées (acteurs, business model, principes…). */
+interface Card {
+  title: string;
+  text?: string;
+  items?: string[];
+}
+
+interface Props {
+  cards: Card[];
+  columns?: 2 | 3;
+}
+
+const { cards, columns = 3 } = Astro.props;
+---
+
+<ul role="list" class:list={['cards', `cards--c${columns}`]}>
+  {
+    cards.map((c, i) => (
+      <li class="card" data-reveal style={`--i: ${i % 6}`}>
+        <h3 class="card__title">{c.title}</h3>
+        {c.text && <p class="card__text">{c.text}</p>}
+        {c.items && (
+          <ul role="list" class="card__items">
+            {c.items.map((it) => (
+              <li>{it}</li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .cards {
+    display: grid;
+    gap: var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .cards--c2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cards--c3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .cards--c3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border-top: 2px solid var(--accent);
+  }
+
+  .card__title {
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  .card__text {
+    color: var(--fg-muted);
+  }
+
+  .card__items {
+    display: grid;
+    gap: var(--space-3xs);
+    color: var(--fg-muted);
+  }
+
+  .card__items li::before {
+    content: '— ';
+    color: var(--fg-subtle);
+  }
+</style>

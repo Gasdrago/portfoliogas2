@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const surface = project.theme === 'mobotix' ? 'light' : 'dark';
+const surface = project.theme === 'mobotix' || project.theme === 'laposte' ? 'light' : 'dark';
 ---
 
 <nav class="next" data-theme={project.theme} data-surface={surface} aria-label="Projet suivant">

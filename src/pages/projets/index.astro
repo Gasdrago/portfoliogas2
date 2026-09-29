@@ -10,11 +10,11 @@ import { href } from '@/lib/url';
 
 <Base
   title="Projets"
-  description="Études de cas de Gaspard Bayle : Renault Center View (design d’innovation), INRAE (UX/UI) et Mobotix Sun Scan (design produit)."
+  description="Études de cas de Gaspard Bayle : Renault Center View, INRAE, Mobotix Sun Scan, La Poste Post-it et Earth to Earth EvoBIM — du terrain au prototype."
 >
   <PageHead kicker="(Projets) Études de cas" lines={['Du terrain', 'à l’interface.']} serifLine={1}>
     <p>
-      Trois études de cas menées avec des entreprises, de l’analyse d’usage au prototype. Chacune
+      Cinq études de cas, de l’analyse d’usage au prototype. Chacune
       part d’une question, pas d’une solution.
     </p>
   </PageHead>
@@ -48,7 +48,7 @@ import { href } from '@/lib/url';
               <p class="t-meta work__meta" data-reveal>
                 <span class="t-index">{p.index}</span>
                 <span>{p.client}</span>
-                <span>{p.year}</span>
+                {p.year && <span class="work__year">{p.year}</span>}
               </p>
               <h2 class="work__title" data-reveal style="--i: 1">
                 <a href={href(`projets/${p.slug}/`)} class="work__link" data-cursor="Voir le projet" data-astro-prefetch>
@@ -138,7 +138,7 @@ import { href } from '@/lib/url';
     gap: var(--space-s);
   }
 
-  .work__meta span:last-child {
+  .work__year {
     margin-left: auto;
   }
 

@@ -385,7 +385,8 @@ button:hover > .arrow--ne {
   letter-spacing: var(--tracking-mono);
   text-transform: uppercase;
   color: var(--fg-muted);
-  white-space: nowrap;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .tags {
