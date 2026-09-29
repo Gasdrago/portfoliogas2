@@ -35,6 +35,8 @@ export interface Project {
   role?: string;
   duration?: string;
   outcome?: string;
+  /** Prototype en ligne, présenté après le contenu de l'étude de cas. */
+  prototype?: { href: string; label: string };
 }
 
 type Glob = Record<string, { default: ImageMetadata }>;
@@ -158,7 +160,7 @@ export const otherProjects: OtherProject[] = [
     // À compléter : contexte, année et description du projet IDF.
     name: 'IDF',
     discipline: 'Prototype interactif',
-    note: 'Prototype en ligne.',
+    note: 'Prototype en ligne',
     href: 'https://empathic-learning-grove.lovable.app/',
   },
 ];

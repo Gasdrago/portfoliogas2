@@ -44,7 +44,7 @@ const { headingLevel: Heading = 'h3' } = Astro.props;
               <span class="t-index">{String(projects.length + i + 1).padStart(2, '0')}</span>
               <Heading class="pindex__name">
                 <span class="pindex__client">{p.name}</span>
-                <span class="pindex__note">{p.note}</span>
+                <span class="pindex__title t-serif">{p.note}</span>
               </Heading>
               <span class="pindex__col-d t-meta">{p.discipline}</span>
               <span class="pindex__col-y t-meta">{p.year ?? ''}</span>
@@ -141,7 +141,7 @@ const { headingLevel: Heading = 'h3' } = Astro.props;
     transform: none;
   }
 
-  a.pindex__row:hover :is(.t-meta, .t-index, .pindex__note) {
+  a.pindex__row:hover :is(.t-meta, .t-index) {
     color: inherit;
   }
 
@@ -162,19 +162,7 @@ const { headingLevel: Heading = 'h3' } = Astro.props;
     font-size: 1.04em;
   }
 
-  .pindex__note {
-    flex-basis: 100%;
-    margin-top: 0.35em;
-    font-size: var(--step--1);
-    font-weight: 400;
-    font-stretch: 100%;
-    letter-spacing: 0;
-    color: var(--fg-subtle);
-  }
 
-  .pindex__item--other .pindex__name {
-    font-size: var(--step-1);
-  }
 
   .pindex__go {
     justify-self: end;
