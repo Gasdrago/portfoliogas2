@@ -331,7 +331,8 @@ const personLd = {
 
   @media (min-width: 768px) {
     .hero {
-      --hero-size: clamp(3rem, 0.5rem + 11vw, 13rem);
+      /* Plafonné aussi par la hauteur : le premier écran reste lisible en entier */
+      --hero-size: min(clamp(3rem, 0.5rem + 11vw, 13rem), 19svh);
       grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 
@@ -341,10 +342,13 @@ const personLd = {
 
     .hero__intro {
       grid-column: 1 / 8;
+      grid-row: 3;
+      align-self: end;
     }
 
     .hero__reel {
       grid-column: 8 / -1;
+      grid-row: 3;
     }
   }
 

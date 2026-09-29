@@ -394,6 +394,8 @@ const lb = 'inrae';
 
   .flow__step {
     position: relative;
+    /* La pastille de liaison doit passer au-dessus de l'étape suivante */
+    z-index: calc(3 - var(--i, 0));
     display: grid;
     gap: var(--space-xs);
     padding: var(--space-m);
