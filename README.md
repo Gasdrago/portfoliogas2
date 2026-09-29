@@ -29,6 +29,14 @@ optionnelles :
 | `SITE_URL`  | URL publique : active les balises `canonical` et les URL absolues OG | `https://gaspardbayle.fr`        |
 | `BASE_PATH` | Sous-dossier de déploiement                                           | `/portfoliogas2` (GitHub Pages) |
 
+### GitHub Pages
+
+Le workflow `.github/workflows/deploy.yml` construit et publie le site à chaque push
+sur `main` (ou manuellement depuis l'onglet *Actions*) sur
+**https://gasdrago.github.io/portfoliogas2/**.
+Activation, une seule fois : *Settings → Pages → Build and deployment → Source :
+GitHub Actions*.
+
 ## Structure
 
 ```
