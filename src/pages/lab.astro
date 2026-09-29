@@ -1,0 +1,270 @@
+---
+import { isPortrait, widthsFor } from '@/lib/image';
+import { Image, getImage } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHead from '@/components/PageHead.astro';
+import { lab } from '@/data/lab';
+
+// Précalcule les sources plein écran de la visionneuse.
+const series = await Promise.all(
+  lab.map(async (s) => ({
+    ...s,
+    items: await Promise.all(
+      s.items.map(async (item) => {
+        const full = await getImage({
+          src: item.image,
+          widths: widthsFor(item.image, [1080, 1920, 2560]),
+          format: 'webp',
+          quality: 84,
+        });
+        return { ...item, full: { src: full.src, srcset: full.srcSet.attribute } };
+      }),
+    ),
+  })),
+);
+---
+
+<Base
+  title="Lab"
+  description="Le Lab de Gaspard Bayle : affiches typographiques, modélisation 3D, rendus produit, affiche et photomontage."
+  image={lab[0].items[0].image}
+>
+  <PageHead kicker="(Lab) Productions personnelles" lines={['Typographie,', '3D, image.']} serifLine={1}>
+    <p>
+      À côté des projets d’entreprise, les exercices où la main précède la méthode : dessiner des
+      lettres, modéliser un objet, composer une image.
+    </p>
+  </PageHead>
+
+  <nav class="container lab-nav" aria-label="Séries du Lab">
+    <ul role="list">
+      {
+        series.map((s) => (
+          <li>
+            <a href={`#${s.id}`} class="lab-nav__link">
+              <span class="t-index">{s.index}</span>
+              {s.title}
+              <span class="t-meta">{s.kicker}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  {
+    series.map((s) => (
+      <section class="series container" id={s.id} aria-labelledby={`${s.id}-title`}>
+        <header class="series__head">
+          <p class="t-meta" data-reveal>
+            <span class="t-index">{s.index}</span> {s.kicker}
+          </p>
+          <h2 class="series__title" id={`${s.id}-title`} data-reveal style="--i: 1">
+            {s.title}
+          </h2>
+          <p class="t-body" data-reveal style="--i: 2">
+            {s.description}
+          </p>
+        </header>
+
+        <ul role="list" class:list={['grid-lab', `grid-lab--${s.id}`]}>
+          {s.items.map((item, i) => {
+            const portrait = isPortrait(item.image);
+            return (
+              <li class:list={['piece', { 'piece--portrait': portrait }]} data-reveal style={`--i: ${i % 4}`}>
+                <button
+                  class="piece__btn"
+                  type="button"
+                  data-lightbox={s.id}
+                  data-src={item.full.src}
+                  data-srcset={item.full.srcset}
+                  data-alt={item.alt}
+                  data-caption={item.caption ?? s.title}
+                  data-cursor="Agrandir"
+                  aria-label={`Agrandir : ${item.caption ?? s.title}`}
+                >
+                  <span class="piece__media media">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      widths={portrait ? [480, 768, 1080] : [768, 1080, 1440]}
+                      width={portrait ? 1080 : 1440}
+                      sizes={portrait ? '(min-width: 1024px) 30vw, 50vw' : '(min-width: 1024px) 50vw, 100vw'}
+                      format="webp"
+                      quality={78}
+                      loading="lazy"
+                    />
+                  </span>
+                  {item.caption && (
+                    <span class="piece__cap t-meta">
+                      <span class="t-index">{String(i + 1).padStart(2, '0')}</span>
+                      {item.caption}
+                    </span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .lab-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    padding-bottom: var(--space-xl);
+  }
+
+  .lab-nav__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+    min-height: 2.75rem;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    font-weight: 500;
+    transition:
+      background var(--dur-2) var(--ease-out),
+      color var(--dur-2);
+  }
+
+  .lab-nav__link:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .lab-nav__link:hover :is(.t-meta, .t-index) {
+    color: inherit;
+  }
+
+  .series {
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-top: 1px solid var(--border);
+  }
+
+  .series__head {
+    display: grid;
+    gap: var(--space-s);
+    margin-bottom: var(--space-xl);
+  }
+
+  @media (min-width: 1024px) {
+    .series__head {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: end;
+    }
+
+    .series__head > :nth-child(1) {
+      grid-column: 1 / -1;
+    }
+
+    .series__head > :nth-child(2) {
+      grid-column: 1 / 7;
+    }
+
+    .series__head > :nth-child(3) {
+      grid-column: 8 / -1;
+    }
+  }
+
+  .series__title {
+    font-size: var(--step-4);
+    font-weight: 600;
+    font-stretch: 78%;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.92;
+  }
+
+  /* ---- Grilles ---------------------------------------------------------- */
+  .grid-lab {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .grid-lab--typographie,
+    .grid-lab--3d {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Une affiche sur trois s'étend : rythme 1 large / 2 moyennes */
+    .grid-lab--typographie .piece:nth-child(3n + 1) {
+      grid-column: 1 / -1;
+    }
+
+    .grid-lab--3d .piece:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .grid-lab--image {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .grid-lab--image .piece {
+      grid-column: span 2;
+    }
+
+    .grid-lab--image .piece:nth-child(1) {
+      grid-column: 1 / 3;
+    }
+
+    .grid-lab--image .piece:nth-child(2) {
+      grid-column: 3 / 5;
+      margin-top: var(--space-2xl);
+    }
+
+    .grid-lab--image .piece:nth-child(3) {
+      grid-column: 5 / 7;
+    }
+
+    .grid-lab--image .piece:nth-child(4) {
+      grid-column: 2 / 4;
+    }
+
+    .grid-lab--image .piece:nth-child(5) {
+      grid-column: 4 / 6;
+      margin-top: calc(var(--space-2xl) * -1);
+    }
+  }
+
+  .piece__btn {
+    display: grid;
+    gap: var(--space-xs);
+    width: 100%;
+    text-align: left;
+  }
+
+  .piece__media {
+    display: block;
+    aspect-ratio: 16 / 9;
+  }
+
+  .piece--portrait .piece__media {
+    aspect-ratio: 3 / 4;
+  }
+
+  .piece__media :global(img) {
+    transition: transform 1.1s var(--ease-out);
+  }
+
+  .piece__btn:hover .piece__media :global(img) {
+    transform: scale(1.03);
+  }
+
+  .piece__btn:focus-visible {
+    outline-offset: 4px;
+  }
+
+  .piece__cap {
+    display: flex;
+    gap: var(--space-xs);
+    color: var(--fg);
+  }
+</style>

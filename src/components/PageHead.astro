@@ -1,0 +1,76 @@
+---
+/** En-tête de page de premier niveau (Projets, Lab, À propos). */
+interface Props {
+  kicker: string;
+  lines: string[];
+  /** Index de la ligne à composer en italique serif. */
+  serifLine?: number;
+}
+
+const { kicker, lines, serifLine } = Astro.props;
+---
+
+<header class="phead container">
+  <p class="t-meta phead__kicker" data-reveal>{kicker}</p>
+  <h1 class="phead__title" data-lines>
+    {
+      lines.map((l, i) => (
+        <span class="line">
+          <span>{i === serifLine ? <em class="t-serif">{l}</em> : l}</span>
+        </span>
+      ))
+    }
+  </h1>
+  {
+    Astro.slots.has('default') && (
+      <div class="phead__intro" data-reveal style="--i: 3">
+        <slot />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .phead {
+    display: grid;
+    gap: var(--space-l);
+    padding-top: calc(var(--header-h) + var(--space-xl));
+    padding-bottom: var(--space-xl);
+  }
+
+  .phead__kicker {
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phead__title {
+    font-size: clamp(3.2rem, 1rem + 10vw, 12rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    word-spacing: 0.06em;
+  }
+
+  .phead__title em {
+    font-weight: 400;
+    font-size: 1.04em;
+    letter-spacing: -0.02em;
+  }
+
+  .phead__intro {
+    display: grid;
+    gap: var(--space-s);
+    max-width: 42ch;
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--fg-muted);
+  }
+
+  @media (min-width: 1024px) {
+    .phead__intro {
+      justify-self: end;
+      margin-top: calc(var(--space-xl) * -1);
+    }
+  }
+</style>

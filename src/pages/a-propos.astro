@@ -1,0 +1,351 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import { site } from '@/data/site';
+import { projects, otherProjects } from '@/data/projects';
+import { href } from '@/lib/url';
+import portrait from '@/assets/brand/portrait.jpg';
+
+// Compétences — reprises du CV.
+const skills = [
+  {
+    title: 'Design',
+    items: ['Suite Adobe — Photoshop, Illustrator, After Effects, Premiere Pro, InDesign', 'Sketch', '3D — Blender, 3ds Max', 'Prototypage UX/UI — Figma'],
+  },
+  {
+    title: 'Informatique',
+    items: ['Python', 'HTML / CSS', 'JavaScript', 'C', 'MySQL'],
+  },
+  {
+    title: 'Méthodes',
+    items: ['User research', 'Design thinking / double diamant', 'Méthodes agiles — Scrum, Kanban', 'Gestion de projet & leadership', 'Communication & présentation'],
+  },
+  {
+    title: 'Langue',
+    items: ['Anglais professionnel'],
+  },
+];
+
+// Parcours — du plus récent au plus ancien.
+const companyProjects = [
+  ...projects.map((p) => ({ year: p.year, name: p.client, discipline: p.discipline })),
+  ...otherProjects.filter((p) => p.year).map((p) => ({ year: p.year!, name: p.name, discipline: p.discipline })),
+].sort((a, b) => b.year.localeCompare(a.year));
+---
+
+<Base
+  title="À propos"
+  description="Gaspard Bayle, étudiant en double cursus Designer global et Ingénieur informatique à CY École de Design et CY Tech. Parcours, compétences et méthodes."
+  image={portrait}
+>
+  <section class="about container" aria-labelledby="about-title">
+    <div class="about__portrait" data-reveal="mask">
+      <Image
+        src={portrait}
+        alt="Portrait de Gaspard Bayle, en pull noir sur fond sombre."
+        widths={[480, 768, 1080]}
+        width={1080}
+        sizes="(min-width: 1024px) 38vw, 100vw"
+        format="webp"
+        quality={80}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+
+    <div class="about__text">
+      <p class="t-meta" data-reveal>(À propos) {site.name}</p>
+      <h1 id="about-title" class="about__title" data-lines>
+        <span class="line"><span>Deux formations,</span></span>
+        <span class="line"><span><em class="t-serif">une même exigence.</em></span></span>
+      </h1>
+      <div class="about__body" data-reveal style="--i: 2">
+        <p class="t-lead">
+          Étudiant en ingénierie informatique et en design global, je suis passionné par l’innovation
+          et la création.
+        </p>
+        <p class="t-body">
+          Mon double cursus à {site.education.schools} me permet d’aborder un projet par ses deux
+          bouts : comprendre les usages sur le terrain, puis concevoir des solutions créatives et
+          fonctionnelles — et savoir comment elles se construisent. J’ai participé à {site.companyProjects} projets
+          d’entreprise, de l’habitacle automobile à la plateforme web.
+        </p>
+      </div>
+      <ul role="list" class="about__actions" data-reveal style="--i: 3">
+        <li>
+          <a class="btn" href={href(site.cv)} download>Télécharger le CV <span class="arrow" aria-hidden="true">↓</span></a>
+        </li>
+        <li>
+          <a class="btn btn--ghost" href={site.linkedin} target="_blank" rel="noopener">
+            LinkedIn <span class="arrow arrow--ne" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Parcours ------------------------------------------------------------ -->
+  <section class="section container" aria-labelledby="parcours-title">
+    <div class="block">
+      <div class="block__aside">
+        <p class="t-meta" data-reveal><span class="t-index">01</span> Parcours</p>
+        <h2 id="parcours-title" class="t-h2" data-reveal style="--i: 1">Formation & expériences</h2>
+      </div>
+      <div class="block__body">
+        <ol role="list" class="timeline">
+          <li class="timeline__row" data-reveal>
+            <span class="t-meta">{site.education.period}</span>
+            <div>
+              <h3 class="timeline__title">{site.education.degree}</h3>
+              <p class="t-muted">{site.education.schools}</p>
+            </div>
+          </li>
+          <li class="timeline__row" data-reveal>
+            <span class="t-meta">2023 — 2024</span>
+            <div>
+              <h3 class="timeline__title">Postier</h3>
+              <p class="t-muted">La Poste, Clamart</p>
+            </div>
+          </li>
+          <li class="timeline__row" data-reveal>
+            <span class="t-meta">2021</span>
+            <div>
+              <h3 class="timeline__title">Baccalauréat</h3>
+              <p class="t-muted">Mention assez bien</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="projects-list" data-reveal>
+          <p class="t-meta">Projets d’entreprise — sélection</p>
+          <ul role="list">
+            {
+              companyProjects.map((p) => (
+                <li>
+                  <span class="t-meta">{p.year}</span>
+                  <span class="projects-list__name">{p.name}</span>
+                  <span class="t-muted">{p.discipline}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compétences --------------------------------------------------------- -->
+  <section class="section skills" data-theme="night" data-surface="dark" aria-labelledby="skills-title">
+    <div class="container">
+      <div class="block">
+        <div class="block__aside">
+          <p class="t-meta" data-reveal><span class="t-index">02</span> Compétences</p>
+          <h2 id="skills-title" class="t-h2" data-reveal style="--i: 1">
+            Designer <em class="t-serif">&amp;</em> ingénieur.
+          </h2>
+        </div>
+        <div class="block__body skills__grid">
+          {
+            skills.map((group, i) => (
+              <div class="skills__group" data-reveal style={`--i: ${i}`}>
+                <h3 class="skills__title">{group.title}</h3>
+                <ul role="list">
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+    padding-top: calc(var(--header-h) + var(--space-l));
+    padding-bottom: var(--space-2xl);
+  }
+
+  @media (min-width: 1024px) {
+    .about {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: end;
+      min-height: 100svh;
+    }
+
+    .about__portrait {
+      grid-column: 1 / 6;
+    }
+
+    .about__text {
+      grid-column: 7 / -1;
+    }
+  }
+
+  .about__portrait {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--c-night);
+  }
+
+  .about__portrait :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+
+  .about__text {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .about__title {
+    font-size: var(--step-4);
+    font-weight: 600;
+    font-stretch: 78%;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.95;
+  }
+
+  .about__body {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .about__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .block {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .block {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .block__aside {
+      grid-column: 1 / 5;
+    }
+
+    .block__body {
+      grid-column: 5 / -1;
+    }
+  }
+
+  .block__aside {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+  }
+
+  .block__body {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .timeline {
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .timeline__row {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: var(--space-s);
+    padding-block: var(--space-m);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .timeline__row > .t-meta {
+    padding-top: 0.35em;
+  }
+
+  .timeline__title {
+    font-size: var(--step-2);
+    font-stretch: 90%;
+    line-height: 1.1;
+  }
+
+  .projects-list {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .projects-list li {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0 var(--space-s);
+    padding-block: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .projects-list li > .t-muted {
+    grid-column: 2;
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 768px) {
+    .projects-list li {
+      grid-template-columns: 9rem 1fr 1fr;
+    }
+
+    .projects-list li > .t-muted {
+      grid-column: 3;
+      font-size: inherit;
+    }
+  }
+
+  .projects-list__name {
+    font-weight: 600;
+  }
+
+  @media (max-width: 479px) {
+    .timeline__row,
+    .projects-list li {
+      grid-template-columns: 5.5rem 1fr;
+    }
+  }
+
+  .skills__grid {
+    column-gap: var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .skills__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .skills__group {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .skills__title {
+    font-size: var(--step-2);
+    font-stretch: 88%;
+  }
+
+  .skills__group li {
+    padding-block: var(--space-2xs);
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-muted);
+  }
+
+  .skills h2 em {
+    color: var(--c-signal);
+  }
+</style>

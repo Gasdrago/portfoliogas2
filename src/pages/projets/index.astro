@@ -1,0 +1,186 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHead from '@/components/PageHead.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import ProjectIndex from '@/components/ProjectIndex.astro';
+import { projects } from '@/data/projects';
+import { href } from '@/lib/url';
+---
+
+<Base
+  title="Projets"
+  description="Études de cas de Gaspard Bayle : Renault Center View (design d’innovation), INRAE (UX/UI) et Mobotix Sun Scan (design produit)."
+>
+  <PageHead kicker="(Projets) Études de cas" lines={['Du terrain', 'à l’interface.']} serifLine={1}>
+    <p>
+      Trois études de cas menées avec des entreprises, de l’analyse d’usage au prototype. Chacune
+      part d’une question, pas d’une solution.
+    </p>
+  </PageHead>
+
+  <section class="container works" aria-label="Études de cas">
+    <ol role="list" class="works__list">
+      {
+        projects.map((p, i) => (
+          <li class:list={['work', { 'work--reverse': i % 2 === 1 }]}>
+            <div class="work__media media" data-reveal="mask">
+              <Image
+                src={p.cover}
+                alt=""
+                widths={[768, 1080, 1440]}
+                width={1440}
+                sizes="(min-width: 1024px) 58vw, 100vw"
+                format="webp"
+                quality={80}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                style={`view-transition-name: cover-${p.slug}`}
+              />
+            </div>
+            <div class="work__text">
+              <p class="t-meta work__meta" data-reveal>
+                <span class="t-index">{p.index}</span>
+                <span>{p.client}</span>
+                <span>{p.year}</span>
+              </p>
+              <h2 class="work__title" data-reveal style="--i: 1">
+                <a href={href(`projets/${p.slug}/`)} class="work__link" data-cursor="Voir le projet">
+                  {p.title}
+                </a>
+              </h2>
+              <p class="work__q t-serif" data-reveal style="--i: 2">{p.question}</p>
+              <p class="t-body" data-reveal style="--i: 3">{p.summary}</p>
+              <p class="work__foot" data-reveal style="--i: 4">
+                <span class="tag">{p.discipline}</span>
+                <span class="t-meta t-meta--fg work__more" aria-hidden="true">
+                  Lire l’étude <span class="arrow">→</span>
+                </span>
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="section container" aria-labelledby="index-title">
+    <SectionHead index="+" label="Index" id="index-title" title="Tous les projets" />
+    <ProjectIndex headingLevel="h3" />
+  </section>
+</Base>
+
+<style>
+  .works__list {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .work {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+    align-items: center;
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 1024px) {
+    .work {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .work__media {
+      grid-column: 1 / 8;
+    }
+
+    .work__text {
+      grid-column: 9 / -1;
+    }
+
+    .work--reverse .work__media {
+      grid-column: 6 / -1;
+      grid-row: 1;
+    }
+
+    .work--reverse .work__text {
+      grid-column: 1 / 5;
+      grid-row: 1;
+    }
+  }
+
+  .work__media {
+    display: block;
+    aspect-ratio: 16 / 10;
+  }
+
+  .work__media :global(img) {
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .work:has(.work__link:hover) .work__media :global(img) {
+    transform: scale(1.035);
+  }
+
+  .work__text {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .work__meta {
+    display: flex;
+    gap: var(--space-s);
+  }
+
+  .work__meta span:last-child {
+    margin-left: auto;
+  }
+
+  .work__title {
+    font-size: var(--step-4);
+    font-weight: 600;
+    font-stretch: 80%;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.95;
+  }
+
+  .work__link {
+    background-image: linear-gradient(var(--c-signal), var(--c-signal));
+    background-repeat: no-repeat;
+    background-size: 0% 0.06em;
+    background-position: 0 92%;
+    transition: background-size var(--dur-3) var(--ease-out);
+  }
+
+  /* Toute la carte est cliquable via le lien du titre */
+  .work__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .work {
+    position: relative;
+  }
+
+  .work__link:hover,
+  .work__link:focus-visible {
+    background-size: 100% 0.06em;
+  }
+
+  .work:has(.work__link:hover) .work__more .arrow {
+    transform: translateX(0.25em);
+  }
+
+  .work__q {
+    font-size: var(--step-2);
+    line-height: 1.15;
+  }
+
+  .work__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-top: var(--space-s);
+  }
+</style>

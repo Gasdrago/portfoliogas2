@@ -1,0 +1,47 @@
+---
+import Base from '@/layouts/Base.astro';
+import { href } from '@/lib/url';
+---
+
+<Base title="Page introuvable" description="Cette page n’existe pas ou a été déplacée." bareFooter>
+  <section class="nf container" aria-labelledby="nf-title">
+    <p class="t-meta">Erreur 404</p>
+    <h1 id="nf-title" class="nf__title">
+      Hors <em class="t-serif">champ.</em>
+    </h1>
+    <p class="t-lead">Cette page n’existe pas, ou plus. Le reste du portfolio, lui, est bien là.</p>
+    <ul role="list" class="nf__links">
+      <li><a class="btn" href={href('')}>Accueil <span class="arrow" aria-hidden="true">→</span></a></li>
+      <li><a class="btn btn--ghost" href={href('projets/')}>Projets</a></li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    align-content: center;
+    gap: var(--space-l);
+    min-height: 100svh;
+    padding-block: calc(var(--header-h) + var(--space-l)) var(--space-xl);
+  }
+
+  .nf__title {
+    font-size: clamp(4rem, 1rem + 14vw, 16rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.05em;
+    line-height: 0.85;
+  }
+
+  .nf__title em {
+    font-weight: 400;
+    color: var(--c-signal);
+  }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+</style>
