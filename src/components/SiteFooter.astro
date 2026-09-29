@@ -1,0 +1,211 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '@/data/site';
+import { href } from '@/lib/url';
+import poster from '@/assets/lab/trou-noir-poster.jpg';
+
+interface Props {
+  bare?: boolean;
+}
+
+const { bare = false } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" data-theme="night" data-surface="dark">
+  {
+    !bare && (
+      <section id="contact" class="contact" aria-labelledby="contact-title">
+        <div class="contact__bg" aria-hidden="true">
+          <Image src={poster} alt="" widths={[768, 1280]} width={1280} sizes="100vw" format="webp" loading="lazy" />
+          <video data-ambient muted loop playsinline preload="none" disablepictureinpicture>
+            <source src={href('media/trou-noir.mp4')} type="video/mp4" />
+          </video>
+        </div>
+
+        <div class="contact__inner container">
+          <p class="t-meta contact__kicker" data-reveal>
+            <span class="t-index">(—)</span> Contact
+          </p>
+
+          <h2 id="contact-title" class="contact__title" data-lines>
+            <span class="line"><span>Parlons de votre</span></span>
+            <span class="line"><span><em class="t-serif">prochain projet.</em></span></span>
+          </h2>
+
+          <div class="contact__mail" data-reveal>
+            <a class="contact__address" href={`mailto:${site.email}`}>
+              {site.email}
+              <span class="arrow arrow--ne" aria-hidden="true">↗</span>
+            </a>
+            <button class="copy" type="button" data-copy={site.email}>
+              <span data-copy-label>Copier l’adresse</span>
+            </button>
+          </div>
+
+          <ul role="list" class="contact__links" data-reveal>
+            <li>
+              <a class="btn btn--ghost" href={site.linkedin} target="_blank" rel="noopener">
+                LinkedIn <span class="arrow arrow--ne" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="btn" href={href(site.cv)} download>
+                Télécharger le CV <span class="arrow" aria-hidden="true">↓</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <div class="footer__bar container">
+    <p class="t-meta">© {year} {site.name}</p>
+    <p class="t-meta footer__edu">{site.education.schools}</p>
+    <a class="t-meta t-meta--fg link link--quiet" href="#main">Haut de page ↑</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact {
+    position: relative;
+    isolation: isolate;
+    min-height: min(100svh, 62rem);
+    display: flex;
+    align-items: flex-end;
+    padding-block: calc(var(--header-h) + var(--space-2xl)) var(--space-2xl);
+  }
+
+  .contact__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.9;
+  }
+
+  .contact__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, var(--bg) 0%, transparent 25%, transparent 75%, var(--bg) 100%),
+      linear-gradient(90deg, color-mix(in srgb, var(--bg) 80%, transparent) 0%, transparent 65%);
+  }
+
+  .contact__bg :is(img, video) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% 55%;
+  }
+
+  .contact__bg video {
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-out);
+  }
+
+  .contact__bg video.is-playing {
+    opacity: 1;
+  }
+
+  .contact__inner {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .contact__kicker {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .contact__title {
+    font-size: var(--step-5);
+    font-weight: 600;
+    font-stretch: 78%;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+    max-width: 14ch;
+  }
+
+  .contact__title em {
+    font-size: 1.08em;
+    color: var(--c-signal);
+  }
+
+  .contact__mail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s) var(--space-m);
+    margin-top: var(--space-m);
+  }
+
+  .contact__address {
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size var(--dur-3) var(--ease-out);
+  }
+
+  .contact__address:hover {
+    background-size: 0 1px;
+    background-position: 100% 100%;
+  }
+
+  .copy {
+    min-height: 2.75rem;
+    padding: 0 var(--space-s);
+    border-radius: var(--radius-pill);
+    border: 1px dashed var(--border-strong);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    transition:
+      color var(--dur-1),
+      border-color var(--dur-1);
+  }
+
+  .copy:hover,
+  .copy.is-done {
+    color: var(--fg);
+    border-style: solid;
+  }
+
+  .contact__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding: 0;
+  }
+
+  .footer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-m);
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 767px) {
+    .footer__edu {
+      order: 3;
+      width: 100%;
+    }
+  }
+</style>
