@@ -1,0 +1,108 @@
+---
+import type { ImageMetadata } from 'astro';
+import Figure from '@/components/Figure.astro';
+
+/**
+ * Écran ou vue commentée : image large + intention de design.
+ * Les `notes` reprennent les annotations des planches d'origine.
+ */
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  index: string;
+  title: string;
+  text?: string;
+  notes?: string[];
+  reverse?: boolean;
+  lightbox?: string;
+  framed?: boolean;
+}
+
+const { image, alt, index, title, text, notes = [], reverse = false, lightbox, framed = false } = Astro.props;
+---
+
+<div class:list={['feat', { 'feat--reverse': reverse, 'feat--framed': framed }]}>
+  <div class="feat__media">
+    <Figure src={image} alt={alt} sizes="(min-width: 1024px) 58vw, 100vw" lightbox={lightbox} />
+  </div>
+  <div class="feat__text">
+    <p class="t-index" data-reveal>{index}</p>
+    <h3 class="feat__title" data-reveal style="--i: 1">{title}</h3>
+    {text && <p class="t-body" data-reveal style="--i: 2">{text}</p>}
+    {
+      notes.length > 0 && (
+        <ul role="list" class="feat__notes">
+          {notes.map((n, i) => (
+            <li class="t-serif" data-reveal style={`--i: ${i + 3}`}>
+              « {n} »
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .feat {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .feat {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .feat__media {
+      grid-column: 1 / 8;
+    }
+
+    .feat__text {
+      grid-column: 9 / -1;
+    }
+
+    .feat--reverse .feat__media {
+      grid-column: 6 / -1;
+      grid-row: 1;
+    }
+
+    .feat--reverse .feat__text {
+      grid-column: 1 / 5;
+      grid-row: 1;
+    }
+  }
+
+  .feat--framed .feat__media {
+    padding: clamp(0.75rem, 2vw, 1.75rem);
+    background: var(--bg-raised);
+  }
+
+  .feat__text {
+    display: grid;
+    gap: var(--space-s);
+    align-content: center;
+  }
+
+  .feat__title {
+    font-size: var(--step-3);
+    font-weight: 600;
+    font-stretch: 84%;
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+  }
+
+  .feat__notes {
+    display: grid;
+    gap: var(--space-xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border);
+  }
+
+  .feat__notes li {
+    font-size: var(--step-1);
+    line-height: 1.25;
+    color: var(--fg-muted);
+  }
+</style>

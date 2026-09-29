@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '@/data/projects';
+import { href } from '@/lib/url';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const surface = project.theme === 'mobotix' ? 'light' : 'dark';
+---
+
+<nav class="next" data-theme={project.theme} data-surface={surface} aria-label="Projet suivant">
+  <a class="next__link container" href={href(`projets/${project.slug}/`)} data-cursor="Suivant" data-astro-prefetch>
+    <p class="t-meta next__kicker">
+      <span class="t-index">{project.index}</span> Projet suivant
+    </p>
+    <p class="next__title">
+      <span class="next__client">{project.client}</span>
+      <span class="next__name t-serif">{project.title}</span>
+      <span class="next__arrow arrow" aria-hidden="true">→</span>
+    </p>
+    <div class="next__media media">
+      <Image
+        src={project.cover}
+        alt=""
+        widths={[768, 1440]}
+        width={1440}
+        sizes="100vw"
+        format="webp"
+        quality={76}
+        loading="lazy"
+      />
+    </div>
+  </a>
+</nav>
+
+<style>
+  .next {
+    overflow: hidden;
+  }
+
+  .next__link {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-2xl);
+  }
+
+  .next__kicker {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .next__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.3em;
+    font-size: var(--step-4);
+    font-weight: 600;
+    font-stretch: 80%;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.95;
+  }
+
+  .next__name {
+    font-weight: 400;
+    font-size: 1.02em;
+    color: var(--accent-text);
+  }
+
+  .next__arrow {
+    font-weight: 300;
+  }
+
+  .next__link:hover .next__arrow {
+    transform: translateX(0.3em);
+  }
+
+  .next__media {
+    height: clamp(12rem, 34vw, 30rem);
+    margin-inline: calc(var(--gutter) * -1);
+  }
+
+  .next__media :global(img) {
+    transform: translateY(12%) scale(1.02);
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .next__link:hover .next__media :global(img) {
+    transform: translateY(4%) scale(1.02);
+  }
+</style>

@@ -1,0 +1,51 @@
+<!--
+  Étiquette contextuelle qui suit le pointeur au survol des éléments [data-cursor].
+  Le curseur natif reste visible : l'étiquette est un indice, jamais une nécessité.
+  Activée uniquement sur pointeur fin (souris / trackpad).
+-->
+<div class="cursor" data-cursor-el aria-hidden="true">
+  <span class="cursor__label" data-cursor-label>Voir</span>
+</div>
+
+<style>
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-cursor);
+    pointer-events: none;
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cursor {
+      display: block;
+    }
+  }
+
+  .cursor__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-signal);
+    color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0;
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      opacity var(--dur-1) linear;
+  }
+
+  .cursor.is-active .cursor__label {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+</style>

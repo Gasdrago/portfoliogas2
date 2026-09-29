@@ -1,0 +1,113 @@
+---
+/**
+ * Diagramme en barres horizontales (données issues des planches d'origine).
+ * Rendu en HTML/CSS pour rester lisible, accessible et net à toutes tailles.
+ */
+interface Datum {
+  label: string;
+  value: number;
+}
+
+interface Props {
+  title: string;
+  data: Datum[];
+  unit?: string;
+  highlight?: number;
+  source?: string;
+}
+
+const { title, data, unit = '%', highlight = 0, source } = Astro.props;
+const max = Math.max(...data.map((d) => d.value));
+const fmt = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+---
+
+<figure class="bars" data-reveal>
+  <figcaption class="bars__title t-meta t-meta--fg">{title}</figcaption>
+  <table class="bars__table">
+    <caption class="sr-only">{title}</caption>
+    <thead class="sr-only">
+      <tr><th scope="col">Catégorie</th><th scope="col">Part</th></tr>
+    </thead>
+    <tbody>
+      {
+        data.map((d, i) => (
+          <tr class:list={['bars__row', { 'is-hl': i < highlight }]} style={`--v: ${d.value / max}; --i: ${i}`}>
+            <th scope="row" class="bars__label">{d.label}</th>
+            <td class="bars__cell">
+              <span class="bars__bar" aria-hidden="true" />
+              <span class="bars__value">
+                {fmt(d.value)}
+                {unit}
+              </span>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {source && <p class="bars__source t-meta">{source}</p>}
+</figure>
+
+<style>
+  .bars {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .bars__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .bars__row {
+    border-top: 1px solid var(--border);
+  }
+
+  .bars__label {
+    width: 32%;
+    padding: var(--space-xs) var(--space-s) var(--space-xs) 0;
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .bars__cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    padding-block: var(--space-xs);
+  }
+
+  .bars__bar {
+    height: 0.75rem;
+    width: calc(var(--v) * 72%);
+    background: var(--fg-subtle);
+    transform-origin: left;
+  }
+
+  .is-hl .bars__bar {
+    background: var(--accent);
+  }
+
+  .bars__value {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .bars .bars__bar {
+      transform: scaleX(0);
+      transition: transform 1.1s var(--ease-out);
+      transition-delay: calc(200ms + var(--i) * 90ms);
+    }
+
+    :global(.js) .bars.is-in .bars__bar {
+      transform: none;
+    }
+  }
+
+  .bars__source {
+    color: var(--fg-subtle);
+  }
+</style>

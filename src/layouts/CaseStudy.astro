@@ -1,0 +1,69 @@
+---
+import Base from '@/layouts/Base.astro';
+import CaseHero from '@/components/case/CaseHero.astro';
+import DeckGallery from '@/components/case/DeckGallery.astro';
+import NextProject from '@/components/case/NextProject.astro';
+import { getProject, getNextProject } from '@/data/projects';
+
+interface Props {
+  slug: string;
+  /** Surface claire ou sombre, pour le ton de l'en-tête. */
+  surface: 'dark' | 'light';
+  heroPosition?: string;
+  /** Fond des planches encadrées (Figure framed). */
+  frameBg?: string;
+}
+
+const { slug, surface, heroPosition, frameBg } = Astro.props;
+const project = getProject(slug);
+const next = getNextProject(slug);
+---
+
+<Base
+  title={`${project.client} — ${project.title}`}
+  description={`${project.summary} Étude de cas ${project.discipline.toLowerCase()}, ${project.year}.`}
+  image={project.cover}
+  theme={project.theme}
+>
+  <div class="progress" aria-hidden="true"></div>
+  <article class="case" data-surface={surface} style={frameBg ? `--frame-bg: ${frameBg}` : undefined}>
+    <CaseHero project={project} position={heroPosition} />
+    <slot />
+    <DeckGallery project={project} />
+  </article>
+  <NextProject project={next} />
+</Base>
+
+<style>
+  /* Barre de progression de lecture — CSS scroll-driven, sans JS */
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: calc(var(--z-header) + 1);
+    height: 2px;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+    display: none;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .progress {
+      display: block;
+      animation: progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+
+  @keyframes progress {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .progress {
+      display: none;
+    }
+  }
+</style>

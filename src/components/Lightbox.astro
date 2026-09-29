@@ -1,0 +1,114 @@
+<dialog class="lightbox" data-lightbox-dialog aria-label="Visionneuse d’images" data-theme="night">
+  <div class="lightbox__top">
+    <p class="t-meta" data-lb-counter aria-live="polite"></p>
+    <button class="lightbox__btn" type="button" data-lb-close>
+      Fermer <span aria-hidden="true">✕</span>
+    </button>
+  </div>
+  <div class="lightbox__stage" data-lb-stage>
+    <img data-lb-img alt="" decoding="async" sizes="100vw" />
+  </div>
+  <div class="lightbox__bottom">
+    <button class="lightbox__btn" type="button" data-lb-prev aria-label="Image précédente">
+      <span aria-hidden="true">←</span> Préc.
+    </button>
+    <p class="lightbox__caption" data-lb-caption></p>
+    <button class="lightbox__btn" type="button" data-lb-next aria-label="Image suivante">
+      Suiv. <span aria-hidden="true">→</span>
+    </button>
+  </div>
+</dialog>
+
+<style>
+  .lightbox {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: none;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  .lightbox[open] {
+    display: grid;
+    animation: lb-in var(--dur-2) var(--ease-out);
+  }
+
+  .lightbox::backdrop {
+    background: rgb(0 0 0 / 0.9);
+  }
+
+  .lightbox__top,
+  .lightbox__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: var(--space-s) var(--gutter);
+  }
+
+  .lightbox__stage {
+    display: grid;
+    place-items: center;
+    padding: 0 var(--gutter);
+    min-height: 0;
+  }
+
+  .lightbox__stage img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.985);
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      transform var(--dur-3) var(--ease-out);
+  }
+
+  .lightbox__stage img.is-loaded {
+    opacity: 1;
+    transform: none;
+  }
+
+  .lightbox__caption {
+    flex: 1;
+    text-align: center;
+    font-size: var(--step--1);
+    color: var(--fg-muted);
+  }
+
+  .lightbox__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 2.75rem;
+    padding: 0 var(--space-s);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    transition:
+      background var(--dur-1),
+      color var(--dur-1);
+  }
+
+  .lightbox__btn:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

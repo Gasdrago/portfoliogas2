@@ -1,0 +1,87 @@
+---
+/** Liste numérotée (problèmes, objectifs, constats) en colonnes. */
+interface Item {
+  title: string;
+  text?: string;
+}
+
+interface Props {
+  items: Item[];
+  columns?: 1 | 2 | 3;
+  size?: 'm' | 'l';
+}
+
+const { items, columns = 3, size = 'm' } = Astro.props;
+---
+
+<ol role="list" class:list={['num', `num--c${columns}`, `num--${size}`]}>
+  {
+    items.map((item, i) => (
+      <li class="num__item" data-reveal style={`--i: ${i}`}>
+        <span class="num__n" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <h3 class="num__title">{item.title}</h3>
+        {item.text && <p class="num__text">{item.text}</p>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .num {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .num--c2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .num--c3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .num__item {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .num--c1 .num__item {
+    grid-template-columns: 3rem 1fr;
+    align-items: baseline;
+    padding-block: var(--space-m) 0;
+  }
+
+  .num--c1 .num__text {
+    grid-column: 2;
+  }
+
+  .num__n {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--accent-text);
+  }
+
+  .num__title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    font-stretch: 88%;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .num--l .num__title {
+    font-size: var(--step-3);
+  }
+
+  .num__text {
+    color: var(--fg-muted);
+    max-width: 36ch;
+  }
+</style>

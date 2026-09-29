@@ -1,0 +1,70 @@
+---
+interface Props {
+  index?: string;
+  label: string;
+  id?: string;
+  /** Titre principal (texte). Utiliser le slot "title" pour un titre enrichi. */
+  title?: string;
+  as?: 'h1' | 'h2';
+  class?: string;
+}
+
+const { index, label, id, title, as: Tag = 'h2', class: className } = Astro.props;
+---
+
+<header class:list={['shead', className]}>
+  <p class="shead__label t-meta" data-reveal>
+    {index && <span class="t-index">({index})</span>}
+    <span>{label}</span>
+  </p>
+  <Tag class="shead__title t-h2" id={id} data-lines>
+    <slot name="title"><span class="line"><span>{title}</span></span></slot>
+  </Tag>
+  {
+    Astro.slots.has('aside') && (
+      <div class="shead__aside" data-reveal style="--i: 2">
+        <slot name="aside" />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .shead {
+    display: grid;
+    gap: var(--space-m);
+    padding-bottom: var(--space-l);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--space-xl);
+  }
+
+  .shead__label {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .shead__title {
+    max-width: 18ch;
+  }
+
+  .shead__aside {
+    color: var(--fg-muted);
+    max-width: 42ch;
+  }
+
+  @media (min-width: 1024px) {
+    .shead {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      column-gap: var(--space-xl);
+    }
+
+    .shead__label {
+      grid-column: 1 / -1;
+    }
+
+    .shead__aside {
+      justify-self: end;
+    }
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+import { widthsFor } from '@/lib/image';
+import type { Project } from '@/data/projects';
+import { Image } from 'astro:assets';
+import { href } from '@/lib/url';
+
+interface Props {
+  project: Project;
+  variant?: 'feature' | 'tall' | 'wide';
+  headingLevel?: 'h2' | 'h3';
+  class?: string;
+}
+
+const { project, variant = 'wide', headingLevel: Heading = 'h3', class: className } = Astro.props;
+
+const ratio = { feature: '16 / 8', tall: '4 / 5', wide: '16 / 10' }[variant];
+const sizes = {
+  feature: '(min-width: 1680px) 1600px, calc(100vw - 2 * var(--gutter))',
+  tall: '(min-width: 768px) 40vw, 100vw',
+  wide: '(min-width: 768px) 58vw, 100vw',
+}[variant];
+const image = variant === 'tall' ? project.thumb : project.cover;
+const widths = widthsFor(image, [480, 768, 1080, 1440, 1920]);
+const alt = variant === 'tall' ? project.thumbAlt : project.coverAlt;
+const position = {
+  'renault-center-view': 'center 45%',
+  inrae: 'center',
+  'mobotix-sun-scan': 'center',
+}[project.slug];
+---
+
+<article class:list={['pcard', `pcard--${variant}`, className]} data-project-theme={project.theme}>
+  <a class="pcard__link" href={href(`projets/${project.slug}/`)} data-cursor="Voir le projet" data-astro-prefetch>
+    <div class="pcard__media media" style={`aspect-ratio: ${ratio}`} data-reveal="mask">
+      <Image
+        src={image}
+        alt={alt}
+        widths={widths}
+        width={Math.max(...widths)}
+        sizes={sizes}
+        format="webp"
+        quality={80}
+        loading="lazy"
+        style={`object-position: ${position}; view-transition-name: cover-${project.slug}`}
+      />
+      <span class="pcard__chip t-meta" aria-hidden="true">{project.discipline}</span>
+    </div>
+
+    <div class="pcard__body">
+      <p class="pcard__meta t-meta" data-reveal>
+        <span class="t-index">{project.index}</span>
+        <span>{project.client}</span>
+        <span class="pcard__year">{project.year}</span>
+      </p>
+      <Heading class="pcard__title" data-reveal style="--i: 1">
+        <span>{project.title}</span>
+        <span class="pcard__arrow arrow" aria-hidden="true">→</span>
+      </Heading>
+      <p class="pcard__question t-serif" data-reveal style="--i: 2">{project.question}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .pcard {
+    --card-accent: var(--c-signal);
+  }
+
+  .pcard[data-project-theme='renault'] {
+    --card-accent: #4c7dff;
+  }
+
+  .pcard[data-project-theme='inrae'] {
+    --card-accent: #0a9c8c;
+  }
+
+  .pcard[data-project-theme='mobotix'] {
+    --card-accent: #ff5a1f;
+  }
+
+  .pcard__link {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .pcard__media :global(img) {
+    transition: transform 1.2s var(--ease-out), filter var(--dur-3) var(--ease-out);
+  }
+
+  .pcard__link:hover .pcard__media :global(img) {
+    transform: scale(1.035);
+  }
+
+  .pcard__chip {
+    position: absolute;
+    left: var(--space-s);
+    top: var(--space-s);
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--c-paper) 88%, transparent);
+    color: var(--c-ink);
+    font-size: var(--step--2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transform: translateY(-0.4rem);
+    opacity: 0;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      transform var(--dur-2) var(--ease-out);
+  }
+
+  .pcard__link:hover .pcard__chip,
+  .pcard__link:focus-visible .pcard__chip {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (hover: none) {
+    .pcard__chip {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .pcard__body {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .pcard__meta {
+    display: flex;
+    gap: var(--space-s);
+    align-items: baseline;
+  }
+
+  .pcard__year {
+    margin-left: auto;
+  }
+
+  .pcard__title {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3em;
+    width: fit-content;
+    font-size: var(--step-3);
+    font-weight: 600;
+    font-stretch: 84%;
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+    padding-bottom: 0.12em;
+  }
+
+  .pcard__title > span:first-child {
+    background-image: linear-gradient(var(--card-accent), var(--card-accent));
+    background-repeat: no-repeat;
+    background-size: 0% 0.08em;
+    background-position: 0 100%;
+    transition: background-size var(--dur-3) var(--ease-out);
+  }
+
+  .pcard__link:hover .pcard__title > span:first-child,
+  .pcard__link:focus-visible .pcard__title > span:first-child {
+    background-size: 100% 0.08em;
+  }
+
+  .pcard__arrow {
+    font-weight: 400;
+    font-size: 0.6em;
+    opacity: 0;
+    transform: translateX(-0.4em);
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      transform var(--dur-2) var(--ease-out);
+  }
+
+  .pcard__link:hover .pcard__arrow,
+  .pcard__link:focus-visible .pcard__arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pcard__question {
+    font-size: var(--step-1);
+    line-height: 1.3;
+    color: var(--fg-muted);
+    max-width: 34ch;
+  }
+
+  /* Variante mise en avant : titre et question en regard */
+  @media (min-width: 1024px) {
+    .pcard--feature .pcard__body {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: start;
+    }
+
+    .pcard--feature .pcard__meta {
+      grid-column: 1 / -1;
+    }
+
+    .pcard--feature .pcard__title {
+      grid-column: 1 / 8;
+      font-size: var(--step-4);
+    }
+
+    .pcard--feature .pcard__question {
+      grid-column: 8 / 13;
+      font-size: var(--step-2);
+      padding-top: 0.4em;
+    }
+  }
+</style>

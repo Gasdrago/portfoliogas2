@@ -1,0 +1,522 @@
+---
+import CaseStudy from '@/layouts/CaseStudy.astro';
+import CaseSection from '@/components/case/CaseSection.astro';
+import Quotes from '@/components/case/Quotes.astro';
+import Numbered from '@/components/case/Numbered.astro';
+import Statement from '@/components/case/Statement.astro';
+import BarChart from '@/components/case/BarChart.astro';
+import Annotated from '@/components/case/Annotated.astro';
+import Branches from '@/components/case/Branches.astro';
+import Figure from '@/components/Figure.astro';
+import { decks, slide, getProject } from '@/data/projects';
+import volant from '@/assets/crops/renault-volant.jpg';
+
+const project = getProject('renault-center-view');
+const s = (n: number) => slide(decks.renault, n);
+const lb = 'renault';
+
+// Arborescence reprise de la planche « Accueil » (26).
+const tree: { title: string; items: [string, string][] }[] = [
+  {
+    title: 'Musique',
+    items: [
+      ['Flow', 'lance une musique aléatoire'],
+      ['Playlist n°1', 'lance la playlist'],
+      ['Recherche vocale', 'lance la recherche vocale'],
+      ['Conducteur', 'active le mode conducteur'],
+      ['Passagers', 'active le mode passagers'],
+    ],
+  },
+  {
+    title: 'Téléphone',
+    items: [
+      ['Appel manqué', 'appelle la dernière personne'],
+      ['Favoris', 'appelle un favori'],
+      ['Recherche vocale', 'lance la recherche vocale'],
+    ],
+  },
+  {
+    title: 'Navigation',
+    items: [
+      ['Domicile', 'itinéraire vers le domicile'],
+      ['Travail', 'itinéraire vers le travail'],
+      ['Carburant', 'station essence la plus proche'],
+      ['Restaurants', 'restaurant le plus proche'],
+      ['Recherche vocale', 'lance la recherche vocale'],
+    ],
+  },
+];
+---
+
+<CaseStudy slug={project.slug} surface="dark">
+  <!-- 01 — Contexte ---------------------------------------------------- -->
+  <CaseSection index="01" label="Contexte" title="Un sujet ouvert, un habitacle saturé." id="contexte">
+    <p class="t-lead case-lead" data-reveal>
+      Le point de départ était volontairement large : imaginer le futur de l’interaction de la
+      mobilité. Nous sommes partis de l’existant — le tableau de bord, ses écrans, ses boutons — et
+      de celles et ceux qui l’utilisent au quotidien.
+    </p>
+    <div class="tasks" data-reveal style="--i: 1">
+      <p class="t-meta">Missions</p>
+      <ul role="list">
+        {project.tasks.map((t) => <li>{t}</li>)}
+      </ul>
+    </div>
+  </CaseSection>
+
+  <!-- 02 — Recherche : habitacle --------------------------------------- -->
+  <CaseSection index="02" label="Recherche" title="Ce que l’on touche, ce que l’on regarde." layout="full" id="recherche">
+    <div class="pair">
+      <Figure
+        src={s(3)}
+        alt="Analyse de l’habitacle : photo du poste de conduite avec une carte de chaleur des zones les plus touchées (rouge) aux moins touchées (vert)."
+        caption="Zones les plus touchées"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(4)}
+        alt="Analyse de l’habitacle : carte de chaleur des zones les plus regardées, du bleu foncé au turquoise."
+        caption="Zones les plus regardées"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+        style="--i: 1"
+      />
+    </div>
+  </CaseSection>
+
+  <!-- 03 — Entretiens --------------------------------------------------- -->
+  <CaseSection index="03" label="Entretiens" title="La parole des conducteurs." id="entretiens">
+    <Quotes
+      quotes={[
+        { text: 'L’écran n’est pas assez utilisé' },
+        { text: 'Certains boutons sont peu utiles' },
+        { text: 'J’utilise juste le GPS et Spotify' },
+        { text: 'Je ne sais pas à quoi ça sert' },
+        { text: 'L’interface est trop chargée' },
+      ]}
+      source="Verbatims recueillis en entretien"
+    />
+  </CaseSection>
+
+  <!-- 04 — Données ------------------------------------------------------ -->
+  <CaseSection index="04" label="Usages" title="Trois applications concentrent l’essentiel." id="usages">
+    <p class="kpi" data-reveal>
+      <span class="kpi__value">+85&nbsp;%</span>
+      <span class="kpi__label">des applications utilisées par les conducteurs sont parmi trois applications.</span>
+    </p>
+    <BarChart
+      title="Applications les plus utilisées en voiture"
+      highlight={3}
+      data={[
+        { label: 'Navigation', value: 43.5 },
+        { label: 'Musique', value: 26.1 },
+        { label: 'Communication', value: 17.4 },
+        { label: 'Info-trafic', value: 8.7 },
+        { label: 'Autre', value: 4.3 },
+      ]}
+    />
+    <div class="charts-2">
+      <BarChart
+        title="Navigation — destinations"
+        highlight={1}
+        data={[
+          { label: 'Adresse', value: 34.2 },
+          { label: 'Travail', value: 26.3 },
+          { label: 'Domicile', value: 21.1 },
+          { label: 'Station essence', value: 10.5 },
+          { label: 'Autre', value: 7.9 },
+        ]}
+      />
+      <BarChart
+        title="Communication — contacts"
+        highlight={1}
+        data={[
+          { label: 'Famille', value: 48.4 },
+          { label: 'Ami', value: 32.3 },
+          { label: 'Un collègue', value: 12.9 },
+          { label: 'Autre', value: 6.5 },
+        ]}
+      />
+    </div>
+    <p class="t-meta">Données présentées dans le dossier de projet.</p>
+  </CaseSection>
+
+  <!-- 05 — Problèmes ---------------------------------------------------- -->
+  <CaseSection index="05" label="Problèmes" title="Trop d’informations, pas assez d’évidence." id="problemes">
+    <Numbered
+      size="l"
+      columns={1}
+      items={[{ title: 'Surinformation' }, { title: 'Distraction visuelle' }, { title: 'Interface pas assez intuitive' }]}
+    />
+  </CaseSection>
+
+  <Statement
+    kicker="Problématique reformulée"
+    text="Comment épurer l’interface et transformer l’interaction afin de rendre la conduite plus agréable, adaptée et sécuritaire ?"
+  />
+
+  <!-- 06 — Objectifs ---------------------------------------------------- -->
+  <CaseSection index="06" label="Objectifs" title="Trois intentions de design." id="objectifs">
+    <Numbered
+      items={[
+        { title: 'Nouvelle expérience', text: 'Proposer une expérience intuitive et agréable.' },
+        { title: 'Centraliser la vue', text: 'Pas d’informations parasites : l’essentiel au même endroit.' },
+        {
+          title: 'Simplifier l’interface',
+          text: 'Identifier les usages clés et réaliser une interface synthétique des besoins utilisateurs.',
+        },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 07 — Solution ----------------------------------------------------- -->
+  <section class="solution" aria-labelledby="solution-title">
+    <div class="container solution__head">
+      <p class="t-meta" data-reveal><span class="t-index">07</span> Solution</p>
+      <h2 id="solution-title" class="solution__title" data-lines>
+        <span class="line"><span>Center View :</span></span>
+        <span class="line"><span><em class="t-serif">l’essentiel, au centre.</em></span></span>
+      </h2>
+      <p class="t-lead" data-reveal style="--i: 2">
+        Un bandeau d’écran épuré qui ne garde que les trois usages majeurs — musique, téléphone,
+        navigation — et une interface personnalisable selon le conducteur.
+      </p>
+    </div>
+    <Figure src={s(12)} alt={project.coverAlt} sizes="100vw" class="bleed" lightbox={lb} />
+    <div class="container mosaic">
+      <Figure
+        src={s(13)}
+        alt="Interface personnalisable : les icônes des applications disposées dans le bandeau d’écran."
+        caption="Interface personnalisable"
+        sizes="(min-width: 1024px) 60vw, 100vw"
+        class="mosaic__a"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(15)}
+        alt="Sous-menu musique : Flow, Playlist 1, recherche vocale, modes Conducteur et Passagers."
+        caption="Sous-menu musique"
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        class="mosaic__b"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(16)}
+        alt="Lecteur de musique affiché à gauche du bandeau d’écran."
+        caption="Lecture en cours"
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        class="mosaic__c"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(17)}
+        alt="Sous-menu musique ouvert au centre du bandeau d’écran."
+        caption="Menu musique"
+        sizes="(min-width: 1024px) 60vw, 100vw"
+        class="mosaic__d"
+        lightbox={lb}
+      />
+    </div>
+  </section>
+
+  <!-- 08 — Architecture ------------------------------------------------- -->
+  <CaseSection index="08" label="Architecture" title="Trois applications, une action par geste." id="architecture">
+    <Branches branches={tree} />
+    <Figure
+      src={s(26)}
+      alt="Arborescence depuis l’accueil : Musique, Téléphone et Navigation, chacune avec ses raccourcis et leur action."
+      caption="Arborescence d’origine"
+      sizes="(min-width: 1024px) 66vw, 100vw"
+      lightbox={lb}
+    />
+  </CaseSection>
+
+  <!-- 09 — Modes audio & usages ---------------------------------------- -->
+  <CaseSection index="09" label="Usages" title="Conduire, écouter, appeler." layout="full" id="usages-ecran">
+    <div class="pair">
+      <Figure
+        src={s(18)}
+        alt="Mode Passagers : vue de dessus de l’habitacle, le son diffusé vers les places passagers."
+        caption="Mode Passagers"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(19)}
+        alt="Mode Conducteur : vue de dessus de l’habitacle, le son diffusé vers la place conducteur."
+        caption="Mode Conducteur"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+    <div class="trio">
+      <Figure
+        src={s(21)}
+        alt="Carte de navigation affichée derrière le volant."
+        caption="Navigation au combiné"
+        sizes="(min-width: 768px) 33vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(22)}
+        alt="Bandeau d’écran : carte et raccourcis Domicile, Travail, Carburant, Restaurants."
+        caption="Raccourcis de navigation"
+        sizes="(min-width: 768px) 33vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(24)}
+        alt="Notification d’appel entrant dans le bandeau d’écran, avec boutons accepter et refuser."
+        caption="Appel entrant"
+        sizes="(min-width: 768px) 33vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <!-- 10 — Pare-brise --------------------------------------------------- -->
+  <section class="hud" aria-labelledby="hud-title">
+    <Figure
+      src={s(28)}
+      alt={project.thumbAlt}
+      sizes="100vw"
+      class="bleed"
+      lightbox={lb}
+    />
+    <div class="container hud__text">
+      <p class="t-meta" data-reveal><span class="t-index">10</span> Le pare-brise</p>
+      <h2 id="hud-title" class="t-h2" data-reveal style="--i: 1">
+        Les yeux sur la route, <em class="t-serif">l’information dessus.</em>
+      </h2>
+      <p class="t-body" data-reveal style="--i: 2">
+        L’affichage tête haute superpose à la route ce qui compte pendant la conduite : vitesse,
+        limitation, prochaine direction et météo.
+      </p>
+    </div>
+  </section>
+
+  <!-- 11 — Volant ------------------------------------------------------- -->
+  <CaseSection index="11" label="Le volant" title="Un volant repensé pour piloter l’écran." layout="full" id="volant">
+    <p class="t-lead" data-reveal>
+      Dans le but de rendre la conduite plus intuitive et sécurisée, le volant a été repensé en y
+      ajoutant les fonctionnalités nécessaires pour accompagner la gestion des applications.
+    </p>
+    <Annotated
+      image={volant}
+      alt="Rendu 3D du nouveau volant, vu de trois quarts, avec ses commandes intégrées."
+      lightbox={lb}
+      notes={[
+        { term: 'Clignotant', text: 'Intégré directement aux branches du volant.' },
+        {
+          term: 'Flèches de sélection',
+          text: 'Naviguer entre les raccourcis ; ces boutons ont plusieurs fonctionnalités en fonction du mode activé.',
+        },
+        { term: 'Bouton +/−', text: 'Ajuster, selon le mode actif.' },
+        { term: 'Validation', text: 'Deux boutons, ✓ et ✗, pour confirmer ou annuler.' },
+        { term: 'Roulette', text: 'Sert à changer d’application sur l’écran.' },
+      ]}
+    />
+    <div class="trio">
+      <Figure src={s(31)} alt="Détail du volant : clignotant, flèches de sélection et bouton plus/moins." caption="Commandes gauche" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
+      <Figure src={s(32)} alt="Détail du volant : clignotant et boutons de validation." caption="Commandes droite" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
+      <Figure src={s(33)} alt="Détail du volant : la roulette rouge au dos de la branche." caption="Roulette" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
+    </div>
+    <Figure
+      src={s(30)}
+      alt="Pictogrammes des boutons : croix, coche et flèches, en traits blancs sur fond noir."
+      caption="Design des boutons"
+      sizes="(min-width: 1024px) 66vw, 100vw"
+      class="narrow"
+      lightbox={lb}
+    />
+  </CaseSection>
+
+  <!-- 12 — Ensemble ----------------------------------------------------- -->
+  <section class="finale" aria-labelledby="finale-title">
+    <div class="container">
+      <p class="t-meta" data-reveal><span class="t-index">12</span> Vue d’ensemble</p>
+      <h2 id="finale-title" class="t-h2" data-reveal style="--i: 1">
+        Écran, pare-brise, volant : <em class="t-serif">un seul système.</em>
+      </h2>
+    </div>
+    <Figure
+      src={s(34)}
+      alt="Vue d’ensemble du poste de conduite : volant repensé, bandeau d’écran à trois applications et affichage sur le pare-brise."
+      sizes="100vw"
+      class="bleed"
+      lightbox={lb}
+    />
+  </section>
+</CaseStudy>
+
+<style>
+  .case-lead {
+    max-width: 44ch;
+  }
+
+  .tasks {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .tasks ul {
+    display: grid;
+    border-top: 1px solid var(--border);
+  }
+
+  .tasks li {
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+
+  .pair,
+  .trio {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .trio {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .kpi {
+    display: grid;
+    gap: var(--space-xs);
+    padding-bottom: var(--space-l);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .kpi__value {
+    font-size: clamp(4rem, 2rem + 9vw, 10rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.05em;
+    line-height: 0.85;
+    color: var(--accent-text);
+  }
+
+  .kpi__label {
+    font-size: var(--step-1);
+    max-width: 30ch;
+  }
+
+  .charts-2 {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+  }
+
+  @media (min-width: 1280px) {
+    .charts-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Solution */
+  .solution {
+    padding-block: var(--space-2xl);
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .solution__head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .solution__title {
+    font-size: var(--step-4);
+    font-weight: 600;
+    font-stretch: 80%;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.95;
+  }
+
+  :global(.bleed) {
+    width: 100%;
+  }
+
+  .mosaic {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .mosaic {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .mosaic :global(.mosaic__a) {
+      grid-column: 1 / 8;
+    }
+
+    .mosaic :global(.mosaic__b) {
+      grid-column: 9 / -1;
+      margin-top: var(--space-2xl);
+    }
+
+    .mosaic :global(.mosaic__c) {
+      grid-column: 2 / 6;
+    }
+
+    .mosaic :global(.mosaic__d) {
+      grid-column: 7 / -1;
+      margin-top: calc(var(--space-xl) * -1);
+    }
+  }
+
+  /* Pare-brise */
+  .hud {
+    padding-block: var(--space-2xl) 0;
+  }
+
+  .hud__text {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-l);
+  }
+
+  @media (min-width: 1024px) {
+    .hud__text {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: start;
+    }
+
+    .hud__text > :nth-child(1) {
+      grid-column: 1 / 4;
+    }
+
+    .hud__text > :nth-child(2) {
+      grid-column: 4 / 10;
+    }
+
+    .hud__text > :nth-child(3) {
+      grid-column: 10 / -1;
+    }
+  }
+
+  :global(.narrow) {
+    max-width: 56rem;
+  }
+
+  .finale {
+    display: grid;
+    gap: var(--space-l);
+    padding-top: var(--space-2xl);
+  }
+
+  .finale .container {
+    display: grid;
+    gap: var(--space-m);
+  }
+</style>

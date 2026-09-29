@@ -1,0 +1,42 @@
+---
+/** Grande reformulation (problématique) — le moment « déclic » d'un projet. */
+interface Props {
+  kicker?: string;
+  text: string;
+  note?: string;
+}
+
+const { kicker, text, note } = Astro.props;
+---
+
+<div class="statement container">
+  {kicker && <p class="t-meta statement__kicker" data-reveal>{kicker}</p>}
+  <p class="statement__text t-serif" data-reveal style="--i: 1">{text}</p>
+  {note && <p class="statement__note t-body" data-reveal style="--i: 2">{note}</p>}
+</div>
+
+<style>
+  .statement {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-2xl);
+  }
+
+  .statement__kicker {
+    color: var(--accent-text);
+  }
+
+  .statement__text {
+    font-size: clamp(2rem, 1.2rem + 3.6vw, 5.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+
+  .statement__note {
+    max-width: 52ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+  }
+</style>

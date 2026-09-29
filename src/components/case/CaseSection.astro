@@ -1,0 +1,117 @@
+---
+/**
+ * Section d'étude de cas : étiquette collante à gauche, contenu à droite.
+ * `layout="full"` libère toute la largeur pour les compositions d'images.
+ */
+interface Props {
+  index: string;
+  label: string;
+  title?: string;
+  id?: string;
+  layout?: 'split' | 'full';
+  class?: string;
+  theme?: string;
+  surface?: 'dark' | 'light';
+}
+
+const { index, label, title, id, layout = 'split', class: className, theme, surface } = Astro.props;
+const headingId = id ? `${id}-title` : undefined;
+---
+
+<section
+  class:list={['csec', `csec--${layout}`, className]}
+  id={id}
+  aria-labelledby={headingId}
+  data-theme={theme}
+  data-surface={surface}
+>
+  <div class="container csec__grid">
+    <div class="csec__aside">
+      <p class="t-meta csec__label" data-reveal>
+        <span class="t-index">{index}</span>
+        {label}
+      </p>
+      {
+        title && (
+          <h2 class="csec__title t-h2" id={headingId} data-reveal style="--i: 1">
+            {title}
+          </h2>
+        )
+      }
+    </div>
+    <div class="csec__body">
+      <slot />
+    </div>
+  </div>
+  <slot name="after" />
+</section>
+
+<style>
+  .csec {
+    padding-block: var(--space-2xl);
+  }
+
+  .csec__grid {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  .csec__aside {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+  }
+
+  .csec__label {
+    display: flex;
+    gap: var(--space-xs);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--border);
+  }
+
+  .csec__title {
+    max-width: 16ch;
+  }
+
+  .csec__body {
+    display: grid;
+    gap: var(--space-xl);
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .csec__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .csec--split .csec__aside {
+      grid-column: 1 / 5;
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-m));
+      align-self: start;
+    }
+
+    .csec--split .csec__body {
+      grid-column: 5 / -1;
+    }
+
+    .csec--full .csec__aside,
+    .csec--full .csec__body {
+      grid-column: 1 / -1;
+    }
+
+    .csec--full .csec__aside {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: end;
+    }
+
+    .csec--full .csec__label {
+      grid-column: 1 / -1;
+    }
+
+    .csec--full .csec__title {
+      grid-column: 1 / 9;
+    }
+  }
+</style>

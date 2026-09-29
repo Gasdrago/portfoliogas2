@@ -1,0 +1,73 @@
+---
+/** Arborescence en colonnes : un nœud par colonne, ses branches listées dessous. */
+interface Branch {
+  title: string;
+  items: (string | [string, string])[];
+}
+
+interface Props {
+  branches: Branch[];
+}
+
+const { branches } = Astro.props;
+---
+
+<div class="branches" data-reveal>
+  {
+    branches.map((b) => (
+      <div class="branches__col">
+        <h3 class="branches__title">{b.title}</h3>
+        <ul role="list" class="branches__list">
+          {b.items.map((item) =>
+            Array.isArray(item) ? (
+              <li>
+                <span class="branches__term">{item[0]}</span>
+                <span class="branches__desc">{item[1]}</span>
+              </li>
+            ) : (
+              <li>
+                <span class="branches__term">{item}</span>
+              </li>
+            ),
+          )}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .branches {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .branches {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .branches__title {
+    padding-bottom: var(--space-xs);
+    margin-bottom: var(--space-xs);
+    border-bottom: 2px solid var(--accent);
+    font-size: var(--step-2);
+    font-stretch: 88%;
+  }
+
+  .branches__list li {
+    display: grid;
+    padding-block: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .branches__term {
+    font-weight: 600;
+  }
+
+  .branches__desc {
+    color: var(--fg-muted);
+    font-size: var(--step--1);
+  }
+</style>

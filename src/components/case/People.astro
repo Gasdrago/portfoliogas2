@@ -1,0 +1,103 @@
+---
+/** Personnes rencontrées sur le terrain : profil + verbatims. */
+interface Person {
+  name: string;
+  profile: string;
+  quotes: string[];
+}
+
+interface Props {
+  people: Person[];
+}
+
+const { people } = Astro.props;
+---
+
+<ul role="list" class="people">
+  {
+    people.map((p, i) => (
+      <li class="person" data-reveal style={`--i: ${i}`}>
+        <div class="person__head">
+          <span class="person__initial" aria-hidden="true">
+            {p.name.charAt(0)}
+          </span>
+          <div>
+            <h3 class="person__name">{p.name}</h3>
+            <p class="person__profile">{p.profile}</p>
+          </div>
+        </div>
+        {p.quotes.length > 0 && (
+          <ul role="list" class="person__quotes">
+            {p.quotes.map((q) => (
+              <li>
+                <blockquote class="t-serif">« {q} »</blockquote>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .people {
+    display: grid;
+    gap: var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .people {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .person {
+    display: grid;
+    align-content: start;
+    gap: var(--space-m);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+  }
+
+  .person__head {
+    display: flex;
+    gap: var(--space-s);
+    align-items: center;
+  }
+
+  .person__initial {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--c-ink);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.6rem;
+  }
+
+  .person__name {
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .person__profile {
+    font-size: var(--step--1);
+    color: var(--fg-muted);
+  }
+
+  .person__quotes {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .person__quotes blockquote {
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+</style>
