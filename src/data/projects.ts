@@ -155,12 +155,6 @@ export interface OtherProject {
 
 export const otherProjects: OtherProject[] = [
   {
-    name: 'Numixs',
-    discipline: 'Design d’espace',
-    year: '2024',
-    note: 'Concevoir un nouvel espace VR — terrain, entretiens, concept, maquette.',
-  },
-  {
     // À compléter : contexte, année et description du projet IDF.
     name: 'IDF',
     discipline: 'Prototype interactif',

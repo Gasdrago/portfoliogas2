@@ -439,26 +439,30 @@ button:hover > .arrow--ne {
     transform: none;
   }
 
+  /* Masque : le cadre observé reste visible (un élément entièrement découpé
+     par clip-path n'est jamais signalé par IntersectionObserver) ; seul son
+     contenu est révélé. */
   .js [data-reveal='mask'] {
     opacity: 1;
     transform: none;
-    clip-path: inset(100% 0 0 0);
-    transition: clip-path var(--dur-4) var(--ease-out);
-    transition-delay: calc(var(--i, 0) * var(--stagger));
   }
 
-  .js [data-reveal='mask'] :is(img, video) {
+  .js [data-reveal='mask'] > :is(img, picture, video) {
+    clip-path: inset(100% 0 0 0);
     transform: scale(1.12);
-    transition: transform calc(var(--dur-4) * 1.4) var(--ease-out);
+    transition:
+      clip-path var(--dur-4) var(--ease-out),
+      transform calc(var(--dur-4) * 1.4) var(--ease-out);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
   }
 
   .js [data-reveal].is-in {
     opacity: 1;
     transform: none;
-    clip-path: inset(0 0 0 0);
   }
 
-  .js [data-reveal='mask'].is-in :is(img, video) {
+  .js [data-reveal='mask'].is-in > :is(img, picture, video) {
+    clip-path: inset(0 0 0 0);
     transform: none;
   }
 

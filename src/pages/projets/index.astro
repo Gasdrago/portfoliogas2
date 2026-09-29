@@ -24,7 +24,14 @@ import { href } from '@/lib/url';
       {
         projects.map((p, i) => (
           <li class:list={['work', { 'work--reverse': i % 2 === 1 }]}>
-            <div class="work__media media" data-reveal="mask">
+            <a
+              class="work__media media"
+              href={href(`projets/${p.slug}/`)}
+              data-reveal="mask"
+              data-cursor="Voir le projet"
+              tabindex="-1"
+              aria-hidden="true"
+            >
               <Image
                 src={p.cover}
                 alt=""
@@ -36,7 +43,7 @@ import { href } from '@/lib/url';
                 loading={i === 0 ? 'eager' : 'lazy'}
                 style={`view-transition-name: cover-${p.slug}`}
               />
-            </div>
+            </a>
             <div class="work__text">
               <p class="t-meta work__meta" data-reveal>
                 <span class="t-index">{p.index}</span>
@@ -52,9 +59,10 @@ import { href } from '@/lib/url';
               <p class="t-body" data-reveal style="--i: 3">{p.summary}</p>
               <p class="work__foot" data-reveal style="--i: 4">
                 <span class="tag">{p.discipline}</span>
-                <span class="t-meta t-meta--fg work__more" aria-hidden="true">
-                  Lire l’étude <span class="arrow">→</span>
-                </span>
+                <a class="link t-meta t-meta--fg work__more" href={href(`projets/${p.slug}/`)} data-astro-prefetch>
+                  Lire l’étude <span class="sr-only">{p.client} — {p.title}</span>
+                  <span class="arrow" aria-hidden="true">→</span>
+                </a>
               </p>
             </div>
           </li>
@@ -116,7 +124,7 @@ import { href } from '@/lib/url';
     transition: transform 1.2s var(--ease-out);
   }
 
-  .work:has(.work__link:hover) .work__media :global(img) {
+  .work:has(a:hover) .work__media :global(img) {
     transform: scale(1.035);
   }
 
@@ -150,23 +158,12 @@ import { href } from '@/lib/url';
     transition: background-size var(--dur-3) var(--ease-out);
   }
 
-  /* Toute la carte est cliquable via le lien du titre */
-  .work__link::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
-  .work {
-    position: relative;
-  }
-
   .work__link:hover,
   .work__link:focus-visible {
     background-size: 100% 0.06em;
   }
 
-  .work:has(.work__link:hover) .work__more .arrow {
+  .work:has(a:hover) .work__more .arrow {
     transform: translateX(0.25em);
   }
 
