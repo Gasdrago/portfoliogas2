@@ -1,0 +1,685 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import ProjectIndex from '@/components/ProjectIndex.astro';
+import LabStrip from '@/components/LabStrip.astro';
+import { projects, decks, slide, getProject } from '@/data/projects';
+import { site } from '@/data/site';
+import mobotixSquare from '@/assets/crops/mobotix-app-square.jpg';
+import { href } from '@/lib/url';
+
+const [renault, inrae, mobotix] = projects;
+
+const reel = [
+  {
+    project: renault,
+    image: slide(decks.renault, 28),
+    alt: renault.thumbAlt,
+    position: '50% 70%',
+  },
+  {
+    project: inrae,
+    image: slide(decks.inrae, 26),
+    alt: inrae.coverAlt,
+    position: '50% 50%',
+  },
+  {
+    project: mobotix,
+    image: mobotixSquare,
+    alt: mobotix.thumbAlt,
+    position: 'center',
+  },
+];
+
+const domains = ['Design d’innovation', 'UX/UI design', 'Design produit', 'Design d’espace', 'Ingénierie informatique'];
+
+const method = [
+  {
+    step: 'Comprendre',
+    lead: 'Observer, mesurer, interroger.',
+    text: 'Analyse de l’habitacle et entretiens avec des conducteurs pour Renault ; quatre profils rencontrés sur le terrain pour INRAE, du maraîcher au conseiller agronome.',
+    ref: getProject('inrae'),
+  },
+  {
+    step: 'Définir',
+    lead: 'Reformuler jusqu’à la bonne question.',
+    text: '« Comment épurer l’interface et transformer l’interaction afin de rendre la conduite plus agréable, adaptée et sécuritaire ? »',
+    ref: getProject('renault-center-view'),
+  },
+  {
+    step: 'Explorer',
+    lead: 'Ouvrir des pistes, puis les faire converger.',
+    text: 'Gadget pour téléphone, mini-assistant, habillage de caméra : trois pistes réunies par une seule application.',
+    ref: getProject('mobotix-sun-scan'),
+  },
+  {
+    step: 'Éprouver',
+    lead: 'Tester tôt, en situation réelle.',
+    text: 'Un POC mené à la piscine Suzanne Berlioux pour mesurer l’acceptation d’une caméra « de sécurité », avant de dessiner l’application.',
+    ref: getProject('mobotix-sun-scan'),
+  },
+];
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.role,
+  email: `mailto:${site.email}`,
+  sameAs: [site.linkedin],
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'CY École de Design' },
+    { '@type': 'CollegeOrUniversity', name: 'CY Tech' },
+  ],
+};
+---
+
+<Base>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(personLd)} />
+
+  <!-- ================================================================ HÉROS -->
+  <section class="hero container" aria-labelledby="hero-title">
+    <div class="hero__top t-meta">
+      <p><span class="t-index">GB</span> Portfolio</p>
+      <p class="hero__top-mid">{site.education.schools}</p>
+      <p>{site.education.period}</p>
+    </div>
+
+    <h1 id="hero-title" class="hero__title" data-lines>
+      <span class="sr-only">{site.name}, </span>
+      <span class="line"><span>Designer global</span></span>
+      <span class="line"><span><em class="hero__amp t-serif">&amp;</em> ingénieur</span></span>
+      <span class="line"><span>informatique.</span></span>
+    </h1>
+
+    <div class="hero__reel reel" data-reel data-interval="5200">
+      <div class="reel__frames">
+        {
+          reel.map((r, i) => (
+            <figure class:list={['reel__item', { 'is-current': i === 0 }]} data-reel-item>
+              <a href={href(`projets/${r.project.slug}/`)} class="reel__link" data-cursor="Voir le projet">
+                <Image
+                  src={r.image}
+                  alt={r.alt}
+                  widths={[480, 768, 1080]}
+                  width={1080}
+                  sizes="(min-width: 1024px) 34vw, 100vw"
+                  format="webp"
+                  quality={78}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  style={`object-position: ${r.position}`}
+                />
+              </a>
+              <figcaption class="reel__caption">
+                <span class="t-index">{r.project.index}</span>
+                <span class="reel__name">
+                  {r.project.client} <span class="t-serif">— {r.project.title}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <div class="reel__controls">
+        <div class="reel__dots">
+          {
+            reel.map((r) => (
+              <button class="reel__dot" type="button" data-reel-dot aria-label={`Afficher ${r.project.client}`}>
+                <span />
+              </button>
+            ))
+          }
+        </div>
+        <button class="reel__toggle" type="button" data-reel-toggle aria-pressed="false">
+          <span class="reel__icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero__intro">
+      <p class="hero__lead" data-reveal style="--i: 4">
+        Je conçois des expériences numériques pour améliorer la vie des utilisateurs, en croisant <em class="t-serif">recherche terrain</em>, <em class="t-serif">design</em> et <em class="t-serif">ingénierie</em>.
+      </p>
+      <ul role="list" class="tags hero__domains" aria-label="Domaines" data-reveal style="--i: 5">
+        {domains.map((d) => <li class="tag">{d}</li>)}
+      </ul>
+    </div>
+
+    <div class="hero__bottom t-meta">
+      <p><span class="t-meta--fg">{site.companyProjects}</span> projets d’entreprises</p>
+      <a href="#selection" class="hero__scroll link link--quiet">Voir les projets <span class="arrow" aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+
+  <!-- ============================================================ SÉLECTION -->
+  <section id="selection" class="section container" aria-labelledby="selection-title">
+    <SectionHead index="01" label="Études de cas" id="selection-title">
+      <Fragment slot="title">
+        <span class="line"><span>Trois projets,</span></span>
+        <span class="line"><span><em class="t-serif">trois échelles.</em></span></span>
+      </Fragment>
+      <p slot="aside">
+        Un poste de conduite, une plateforme de décision agricole, une caméra repensée : de l’objet à
+        l’interface, chaque projet part d’une question posée aux utilisateurs.
+      </p>
+    </SectionHead>
+
+    <div class="selection">
+      <ProjectCard project={renault} variant="feature" class="selection__feature" />
+      <ProjectCard project={inrae} variant="wide" class="selection__a" />
+      <ProjectCard project={mobotix} variant="tall" class="selection__b" />
+    </div>
+  </section>
+
+  <!-- =============================================================== MÉTHODE -->
+  <section class="method" data-theme="night" data-surface="dark" aria-labelledby="method-title">
+    <div class="section container method__grid">
+      <div class="method__intro">
+        <p class="t-meta" data-reveal><span class="t-index">(02)</span> Méthode</p>
+        <h2 id="method-title" class="t-h2" data-lines>
+          <span class="line"><span>Diverger pour comprendre,</span></span>
+          <span class="line"><span><em class="t-serif">converger pour décider.</em></span></span>
+        </h2>
+        <p class="t-body" data-reveal style="--i: 2">
+          Designer et ingénieur, j’aborde chaque sujet avec le double diamant : partir du terrain,
+          nommer le vrai problème, explorer large, puis éprouver les idées au contact du réel.
+        </p>
+        <svg class="method__diamond" viewBox="0 0 400 120" aria-hidden="true" data-reveal="fade">
+          <path d="M4 60 L102 8 L200 60 L102 112 Z" pathLength="1" />
+          <path d="M200 60 L298 8 L396 60 L298 112 Z" pathLength="1" />
+          <circle cx="4" cy="60" r="4" />
+          <circle cx="200" cy="60" r="4" />
+          <circle cx="396" cy="60" r="4" />
+        </svg>
+      </div>
+
+      <ol role="list" class="method__steps">
+        {
+          method.map((m, i) => (
+            <li class="method__step" data-reveal>
+              <span class="method__num">{String(i + 1).padStart(2, '0')}</span>
+              <div class="method__body">
+                <h3 class="t-h3">
+                  {m.step} <span class="t-serif t-muted">— {m.lead}</span>
+                </h3>
+                <p class="t-body">{m.text}</p>
+                <a class="link t-meta t-meta--fg" href={href(`projets/${m.ref.slug}/`)}>
+                  {m.ref.client} · {m.ref.title} <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==================================================================== LAB -->
+  <section class="section lab-teaser" aria-labelledby="lab-title">
+    <div class="container">
+      <SectionHead index="03" label="Lab" id="lab-title">
+        <Fragment slot="title">
+          <span class="line"><span>Typographie, 3D,</span></span>
+          <span class="line"><span><em class="t-serif">image.</em></span></span>
+        </Fragment>
+        <p slot="aside">
+          Les exercices où la main précède la méthode : lettrage, modélisation, lumière et composition.
+          <br /><a class="link" href={href('lab/')}>Ouvrir le Lab <span class="arrow" aria-hidden="true">→</span></a>
+        </p>
+      </SectionHead>
+    </div>
+    <LabStrip />
+  </section>
+
+  <!-- ================================================================= INDEX -->
+  <section class="section container" aria-labelledby="index-title">
+    <SectionHead index="04" label="Index" id="index-title" title="Tous les projets" />
+    <ProjectIndex />
+  </section>
+</Base>
+
+<style>
+  /* ---- Héros ------------------------------------------------------------ */
+  .hero {
+    --hero-size: 16.4vw;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: var(--space-l);
+    align-content: space-between;
+    min-height: 100svh;
+    padding-top: calc(var(--header-h) + var(--space-m));
+    padding-bottom: var(--space-m);
+  }
+
+  .hero__top,
+  .hero__bottom {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero__top p {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .hero__top-mid {
+    display: none !important;
+  }
+
+  .hero__bottom {
+    border-bottom: 0;
+    border-top: 1px solid var(--border);
+    padding: var(--space-xs) 0 0;
+    align-items: baseline;
+  }
+
+  .hero__title {
+    grid-column: 1 / -1;
+    font-size: var(--hero-size);
+    font-weight: 600;
+    font-stretch: 76%;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    word-spacing: 0.06em;
+    text-wrap: nowrap;
+  }
+
+  .hero__amp {
+    display: inline-block;
+    font-size: 1.08em;
+    line-height: 0;
+    color: var(--c-signal);
+    margin-right: -0.04em;
+  }
+
+  .hero__intro {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .hero__lead {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    max-width: 34ch;
+    letter-spacing: -0.01em;
+  }
+
+  .hero__lead em {
+    font-size: 1.1em;
+  }
+
+  .hero__domains .tag {
+    color: var(--fg);
+  }
+
+  .hero__reel {
+    grid-column: 1 / -1;
+  }
+
+  .hero__scroll {
+    color: var(--fg);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      --hero-size: clamp(3rem, 0.5rem + 11vw, 13rem);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .hero__top-mid {
+      display: flex !important;
+    }
+
+    .hero__intro {
+      grid-column: 1 / 8;
+    }
+
+    .hero__reel {
+      grid-column: 8 / -1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      grid-template-rows: auto auto 1fr auto;
+    }
+
+    .hero__title {
+      grid-row: 2;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero__reel {
+      grid-column: 9 / -1;
+      grid-row: 2 / 4;
+      align-self: start;
+      /* Démarre sous la première ligne du titre */
+      margin-top: calc(var(--hero-size) * 0.95);
+    }
+
+    .hero__intro {
+      grid-row: 3;
+      grid-column: 1 / 7;
+      align-self: end;
+    }
+  }
+
+  /* ---- Bobine ----------------------------------------------------------- */
+  .reel__frames {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+
+  @media (min-width: 1024px) {
+    .reel__frames {
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  .reel__item {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    clip-path: inset(0 0 0 100%);
+    transition:
+      clip-path var(--dur-4) var(--ease-out),
+      visibility 0s linear var(--dur-4);
+  }
+
+  .reel__item.is-current {
+    visibility: visible;
+    clip-path: inset(0 0 0 0);
+    z-index: 1;
+    transition:
+      clip-path var(--dur-4) var(--ease-out),
+      visibility 0s;
+  }
+
+  .reel__link {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .reel__link :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.08);
+    transition: transform 5.5s linear;
+  }
+
+  .reel__item.is-current .reel__link :global(img) {
+    transform: scale(1);
+  }
+
+  .reel__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    gap: var(--space-xs);
+    align-items: baseline;
+    padding: var(--space-l) var(--space-s) var(--space-s);
+    background: linear-gradient(transparent, rgb(0 0 0 / 0.55));
+    color: var(--c-snow);
+    pointer-events: none;
+  }
+
+  .reel__caption .t-index {
+    color: var(--c-snow);
+  }
+
+  .reel__name {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .reel__name .t-serif {
+    font-weight: 400;
+    font-size: 1.1em;
+  }
+
+  .reel__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-top: var(--space-2xs);
+  }
+
+  .reel__dots {
+    display: flex;
+    flex: 1;
+    gap: var(--space-2xs);
+  }
+
+  .reel__dot {
+    flex: 1;
+    padding-block: 1.1rem;
+  }
+
+  .reel__dot span {
+    position: relative;
+    display: block;
+    height: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .reel__dot span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--fg);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .reel__dot[aria-current='true'] span::after {
+    transform: scaleX(1);
+  }
+
+  .reel.is-running .reel__dot.is-running span::after {
+    animation: reel-progress var(--reel-interval, 5s) linear both;
+  }
+
+  @keyframes reel-progress {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  .reel__toggle {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    transition: border-color var(--dur-1);
+  }
+
+  .reel__toggle:hover {
+    border-color: var(--fg);
+  }
+
+  .reel__icon {
+    width: 0.7rem;
+    height: 0.8rem;
+    border-inline: 3px solid currentColor;
+  }
+
+  .reel__toggle[aria-pressed='true'] .reel__icon {
+    border: 0;
+    width: 0;
+    height: 0;
+    border-block: 0.42rem solid transparent;
+    border-left: 0.7rem solid currentColor;
+    margin-left: 0.2rem;
+  }
+
+  /* Apparition au chargement */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__reel {
+      animation: hero-in 1.4s var(--ease-out) 0.35s both;
+    }
+
+    .hero__top,
+    .hero__bottom {
+      animation: hero-fade 1s var(--ease-out) 0.6s both;
+    }
+  }
+
+  @keyframes hero-in {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes hero-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* ---- Sélection -------------------------------------------------------- */
+  .selection {
+    display: grid;
+    gap: var(--space-2xl) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .selection {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .selection :global(.selection__feature) {
+      grid-column: 1 / -1;
+    }
+
+    .selection :global(.selection__a) {
+      grid-column: 1 / 8;
+    }
+
+    .selection :global(.selection__b) {
+      grid-column: 9 / -1;
+      margin-top: var(--space-3xl);
+    }
+  }
+
+  /* ---- Méthode ---------------------------------------------------------- */
+  .method__grid {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+  }
+
+  .method__intro {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  @media (min-width: 1024px) {
+    .method__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .method__intro {
+      grid-column: 1 / 6;
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-l));
+    }
+
+    .method__steps {
+      grid-column: 7 / -1;
+    }
+  }
+
+  .method__diamond {
+    width: min(100%, 24rem);
+    margin-top: var(--space-m);
+    overflow: visible;
+  }
+
+  .method__diamond path {
+    fill: none;
+    stroke: var(--fg-subtle);
+    stroke-width: 1;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .method__diamond circle {
+    fill: var(--c-signal);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .method__diamond path {
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset 2.2s var(--ease-in-out) 0.3s;
+    }
+
+    :global(.js) .method__diamond path + path {
+      transition-delay: 1s;
+    }
+
+    :global(.js) .method__diamond.is-in path {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .method__steps {
+    border-top: 1px solid var(--border);
+  }
+
+  .method__step {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: var(--space-s);
+    padding-block: var(--space-l);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .method__num {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-signal);
+    padding-top: 0.45em;
+  }
+
+  .method__body {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+
+  .method__body .t-serif {
+    font-size: 1.05em;
+  }
+
+  /* ---- Lab -------------------------------------------------------------- */
+  .lab-teaser {
+    overflow: hidden;
+  }
+</style>

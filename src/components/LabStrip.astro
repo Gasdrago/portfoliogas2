@@ -1,0 +1,195 @@
+---
+import { isPortrait } from '@/lib/image';
+import { Image } from 'astro:assets';
+import { lab } from '@/data/lab';
+import { href } from '@/lib/url';
+
+// Sélection rythmée : affiches larges, rendus 3D, images verticales.
+const [typo, threeD, image] = lab;
+const picks = [
+  { series: typo, item: typo.items[0] },
+  { series: image, item: image.items[0] },
+  { series: typo, item: typo.items[7] },
+  { series: threeD, item: threeD.items[5] },
+  { series: image, item: image.items[1] },
+  { series: typo, item: typo.items[2] },
+  { series: image, item: image.items[3] },
+  { series: typo, item: typo.items[11] },
+  { series: threeD, item: threeD.items[1] },
+];
+---
+
+<div class="strip">
+  <div class="strip__track" tabindex="0" role="region" aria-label="Aperçu du Lab — faire défiler horizontalement" data-strip>
+    <ul role="list" class="strip__list">
+      {
+        picks.map(({ series, item }, i) => {
+          const portrait = isPortrait(item.image);
+          return (
+            <li class:list={['strip__item', { 'strip__item--portrait': portrait }]} data-reveal style={`--i: ${Math.min(i, 5)}`}>
+              <a href={href(`lab/#${series.id}`)} class="strip__link" data-cursor="Lab">
+                <div class="strip__media media">
+                  <Image
+                    src={item.image}
+                    alt={item.alt}
+                    widths={portrait ? [320, 640] : [640, 1080]}
+                    width={portrait ? 640 : 1080}
+                    sizes={portrait ? '(min-width: 768px) 24vh, 40vw' : '(min-width: 768px) 60vh, 80vw'}
+                    format="webp"
+                    quality={76}
+                    loading="lazy"
+                  />
+                </div>
+                <p class="strip__cap t-meta">
+                  <span class="t-index">{series.index}</span>
+                  {series.title}
+                  {item.caption && <span class="strip__sub">· {item.caption}</span>}
+                </p>
+              </a>
+            </li>
+          );
+        })
+      }
+      <li class="strip__item strip__item--end">
+        <a href={href('lab/')} class="strip__more">
+          <span class="t-h3">Tout le Lab</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="strip__controls container" aria-hidden="true">
+    <button type="button" class="strip__btn" data-strip-prev tabindex="-1">←</button>
+    <button type="button" class="strip__btn" data-strip-next tabindex="-1">→</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-strip]').forEach((track) => {
+    const root = track.parentElement;
+    const step = () => Math.max(track.clientWidth * 0.7, 280);
+    root?.querySelector('[data-strip-prev]')?.addEventListener('click', () =>
+      track.scrollBy({ left: -step(), behavior: 'smooth' }),
+    );
+    root?.querySelector('[data-strip-next]')?.addEventListener('click', () =>
+      track.scrollBy({ left: step(), behavior: 'smooth' }),
+    );
+  });
+</script>
+
+<style>
+  .strip {
+    --strip-h: clamp(15rem, 44vh, 30rem);
+  }
+
+  .strip__track {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+    padding-bottom: var(--space-s);
+  }
+
+  .strip__track:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .strip__list {
+    display: flex;
+    gap: var(--col-gap);
+    width: max-content;
+    padding-inline: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+  }
+
+  .strip__item {
+    scroll-snap-align: start;
+    flex: none;
+  }
+
+  .strip__media {
+    height: var(--strip-h);
+    aspect-ratio: 16 / 9;
+  }
+
+  .strip__item--portrait .strip__media {
+    aspect-ratio: 3 / 4.4;
+  }
+
+  .strip__media :global(img) {
+    transition: transform 1.1s var(--ease-out);
+  }
+
+  .strip__link:hover .strip__media :global(img) {
+    transform: scale(1.04);
+  }
+
+  .strip__cap {
+    display: flex;
+    gap: var(--space-2xs);
+    margin-top: var(--space-xs);
+    color: var(--fg);
+  }
+
+  .strip__sub {
+    color: var(--fg-subtle);
+    text-transform: none;
+  }
+
+  .strip__item--end {
+    display: flex;
+  }
+
+  .strip__more {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: clamp(12rem, 20vw, 18rem);
+    height: var(--strip-h);
+    padding: var(--space-m);
+    background: var(--fg);
+    color: var(--bg);
+    transition: background var(--dur-2) var(--ease-out), color var(--dur-2);
+  }
+
+  .strip__more:hover {
+    background: var(--c-signal);
+    color: var(--c-ink);
+  }
+
+  .strip__more .arrow {
+    font-size: var(--step-3);
+    align-self: flex-end;
+  }
+
+  .strip__controls {
+    display: none;
+    justify-content: flex-end;
+    gap: var(--space-2xs);
+    margin-top: var(--space-s);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .strip__controls {
+      display: flex;
+    }
+  }
+
+  .strip__btn {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    transition:
+      background var(--dur-1),
+      color var(--dur-1);
+  }
+
+  .strip__btn:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+</style>

@@ -1,0 +1,231 @@
+---
+import { Image } from 'astro:assets';
+import { projects, otherProjects } from '@/data/projects';
+import { href } from '@/lib/url';
+
+interface Props {
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { headingLevel: Heading = 'h3' } = Astro.props;
+---
+
+<div class="pindex" data-preview-list>
+  <div class="pindex__head t-meta" aria-hidden="true">
+    <span>N°</span><span>Projet</span><span class="pindex__col-d">Discipline</span><span class="pindex__col-y">Année</span>
+  </div>
+
+  <ul role="list" class="pindex__list">
+    {
+      projects.map((p, i) => (
+        <li class="pindex__item" data-reveal style={`--i: ${i}`}>
+          <a class="pindex__row" href={href(`projets/${p.slug}/`)} data-preview={p.slug}>
+            <span class="t-index">{p.index}</span>
+            <Heading class="pindex__name">
+              <span class="pindex__client">{p.client}</span>
+              <span class="pindex__title t-serif">{p.title}</span>
+            </Heading>
+            <span class="pindex__col-d t-meta">{p.discipline}</span>
+            <span class="pindex__col-y t-meta">{p.year}</span>
+            <span class="pindex__go arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))
+    }
+    {
+      otherProjects.map((p, i) => {
+        const Row = p.href ? 'a' : 'div';
+        return (
+          <li class="pindex__item pindex__item--other" data-reveal style={`--i: ${projects.length + i}`}>
+            <Row
+              class="pindex__row"
+              {...(p.href ? { href: p.href, target: '_blank', rel: 'noopener' } : {})}
+            >
+              <span class="t-index">{String(projects.length + i + 1).padStart(2, '0')}</span>
+              <Heading class="pindex__name">
+                <span class="pindex__client">{p.name}</span>
+                <span class="pindex__note">{p.note}</span>
+              </Heading>
+              <span class="pindex__col-d t-meta">{p.discipline}</span>
+              <span class="pindex__col-y t-meta">{p.year ?? ''}</span>
+              <span class="pindex__go arrow arrow--ne" aria-hidden="true">
+                {p.href ? '↗' : ''}
+              </span>
+              {p.href && <span class="sr-only">(ouvre un nouvel onglet)</span>}
+            </Row>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <div class="pindex__float" data-preview-float aria-hidden="true">
+    {
+      projects.map((p) => (
+        <div class="pindex__frame" data-preview-frame={p.slug}>
+          <Image src={p.thumb} alt="" widths={[480]} width={480} sizes="22rem" format="webp" quality={72} loading="lazy" />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .pindex {
+    position: relative;
+  }
+
+  .pindex__head,
+  .pindex__row {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    column-gap: var(--col-gap);
+    align-items: baseline;
+  }
+
+  @media (min-width: 768px) {
+    .pindex__head,
+    .pindex__row {
+      grid-template-columns: 3rem minmax(0, 1fr) 13rem 4rem 2rem;
+    }
+  }
+
+  .pindex__head {
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .pindex__head > span:first-child {
+    grid-column: 1;
+  }
+
+  .pindex__col-d,
+  .pindex__col-y {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .pindex__col-d,
+    .pindex__col-y {
+      display: block;
+    }
+  }
+
+  .pindex__item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pindex__row {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-m);
+    transition: padding var(--dur-2) var(--ease-out);
+  }
+
+  .pindex__row::before {
+    content: '';
+    position: absolute;
+    inset: 0 calc(var(--space-s) * -1);
+    z-index: -1;
+    background: var(--fg);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  a.pindex__row:hover {
+    color: var(--bg);
+  }
+
+  a.pindex__row:hover::before {
+    transform: none;
+  }
+
+  a.pindex__row:hover :is(.t-meta, .t-index, .pindex__note) {
+    color: inherit;
+  }
+
+  .pindex__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.45em;
+    font-size: var(--step-2);
+    font-weight: 600;
+    font-stretch: 86%;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  .pindex__title {
+    font-weight: 400;
+    font-size: 1.04em;
+  }
+
+  .pindex__note {
+    flex-basis: 100%;
+    margin-top: 0.35em;
+    font-size: var(--step--1);
+    font-weight: 400;
+    font-stretch: 100%;
+    letter-spacing: 0;
+    color: var(--fg-subtle);
+  }
+
+  .pindex__item--other .pindex__name {
+    font-size: var(--step-1);
+  }
+
+  .pindex__go {
+    justify-self: end;
+  }
+
+  /* Aperçu flottant (pointeur fin uniquement) */
+  .pindex__float {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: clamp(14rem, 20vw, 22rem);
+    aspect-ratio: 4 / 3;
+    margin: calc(clamp(14rem, 20vw, 22rem) * -0.375) 0 0 calc(clamp(14rem, 20vw, 22rem) * -0.5);
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.85;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      scale var(--dur-2) var(--ease-out);
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+    .pindex__float {
+      display: block;
+    }
+  }
+
+  .pindex__float.is-visible {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .pindex__frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path var(--dur-3) var(--ease-out);
+    box-shadow: var(--shadow-float);
+  }
+
+  .pindex__frame.is-current {
+    clip-path: inset(0 0 0 0);
+    z-index: 1;
+  }
+
+  .pindex__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
