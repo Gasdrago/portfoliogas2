@@ -26,7 +26,7 @@ const { headingLevel: Heading = 'h3' } = Astro.props;
               <span class="pindex__title t-serif">{p.title}</span>
             </Heading>
             <span class="pindex__col-d t-meta">{p.discipline}</span>
-            <span class="pindex__col-y t-meta">{p.year}</span>
+            <span class="pindex__col-y t-meta">{p.year ?? ''}</span>
             <span class="pindex__go arrow" aria-hidden="true">→</span>
           </a>
         </li>

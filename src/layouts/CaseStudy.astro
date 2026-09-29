@@ -22,7 +22,7 @@ const next = getNextProject(slug);
 
 <Base
   title={`${project.client} — ${project.title}`}
-  description={`${project.summary} Étude de cas ${project.discipline.toLowerCase()}, ${project.year}.`}
+  description={`${project.summary} Étude de cas — ${project.discipline.toLowerCase()}${project.year ? `, ${project.year}` : ''}.`}
   image={project.cover}
   theme={project.theme}
 >

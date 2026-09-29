@@ -1,0 +1,67 @@
+---
+/** Chiffres clés : grand nombre + explication. Données reprises des dossiers, avec source. */
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  stats: Stat[];
+  source?: string;
+}
+
+const { stats, source } = Astro.props;
+---
+
+<figure class="stats">
+  <dl class="stats__list">
+    {
+      stats.map((s, i) => (
+        <div class="stats__item" data-reveal style={`--i: ${i}`}>
+          <dt class="stats__value">{s.value}</dt>
+          <dd class="stats__label">{s.label}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  {source && <figcaption class="t-meta stats__source">{source}</figcaption>}
+</figure>
+
+<style>
+  .stats__list {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .stats__list {
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    }
+  }
+
+  .stats__item {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .stats__value {
+    font-size: clamp(2.6rem, 1.6rem + 3.6vw, 5rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    color: var(--accent-text);
+  }
+
+  .stats__label {
+    color: var(--fg-muted);
+    max-width: 34ch;
+  }
+
+  .stats__source {
+    margin-top: var(--space-m);
+  }
+</style>

@@ -1,5 +1,8 @@
 import type { ImageMetadata } from 'astro';
 import mobotixPortrait from '@/assets/crops/mobotix-app-portrait.jpg';
+import laposteMascot from '@/assets/crops/laposte-postit.jpg';
+import earthCover from '@/assets/crops/earth-evobim.jpg';
+import earthBim from '@/assets/crops/earth-bim.jpg';
 
 /**
  * Projets — contenu extrait des planches de présentation originales
@@ -8,7 +11,7 @@ import mobotixPortrait from '@/assets/crops/mobotix-app-portrait.jpg';
  * l'information n'est pas fournie, et les composants ne les affichent pas.
  */
 
-export type ProjectTheme = 'renault' | 'mobotix' | 'inrae';
+export type ProjectTheme = 'renault' | 'mobotix' | 'inrae' | 'laposte' | 'earth';
 
 export interface Project {
   slug: string;
@@ -17,12 +20,15 @@ export interface Project {
   title: string;
   /** Problématique de départ, telle que formulée dans le dossier. */
   question: string;
-  year: string;
+  /** Année, si elle figure dans le CV ou le dossier. */
+  year?: string;
   discipline: string;
   /** Phrase courte pour les aperçus. */
   summary: string;
-  /** Missions, reprises du CV. */
+  /** Missions, reprises du CV (vide si le projet n'y figure pas). */
   tasks: string[];
+  /** Cadre du projet, affiché dans l'en-tête de l'étude de cas. */
+  context?: string;
   theme: ProjectTheme;
   cover: ImageMetadata;
   coverAlt: string;
@@ -55,6 +61,12 @@ const mobotixDeck = sortDeck(
 const inraeDeck = sortDeck(
   import.meta.glob<{ default: ImageMetadata }>('../assets/projects/inrae/*.png', { eager: true }),
 );
+const laposteDeck = sortDeck(
+  import.meta.glob<{ default: ImageMetadata }>('../assets/projects/la-poste/*.png', { eager: true }),
+);
+const earthDeck = sortDeck(
+  import.meta.glob<{ default: ImageMetadata }>('../assets/projects/earth-to-earth/*.png', { eager: true }),
+);
 
 /** Accès 1-indexé à une planche, pour rester aligné sur la numérotation des dossiers. */
 export const slide = (deck: ImageMetadata[], n: number): ImageMetadata => {
@@ -63,7 +75,13 @@ export const slide = (deck: ImageMetadata[], n: number): ImageMetadata => {
   return image;
 };
 
-export const decks = { renault: renaultDeck, mobotix: mobotixDeck, inrae: inraeDeck };
+export const decks = {
+  renault: renaultDeck,
+  mobotix: mobotixDeck,
+  inrae: inraeDeck,
+  laposte: laposteDeck,
+  earth: earthDeck,
+};
 
 export const projects: Project[] = [
   {
@@ -140,6 +158,51 @@ export const projects: Project[] = [
     thumbAlt:
       'Écrans superposés de l’application Sun Scan : démarrage, alerte « sortie de zone », niveau de risque et statistiques.',
     deck: mobotixDeck,
+  },
+  {
+    slug: 'la-poste',
+    index: '04',
+    client: 'La Poste',
+    title: 'Post-it',
+    question: 'Quel avenir pour l’IA à La Poste ?',
+    discipline: 'UX design & IA',
+    summary:
+      'Quinze entretiens, un site qu’on n’explore pas : Post-it, un assistant IA né du logo de La Poste pour guider chaque recherche.',
+    tasks: [],
+    context: 'Projet d’entreprise — CY École de Design',
+    team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
+    theme: 'laposte',
+    cover: slide(laposteDeck, 26),
+    coverAlt:
+      'Storyboard illustré : un usager perdu devant le site de La Poste, puis Post-it apparaît à l’écran et l’accompagne jusqu’à sa demande.',
+    thumb: laposteMascot,
+    thumbAlt: 'Post-it, la mascotte de l’assistant IA : un oiseau bleu à crête jaune, dérivé du logo de La Poste.',
+    deck: laposteDeck,
+    prototype: { href: 'https://postal-simplicity.lovable.app', label: 'Prototype Postal Simplicity' },
+  },
+  {
+    slug: 'earth-to-earth',
+    index: '05',
+    client: 'Earth to Earth',
+    title: 'EvoBIM',
+    question:
+      'Quelle organisation industrielle innovante pour optimiser la conception et la réalisation de bâtiments de logements abordables ?',
+    discipline: 'Design systémique & innovation',
+    summary:
+      'Industrialiser des bâtiments évolutifs : une filière intégrée, du sourcing local à la maintenance, pilotée par une plateforme BIM 4.0.',
+    tasks: [],
+    context: 'Projet — CY École de Design',
+    team: 'Gaspard Bayle, Matthys Tachon-Panafieu, Améline Guérineau',
+    theme: 'earth',
+    cover: earthCover,
+    coverAlt: 'EvoBIM — « Penser en système. Construire l’avenir. » : le logo au-dessus d’une ligne de bâtiments dessinés et d’une grue.',
+    thumb: earthBim,
+    thumbAlt: 'Interface de la plateforme EvoBIM sur un ordinateur portable : maquette 3D du bâtiment et curseur de transformation.',
+    deck: earthDeck,
+    prototype: {
+      href: 'https://www.figma.com/make/8D06cxDeiikSyaadFha6nV/BIM-4.0-Interface-Design?t=3uyEEpW3xLaEzS2c-20&fullscreen=1',
+      label: 'Maquette EvoBIM (Figma Make)',
+    },
   },
 ];
 

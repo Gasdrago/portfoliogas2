@@ -12,9 +12,9 @@ const { project, position = 'center' } = Astro.props;
 
 const facts = [
   { term: 'Client', value: project.client },
-  { term: 'Année', value: project.year },
+  ...(project.year ? [{ term: 'Année', value: project.year }] : []),
   { term: 'Discipline', value: project.discipline },
-  { term: 'Cadre', value: 'Projet d’entreprise — CY École de Design' },
+  { term: 'Cadre', value: project.context ?? 'Projet d’entreprise — CY École de Design' },
   ...(project.role ? [{ term: 'Rôle', value: project.role }] : []),
   ...(project.team ? [{ term: 'Équipe', value: project.team }] : []),
   ...(project.duration ? [{ term: 'Durée', value: project.duration }] : []),

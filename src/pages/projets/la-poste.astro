@@ -1,0 +1,354 @@
+---
+import CaseStudy from '@/layouts/CaseStudy.astro';
+import CaseSection from '@/components/case/CaseSection.astro';
+import Numbered from '@/components/case/Numbered.astro';
+import Statement from '@/components/case/Statement.astro';
+import Branches from '@/components/case/Branches.astro';
+import Quotes from '@/components/case/Quotes.astro';
+import Stats from '@/components/case/Stats.astro';
+import Cards from '@/components/case/Cards.astro';
+import Video from '@/components/case/Video.astro';
+import Figure from '@/components/Figure.astro';
+import { decks, slide, getProject } from '@/data/projects';
+import poster from '@/assets/crops/laposte-logo-poster.jpg';
+
+const project = getProject('la-poste');
+const s = (n: number) => slide(decks.laposte, n);
+const lb = 'la-poste';
+---
+
+<CaseStudy slug={project.slug} surface="light">
+  <!-- 01 — Sujet ------------------------------------------------------- -->
+  <CaseSection index="01" label="Sujet" title="Une question ouverte sur l’IA." id="sujet">
+    <p class="t-lead lead" data-reveal>
+      Le point de départ : imaginer la place de l’intelligence artificielle à La Poste. Avant de
+      proposer quoi que ce soit, nous avons confronté nos propres perceptions de La Poste et de l’IA
+      à celles des usagers.
+    </p>
+    <ul role="list" class="tags" data-reveal style="--i: 1">
+      {
+        [
+          'Intégrer l’IA',
+          'Personnaliser l’expérience de l’utilisateur',
+          'Asseoir et améliorer les services historiques',
+          'Nouveaux partenariats pour de nouveaux usages',
+        ].map((t) => <li class="tag">{t}</li>)
+      }
+    </ul>
+  </CaseSection>
+
+  <!-- 02 — Perceptions ------------------------------------------------- -->
+  <CaseSection index="02" label="Perceptions" title="Ce qu’évoquent La Poste et l’IA." id="perceptions">
+    <Branches
+      branches={[
+        { title: 'La Poste', items: ['Proximité', 'Connaissance du quartier', 'Accueillant, chaleureux', 'Moins de confiance'] },
+        { title: 'Ses services', items: ['Colis', 'Lettres', 'Banque', 'Forfait téléphone'] },
+        { title: 'L’IA', items: ['Guide', 'Confident', 'Disponible', 'Chatbot'] },
+      ]}
+    />
+    <p class="t-body" data-reveal>
+      Lecture de référence : Joan Tronto, <em>Un monde vulnérable, pour une politique du care</em> et
+      <em>Caring Democracy</em>.
+    </p>
+  </CaseSection>
+
+  <!-- 03 — Présence numérique ------------------------------------------ -->
+  <CaseSection index="03" label="Présence numérique" title="Un site massivement utilisé." id="numerique">
+    <Stats
+      stats={[
+        { value: '60 %', label: 'des usagers consultent laposte.fr depuis leur smartphone.' },
+        { value: '850 M', label: 'de visites par an sur laposte.fr.' },
+        { value: '8 M+', label: 'de comptes clients actifs sur le site.' },
+        { value: '2 M+', label: 'de lettres recommandées électroniques envoyées via le site.' },
+      ]}
+      source="Données présentées dans le dossier de projet."
+    />
+  </CaseSection>
+
+  <!-- 04 — Interviews -------------------------------------------------- -->
+  <CaseSection index="04" label="Interviews" title="Quinze entretiens, une même réponse." layout="full" id="interviews">
+    <div class="split">
+      <div class="method" data-reveal>
+        <p class="t-meta">Méthode</p>
+        <ul role="list">
+          <li>15 personnes de 16 à 64 ans</li>
+          <li>Milieux sociaux et professions variés</li>
+          <li>Entretiens téléphoniques</li>
+          <li>Discussion ouverte : l’interviewé reste libre de son récit</li>
+          <li>Recentrage si la conversation s’éloigne trop du sujet</li>
+        </ul>
+      </div>
+      <div class="method" data-reveal style="--i: 1">
+        <p class="t-meta">Quelques questions</p>
+        <ul role="list">
+          <li>Qu’est-ce que La Poste ?</li>
+          <li>Quels services utilises-tu ?</li>
+          <li>Qu’est-ce qu’un service personnalisé ? La Poste entre-t-elle dans ce cadre ?</li>
+          <li>Avez-vous déjà utilisé le site de La Poste ? Pourquoi ?</li>
+          <li>Qu’est-ce que l’IA ? Avez-vous peur de l’IA ?</li>
+        </ul>
+      </div>
+    </div>
+    <Cards
+      cards={[
+        {
+          title: 'Usages de La Poste',
+          items: [
+            'Outil incontournable, mais pas toujours adapté ou fluide',
+            'Presque personne n’explore le site web',
+            'On arrive directement sur la page via un lien',
+            'Usage administratif et service de livraison',
+          ],
+        },
+        {
+          title: 'Un service personnalisé ?',
+          items: [
+            'Non, à l’unanimité',
+            'Trop d’actions pour atteindre un objectif',
+            'Aucune reconnaissance du profil ou des habitudes',
+            'Interface peu intuitive ou lente',
+          ],
+        },
+        {
+          title: 'Rapport à l’IA',
+          items: [
+            'Tous l’utilisent sans s’en rendre compte',
+            'Un gain de temps, moins de charge mentale',
+            'Un danger si elle est mal utilisée',
+            'Améliore l’expérience lorsqu’elle est bien intégrée',
+          ],
+        },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 05 — Verbatims --------------------------------------------------- -->
+  <CaseSection index="05" label="Avis d’usagers" title="« Une fourmilière »." id="verbatims">
+    <Quotes
+      quotes={[
+        { text: 'J’ai été obligé de naviguer dans tous les menus et sous-menus avant de trouver ce que je cherchais.' },
+        { text: 'Je voulais juste des timbres simples ! Tellement compliqué de faire simple.' },
+        { text: 'Il faut d’abord faire une recherche sur Google pour tomber sur les bonnes informations.' },
+        { text: 'Le site est mal agencé et l’utilisateur met trop de temps pour trouver ce qu’il cherche.' },
+      ]}
+      source="Verbatims issus de la base de données d’avis (BDD)"
+    />
+  </CaseSection>
+
+  <!-- 06 — Analyse du site --------------------------------------------- -->
+  <CaseSection index="06" label="Analyse du site" title="Une arborescence qui éparpille." layout="full" id="site">
+    <Figure
+      src={s(18)}
+      alt="Arborescence de la page d’accueil de laposte.fr : Le courrier, Le colis, Déménagement, Les services, Tous nos produits, puis une longue liste de sous-pages pour les envois et les timbres."
+      caption="Arborescence de laposte.fr"
+      sizes="(min-width: 1680px) 1600px, 100vw"
+      framed
+      lightbox={lb}
+    />
+    <Numbered
+      columns={3}
+      items={[
+        { title: 'On ne vient que pour suivre un colis', text: 'Quasiment aucun autre service n’est utilisé.' },
+        { title: 'On n’a pas envie d’explorer', text: 'On arrive directement sur la bonne page via un lien.' },
+        { title: 'Le service personnalisé est un luxe', text: 'Et l’IA permettrait d’améliorer le service.' },
+      ]}
+    />
+  </CaseSection>
+
+  <Statement
+    kicker="Problématique"
+    text="Comment optimiser la navigation du client en l’accompagnant dans sa phase de recherche ?"
+  />
+
+  <!-- 07 — Post-it ----------------------------------------------------- -->
+  <section class="postit" data-theme="night" data-surface="dark" aria-labelledby="postit-title">
+    <div class="container postit__head">
+      <p class="t-meta" data-reveal><span class="t-index">07</span> Solution</p>
+      <h2 id="postit-title" class="postit__title" data-lines>
+        <span class="line"><span>Post-it</span></span>
+      </h2>
+      <p class="t-lead" data-reveal style="--i: 2">
+        Un assistant IA intégré au site, incarné par un oiseau né du logo de La Poste : il accompagne
+        la recherche au lieu de laisser l’usager fouiller les menus.
+      </p>
+    </div>
+    <div class="container">
+      <Video
+        src="media/laposte-logo.mp4"
+        poster={poster}
+        alt="Animation du logo de La Poste : des traits de lumière jaunes et bleus dessinent la flèche, en blanc sur fond noir."
+        caption="Animation d’ouverture de la présentation"
+      />
+    </div>
+    <div class="container">
+      <Numbered
+        items={[
+          { title: 'Navigation simplifiée' },
+          { title: 'IA personnalisée' },
+          { title: 'Suivi transparent' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- 08 — Personnage & principes -------------------------------------- -->
+  <CaseSection index="08" label="Personnage" title="Du logo à la mascotte." layout="full" id="personnage">
+    <div class="split">
+      <Figure
+        src={s(22)}
+        alt="L’origine de Post-it : le logo jaune et bleu de La Poste, à côté de la mascotte oiseau qui en reprend la forme et les couleurs."
+        caption="L’origine"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={s(23)}
+        alt="Post-it en 3D, à côté de ses trois principes : éthique, inclusive, transparente."
+        caption="Les principes"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+    <Cards
+      cards={[
+        { title: 'Éthique', text: 'Respect des droits fondamentaux, réduction des biais.' },
+        { title: 'Inclusive', text: 'Accessible à tous, en tenant compte de la diversité et de la parité.' },
+        { title: 'Transparente', text: 'Traçabilité, explicabilité des algorithmes, transparence sur l’usage de l’IA.' },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 09 — Fonctionnement ---------------------------------------------- -->
+  <CaseSection index="09" label="Fonctionnement" title="De la demande à la réponse." id="fonctionnement">
+    <ol role="list" class="flow">
+      {
+        [
+          ['Profil', 'L’utilisateur renseigne ses informations, stockées chez La Poste.'],
+          ['Demande', 'Il pose sa question à Post-it.'],
+          ['Requête', 'Post-it interroge l’API de La Poste, qui s’appuie sur les données stockées.'],
+          ['Réponse', 'Post-it renvoie à l’utilisateur une réponse adaptée à son profil.'],
+        ].map(([t, d], i) => (
+          <li data-reveal style={`--i: ${i}`}>
+            <span class="t-index">{String(i + 1).padStart(2, '0')}</span>
+            <strong>{t}</strong>
+            <span class="t-muted">{d}</span>
+          </li>
+        ))
+      }
+    </ol>
+    <Figure
+      src={s(24)}
+      alt="Schéma de fonctionnement : chez l’utilisateur, une demande passe par Post-it, qui envoie une requête à l’API de La Poste, reliée au stockage des données."
+      caption="Schéma de fonctionnement"
+      sizes="(min-width: 1024px) 66vw, 100vw"
+      framed
+      lightbox={lb}
+    />
+  </CaseSection>
+
+  <!-- 10 — Storyboard -------------------------------------------------- -->
+  <CaseSection index="10" label="Storyboard" title="De la frustration au soulagement." layout="full" id="storyboard">
+    <Figure
+      src={s(26)}
+      alt="Storyboard illustré : un usager perdu et agacé devant le site, puis Post-it apparaît à l’écran, l’accompagne et valide sa demande ; l’usager repart satisfait."
+      sizes="(min-width: 1680px) 1600px, 100vw"
+      framed
+      lightbox={lb}
+    />
+  </CaseSection>
+
+  <!-- 11 — Ouverture --------------------------------------------------- -->
+  <CaseSection index="11" label="Ouverture" title="Deux pistes pour aller plus loin." id="ouverture">
+    <Cards
+      columns={2}
+      cards={[
+        {
+          title: 'Repenser le site autour de l’IA',
+          text: 'Intégrer l’IA comme un majordome : reprendre les codes du luxe pour une expérience personnalisée.',
+        },
+        {
+          title: 'Retourner sur le terrain',
+          text: 'Re-questionner la pertinence de l’IA et son bénéfice, et séparer clairement la partie utilitaire de la partie à explorer du site.',
+        },
+      ]}
+    />
+  </CaseSection>
+</CaseStudy>
+
+<style>
+  .lead {
+    max-width: 46ch;
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .method {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+  }
+
+  .method ul {
+    border-top: 1px solid var(--border);
+  }
+
+  .method li {
+    padding-block: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .postit {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .postit__head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .postit__title {
+    font-size: clamp(3rem, 1rem + 9vw, 11rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    color: #ffc600;
+  }
+
+  .flow {
+    display: grid;
+    border-top: 1px solid var(--border);
+  }
+
+  .flow li {
+    display: grid;
+    grid-template-columns: 2.5rem 11rem 1fr;
+    gap: var(--space-s);
+    align-items: baseline;
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (max-width: 599px) {
+    .flow li {
+      grid-template-columns: 2.5rem 1fr;
+    }
+
+    .flow li > :last-child {
+      grid-column: 2;
+    }
+  }
+</style>
