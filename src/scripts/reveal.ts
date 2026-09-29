@@ -4,11 +4,12 @@
  * et si prefers-reduced-motion n'est pas activé.
  */
 export function initReveal(): void {
-  const targets = document.querySelectorAll<HTMLElement>('[data-reveal], [data-lines]');
+  // Les titres [data-lines="load"] s'animent en CSS dès le chargement.
+  const targets = document.querySelectorAll<HTMLElement>('[data-reveal]:not([data-reveal="load"]), [data-lines]:not([data-lines="load"])');
   if (!targets.length) return;
 
   // Numérote les lignes des titres pour le décalage (stagger).
-  document.querySelectorAll<HTMLElement>('[data-lines]').forEach((title) => {
+  document.querySelectorAll<HTMLElement>('[data-lines]:not([data-lines="load"])').forEach((title) => {
     title.querySelectorAll<HTMLElement>(':scope > .line > span').forEach((span, i) => {
       span.style.setProperty('--l', String(i));
     });

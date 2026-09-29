@@ -87,7 +87,7 @@ const personLd = {
       <p>{site.education.period}</p>
     </div>
 
-    <h1 id="hero-title" class="hero__title" data-lines>
+    <h1 id="hero-title" class="hero__title" data-lines="load">
       <span class="sr-only">{site.name}, </span>
       <span class="line"><span>Designer global</span></span>
       <span class="line"><span><em class="hero__amp t-serif">&amp;</em> ingénieur</span></span>
@@ -140,10 +140,10 @@ const personLd = {
     </div>
 
     <div class="hero__intro">
-      <p class="hero__lead" data-reveal style="--i: 4">
+      <p class="hero__lead" data-reveal="load" style="--i: 4">
         Je conçois des expériences numériques pour améliorer la vie des utilisateurs, en croisant <em class="t-serif">recherche terrain</em>, <em class="t-serif">design</em> et <em class="t-serif">ingénierie</em>.
       </p>
-      <ul role="list" class="tags hero__domains" aria-label="Domaines" data-reveal style="--i: 5">
+      <ul role="list" class="tags hero__domains" aria-label="Domaines" data-reveal="load" style="--i: 5">
         {domains.map((d) => <li class="tag">{d}</li>)}
       </ul>
     </div>

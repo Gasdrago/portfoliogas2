@@ -1,4 +1,5 @@
 // @ts-check
+import process from 'node:process';
 import { defineConfig } from 'astro/config';
 
 // SITE_URL  : URL publique absolue (canonical, Open Graph). Ex. https://gaspardbayle.fr

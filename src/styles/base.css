@@ -426,7 +426,7 @@ button:hover > .arrow--ne {
    ========================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-  .js [data-reveal] {
+  .js [data-reveal]:not([data-reveal='load']) {
     opacity: 0;
     transform: translate3d(0, 2.25rem, 0);
     transition:
@@ -462,6 +462,12 @@ button:hover > .arrow--ne {
     transform: none;
   }
 
+  /* Contenu au-dessus de la ligne de flottaison : apparition CSS immédiate. */
+  [data-reveal='load'] {
+    animation: fade-up var(--dur-3) var(--ease-out) both;
+    animation-delay: calc(250ms + var(--i, 0) * var(--stagger));
+  }
+
   /* Titres découpés en lignes */
   .js [data-lines] .line {
     display: block;
@@ -470,15 +476,50 @@ button:hover > .arrow--ne {
     margin-bottom: -0.08em;
   }
 
+  .js [data-lines]:not([data-lines='load']) .line > span {
+    transform: translate3d(0, 105%, 0);
+  }
+
   .js [data-lines] .line > span {
     display: block;
-    transform: translate3d(0, 105%, 0);
     transition: transform var(--dur-4) var(--ease-out);
     transition-delay: calc(var(--l, 0) * 90ms + var(--delay, 0ms));
   }
 
   .js [data-lines].is-in .line > span {
     transform: none;
+  }
+
+  /* Titres au-dessus de la ligne de flottaison : animation CSS immédiate,
+     sans attendre le JS (meilleur LCP). */
+  [data-lines='load'] .line > span {
+    animation: line-up var(--dur-4) var(--ease-out) both;
+    animation-delay: calc(80ms + var(--l, 0) * 90ms);
+  }
+
+  [data-lines] .line:nth-of-type(2) > span {
+    --l: 1;
+  }
+
+  [data-lines] .line:nth-of-type(3) > span {
+    --l: 2;
+  }
+
+  [data-lines] .line:nth-of-type(4) > span {
+    --l: 3;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+  }
+}
+
+@keyframes line-up {
+  from {
+    transform: translate3d(0, 105%, 0);
   }
 }
 

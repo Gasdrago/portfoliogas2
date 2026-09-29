@@ -39,7 +39,7 @@ const companyProjects = [
   image={portrait}
 >
   <section class="about container" aria-labelledby="about-title">
-    <div class="about__portrait" data-reveal="mask">
+    <div class="about__portrait">
       <Image
         src={portrait}
         alt="Portrait de Gaspard Bayle, en pull noir sur fond sombre."
@@ -54,12 +54,12 @@ const companyProjects = [
     </div>
 
     <div class="about__text">
-      <p class="t-meta" data-reveal>(À propos) {site.name}</p>
-      <h1 id="about-title" class="about__title" data-lines>
+      <p class="t-meta" data-reveal="load">(À propos) {site.name}</p>
+      <h1 id="about-title" class="about__title" data-lines="load">
         <span class="line"><span>Deux formations,</span></span>
         <span class="line"><span><em class="t-serif">une même exigence.</em></span></span>
       </h1>
-      <div class="about__body" data-reveal style="--i: 2">
+      <div class="about__body" data-reveal="load" style="--i: 2">
         <p class="t-lead">
           Étudiant en ingénierie informatique et en design global, je suis passionné par l’innovation
           et la création.
@@ -71,7 +71,7 @@ const companyProjects = [
           d’entreprise, de l’habitacle automobile à la plateforme web.
         </p>
       </div>
-      <ul role="list" class="about__actions" data-reveal style="--i: 3">
+      <ul role="list" class="about__actions" data-reveal="load" style="--i: 3">
         <li>
           <a class="btn" href={href(site.cv)} download>Télécharger le CV <span class="arrow" aria-hidden="true">↓</span></a>
         </li>

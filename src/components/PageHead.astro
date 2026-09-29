@@ -11,8 +11,8 @@ const { kicker, lines, serifLine } = Astro.props;
 ---
 
 <header class="phead container">
-  <p class="t-meta phead__kicker" data-reveal>{kicker}</p>
-  <h1 class="phead__title" data-lines>
+  <p class="t-meta phead__kicker" data-reveal="load">{kicker}</p>
+  <h1 class="phead__title" data-lines="load">
     {
       lines.map((l, i) => (
         <span class="line">
@@ -23,7 +23,7 @@ const { kicker, lines, serifLine } = Astro.props;
   </h1>
   {
     Astro.slots.has('default') && (
-      <div class="phead__intro" data-reveal style="--i: 3">
+      <div class="phead__intro" data-reveal="load" style="--i: 3">
         <slot />
       </div>
     )

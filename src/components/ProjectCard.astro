@@ -30,7 +30,7 @@ const position = {
 ---
 
 <article class:list={['pcard', `pcard--${variant}`, className]} data-project-theme={project.theme}>
-  <a class="pcard__link" href={href(`projets/${project.slug}/`)} data-cursor="Voir le projet">
+  <a class="pcard__link" href={href(`projets/${project.slug}/`)} data-cursor="Voir le projet" data-astro-prefetch>
     <div class="pcard__media media" style={`aspect-ratio: ${ratio}`} data-reveal="mask">
       <Image
         src={image}

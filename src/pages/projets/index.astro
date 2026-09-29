@@ -44,7 +44,7 @@ import { href } from '@/lib/url';
                 <span>{p.year}</span>
               </p>
               <h2 class="work__title" data-reveal style="--i: 1">
-                <a href={href(`projets/${p.slug}/`)} class="work__link" data-cursor="Voir le projet">
+                <a href={href(`projets/${p.slug}/`)} class="work__link" data-cursor="Voir le projet" data-astro-prefetch>
                   {p.title}
                 </a>
               </h2>
