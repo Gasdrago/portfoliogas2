@@ -1,0 +1,181 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '@/data/projects';
+import { href } from '@/lib/url';
+
+interface Props {
+  project: Project;
+  position?: string;
+}
+
+const { project, position = 'center' } = Astro.props;
+
+const facts = [
+  { term: 'Client', value: project.client },
+  { term: 'Année', value: project.year },
+  { term: 'Discipline', value: project.discipline },
+  { term: 'Cadre', value: 'Projet d’entreprise — CY École de Design' },
+  ...(project.role ? [{ term: 'Rôle', value: project.role }] : []),
+  ...(project.team ? [{ term: 'Équipe', value: project.team }] : []),
+  ...(project.duration ? [{ term: 'Durée', value: project.duration }] : []),
+];
+
+const words = project.title.split(' ');
+---
+
+<header class="chero">
+  <div class="container chero__inner">
+    <nav class="chero__crumbs t-meta" aria-label="Fil d’Ariane">
+      <a class="link link--quiet" href={href('projets/')}>Projets</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{project.index} — {project.client}</span>
+    </nav>
+
+    <h1 class="chero__title" data-lines>
+      <span class="sr-only">{project.client} — </span>
+      {words.map((w) => <span class="line"><span>{w}</span></span>)}
+    </h1>
+
+    <p class="chero__question t-serif" data-reveal style="--i: 3">{project.question}</p>
+
+    <dl class="chero__facts" data-reveal style="--i: 4">
+      {
+        facts.map((f) => (
+          <div>
+            <dt class="t-meta">{f.term}</dt>
+            <dd>{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <div class="chero__media">
+    <Image
+      src={project.cover}
+      alt={project.coverAlt}
+      widths={[768, 1080, 1440, 1920]}
+      width={1920}
+      sizes="100vw"
+      format="webp"
+      quality={82}
+      loading="eager"
+      fetchpriority="high"
+      style={`object-position: ${position}; view-transition-name: cover-${project.slug}`}
+    />
+  </div>
+</header>
+
+<style>
+  .chero {
+    padding-top: calc(var(--header-h) + var(--space-l));
+  }
+
+  .chero__inner {
+    display: grid;
+    gap: var(--space-l);
+    padding-bottom: var(--space-xl);
+  }
+
+  .chero__crumbs {
+    display: flex;
+    gap: var(--space-xs);
+    color: var(--fg-muted);
+  }
+
+  .chero__title {
+    font-size: clamp(3.2rem, 1rem + 10vw, 12rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    word-spacing: 0.06em;
+    max-width: 12ch;
+  }
+
+  .chero__title .line {
+    display: inline-block;
+    margin-right: 0.16em;
+  }
+
+  .chero__question {
+    font-size: var(--step-3);
+    line-height: 1.08;
+    max-width: 22ch;
+    color: var(--fg);
+  }
+
+  .chero__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-m) var(--col-gap);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--border);
+  }
+
+  .chero__facts dd {
+    margin-top: var(--space-3xs);
+    font-weight: 500;
+  }
+
+  @media (min-width: 1024px) {
+    .chero__inner {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: end;
+    }
+
+    .chero__crumbs,
+    .chero__title {
+      grid-column: 1 / -1;
+    }
+
+    .chero__question {
+      grid-column: 1 / 8;
+    }
+
+    .chero__facts {
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .chero__media {
+    aspect-ratio: 16 / 9;
+    max-height: 92svh;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+
+  .chero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .chero__media {
+      animation: chero-in 1.4s var(--ease-out) 0.2s both;
+    }
+
+    .chero__media :global(img) {
+      animation: chero-zoom 2.2s var(--ease-out) 0.2s both;
+    }
+  }
+
+  @keyframes chero-in {
+    from {
+      clip-path: inset(12% 6% 0 6%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes chero-zoom {
+    from {
+      transform: scale(1.1);
+    }
+  }
+</style>

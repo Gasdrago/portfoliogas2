@@ -1,0 +1,105 @@
+---
+import type { ImageMetadata } from 'astro';
+import Figure from '@/components/Figure.astro';
+
+/**
+ * Image collante + liste d'annotations qui défile à côté (desktop).
+ * Sur mobile : image puis liste.
+ */
+interface Note {
+  term: string;
+  text: string;
+}
+
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  notes: Note[];
+  lightbox?: string;
+  reverse?: boolean;
+}
+
+const { image, alt, notes, lightbox, reverse = false } = Astro.props;
+---
+
+<div class:list={['anno', { 'anno--reverse': reverse }]}>
+  <div class="anno__media">
+    <Figure src={image} alt={alt} sizes="(min-width: 1024px) 55vw, 100vw" lightbox={lightbox} />
+  </div>
+  <dl class="anno__notes">
+    {
+      notes.map((n, i) => (
+        <div class="anno__note" data-reveal style={`--i: ${i}`}>
+          <dt>
+            <span class="t-index">{String(i + 1).padStart(2, '0')}</span>
+            {n.term}
+          </dt>
+          <dd>{n.text}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  .anno {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .anno {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .anno__media {
+      grid-column: 1 / 8;
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-m));
+    }
+
+    .anno__notes {
+      grid-column: 9 / -1;
+      padding-top: var(--space-xl);
+    }
+
+    .anno--reverse .anno__media {
+      grid-column: 6 / -1;
+      grid-row: 1;
+    }
+
+    .anno--reverse .anno__notes {
+      grid-column: 1 / 5;
+      grid-row: 1;
+    }
+  }
+
+  .anno__notes {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .anno__note {
+    display: grid;
+    gap: var(--space-xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .anno__note dt {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: baseline;
+    font-size: var(--step-2);
+    font-weight: 600;
+    font-stretch: 88%;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .anno__note dd {
+    color: var(--fg-muted);
+    max-width: 34ch;
+  }
+</style>

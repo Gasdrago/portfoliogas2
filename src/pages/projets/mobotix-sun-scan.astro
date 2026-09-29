@@ -1,0 +1,348 @@
+---
+import CaseStudy from '@/layouts/CaseStudy.astro';
+import CaseSection from '@/components/case/CaseSection.astro';
+import Numbered from '@/components/case/Numbered.astro';
+import Statement from '@/components/case/Statement.astro';
+import Feature from '@/components/case/Feature.astro';
+import Figure from '@/components/Figure.astro';
+import { decks, slide, getProject } from '@/data/projects';
+
+const project = getProject('mobotix-sun-scan');
+const s = (n: number) => slide(decks.mobotix, n);
+const lb = 'mobotix';
+---
+
+<CaseStudy slug={project.slug} surface="light">
+  <!-- 01 — Contexte ---------------------------------------------------- -->
+  <CaseSection index="01" label="Contexte" title="De la surveillance à la bienveillance." id="contexte">
+    <p class="t-lead lead" data-reveal>
+      Point de départ : une caméra Mobotix — notamment la Mobotix 7 — et une question. Comment faire
+      de cet œil qui surveille un outil qui rend service à celles et ceux qu’il regarde ?
+    </p>
+    <div class="tasks" data-reveal style="--i: 1">
+      <p class="t-meta">Missions</p>
+      <ul role="list">
+        {project.tasks.map((t) => <li>{t}</li>)}
+      </ul>
+    </div>
+  </CaseSection>
+
+  <!-- 02 — Objectifs ---------------------------------------------------- -->
+  <CaseSection index="02" label="Objectifs" title="Changer la relation homme–caméra." id="objectifs">
+    <Numbered
+      items={[
+        { title: 'Changer l’image de la caméra', text: 'Une caméra de bienveillance, pas de surveillance.' },
+        { title: 'Une caméra pour vous', text: 'Rendre service aux usagers.' },
+        { title: 'Changer le design du produit', text: 'Lui donner une apparence plus adaptée.' },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 03 — Pistes ------------------------------------------------------- -->
+  <CaseSection index="03" label="Exploration" title="Trois pistes, une fusion." layout="full" id="pistes">
+    <Numbered
+      items={[
+        { title: 'Un gadget pour téléphone', text: 'Créer un lien entre le téléphone et la caméra Mobotix.' },
+        { title: 'Un mini-vigile assistant', text: 'Utiliser l’intelligence du robot au service de l’homme.' },
+        { title: 'Un habillage de caméra', text: 'Rendre la caméra plus discrète.' },
+      ]}
+    />
+    <div class="split">
+      <Figure
+        src={s(6)}
+        alt="Les trois pistes illustrées : un téléphone, un petit robot assistant tenant une tablette, un motif de camouflage bleu."
+        caption="Les pistes"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={s(7)}
+        alt="Fusion des pistes : le robot assistant et le camouflage reliés par une application au centre."
+        caption="Fusion — l’application fait la jonction"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <Statement
+    kicker="L’idée — VisionPro+"
+    text="Un œil augmenté pour les professionnels."
+    note="Faire de la caméra Mobotix un allié pour les professionnels de la gestion de foule : une prise de mesures plus simple et plus rapide pour maintenir l’ordre, la sécurité et le bien-être des personnes dans les espaces à forte affluence."
+  />
+
+  <!-- 04 — Stratégie ---------------------------------------------------- -->
+  <CaseSection index="04" label="Stratégie" title="Un professionnel, un habillage, une application." id="strategie">
+    <ol role="list" class="timeline">
+      {
+        [
+          ['Choisir un professionnel', 'Quelqu’un qui a besoin de plus de visibilité dans le cadre de son activité — par exemple un maître-nageur.'],
+          ['Habiller la caméra', 'L’intégrer à sa zone d’activité pour lui donner une apparence plus adaptée.'],
+          ['Relier une application', 'La caméra renvoie des données analytiques en temps réel au professionnel.'],
+        ].map(([title, text], i) => (
+          <li class="timeline__step" data-reveal style={`--i: ${i}`}>
+            <span class="timeline__dot" aria-hidden="true">{i + 1}</span>
+            <h3 class="t-h3">{title}</h3>
+            <p class="t-body">{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </CaseSection>
+
+  <!-- 05 — POC ---------------------------------------------------------- -->
+  <CaseSection index="05" label="Proof of concept" title="L’idée de bienveillance est-elle respectée ?" id="poc">
+    <p class="t-lead lead" data-reveal>
+      Test en conditions réelles à la piscine Suzanne Berlioux : comment les gens réagissent-ils à
+      l’utilisation d’une caméra pour leur « sécurité » ? Le dispositif : une affiche « Prenez un
+      bracelet pour votre sécurité », un QR code pour en savoir plus et une boîte de bracelets.
+    </p>
+    <Figure
+      src={s(12)}
+      alt="Dispositif du POC : l’affiche « Prenez un bracelet pour votre sécurité » avec QR code, plus une boîte, égale l’entrée de la piscine Suzanne Berlioux."
+      caption="Dispositif du POC — piscine Suzanne Berlioux"
+      sizes="(min-width: 1024px) 66vw, 100vw"
+      framed
+      lightbox={lb}
+    />
+    <blockquote class="pull" data-reveal>
+      <p class="t-serif">« Si le maître-nageur avait des yeux augmentés, que pourrait-il faire ? »</p>
+      <footer class="t-meta">Question posée lors du POC</footer>
+    </blockquote>
+  </CaseSection>
+
+  <!-- 06 — Profil ------------------------------------------------------- -->
+  <section class="persona container" aria-labelledby="persona-title">
+    <p class="t-meta" data-reveal><span class="t-index">06</span> Profil cible</p>
+    <blockquote class="persona__quote" data-reveal style="--i: 1">
+      <p class="t-serif">
+        « Face au déficit de maîtres-nageurs sauveteurs sur les plages, je trouverais utile de pouvoir
+        bénéficier d’une aide pouvant élargir mon champ de vision, et donc réduire mon temps de réaction
+        et d’action. »
+      </p>
+    </blockquote>
+    <p class="persona__who" id="persona-title" data-reveal style="--i: 2">
+      <strong>Louis</strong> <span class="t-muted">— maître-nageur, plage</span>
+    </p>
+  </section>
+
+  <!-- 07 — Sun Scan ----------------------------------------------------- -->
+  <section class="sunscan" data-theme="night" data-surface="dark" aria-labelledby="sunscan-title">
+    <div class="container sunscan__head">
+      <p class="t-meta" data-reveal><span class="t-index">07</span> Concept</p>
+      <h2 id="sunscan-title" class="sunscan__title" data-lines>
+        <span class="line"><span>The Sun Scan</span></span>
+      </h2>
+      <p class="t-lead" data-reveal style="--i: 2">
+        La caméra prend la forme d’une bouée de sauvetage, fixée sur la chaise du maître-nageur : dans
+        sa zone d’activité, elle se fond dans le décor et devient un outil de travail, relié à une
+        application.
+      </p>
+    </div>
+    <div class="container split">
+      <Figure
+        src={s(16)}
+        alt="Proposition de concept « The Sun Scan » : la caméra intégrée dans une bouée orange, à côté de l’écran d’accueil de l’application."
+        caption="Caméra-bouée + application"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={s(18)}
+        alt="Habillage de la caméra : un support de fixation plus la bouée-caméra égale la bouée installée sur la chaise haute du maître-nageur, sur la plage."
+        caption="Habillage et fixation"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </section>
+
+  <!-- 08 — Application -------------------------------------------------- -->
+  <CaseSection index="08" label="Application" title="Peu d’écrans, l’essentiel à l’œil." layout="full" id="application">
+    <Figure
+      src={s(20)}
+      alt={project.coverAlt}
+      sizes="(min-width: 1680px) 1600px, 100vw"
+      lightbox={lb}
+    />
+    <div class="features">
+      <Feature
+        image={s(21)}
+        alt="Page de démarrage : écran « Sun Scan by Mobotix » puis saisie de la localisation et de la référence de l’appareil."
+        index="08.1"
+        title="Démarrage"
+        notes={['Dispositif de connexion pratique et rapide']}
+        framed
+        lightbox={lb}
+      />
+      <Feature
+        image={s(22)}
+        alt="Page d’accueil : niveau de risque à 65 % et liste des derniers événements — nageur sorti de la zone, enfant non accompagné, danger marin."
+        index="08.2"
+        title="Accueil"
+        notes={['Informations essentielles facilement observables', 'Derniers évènements importants']}
+        reverse
+        framed
+        lightbox={lb}
+      />
+      <Feature
+        image={s(23)}
+        alt="Page statistique : niveau de risque, nombre de personnes, répartition par âge, risque d’hypothermie et nuage de points de répartition dans l’espace."
+        index="08.3"
+        title="Statistiques"
+        text="Les indicateurs s’appuient sur les briques d’analyse de la caméra : AI-Bio, AI-Intrusion PRO et MxAnalytics AI."
+        notes={['Statistiques de base : nombre de personnes, tranche d’âge…', 'Pas trop d’informations parasites']}
+        framed
+        lightbox={lb}
+      />
+      <Feature
+        image={s(24)}
+        alt="Pages d’alerte « Noyade » et « Hypothermie » : la zone concernée est encadrée sur l’image, avec deux actions, appeler et localiser."
+        index="08.4"
+        title="Alerte"
+        notes={['Très peu d’options, uniquement les plus importantes', 'Précision du drame percutante, prenant l’espace dans son entièreté']}
+        reverse
+        framed
+        lightbox={lb}
+      />
+      <Feature
+        image={s(25)}
+        alt="Déclinaison : écrans Sun Scan à la plage et Snow Scan à la montagne."
+        index="08.5"
+        title="Et à la montagne ?"
+        text="Le même système se décline : Sun Scan pour la plage, Snow Scan pour les pistes."
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+</CaseStudy>
+
+<style>
+  .lead {
+    max-width: 46ch;
+  }
+
+  .tasks {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .tasks ul {
+    border-top: 1px solid var(--border);
+  }
+
+  .tasks li {
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .timeline {
+    display: grid;
+    gap: var(--space-l);
+    position: relative;
+  }
+
+  .timeline__step {
+    position: relative;
+    display: grid;
+    gap: var(--space-2xs);
+    padding-left: 3.5rem;
+  }
+
+  .timeline__step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 1.2rem;
+    top: 2.6rem;
+    bottom: calc(var(--space-l) * -1);
+    border-left: 1px dashed var(--border-strong);
+  }
+
+  .timeline__dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: var(--accent-text);
+    color: var(--c-snow);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .pull {
+    display: grid;
+    gap: var(--space-xs);
+    padding-left: var(--space-m);
+    border-left: 3px solid var(--accent);
+  }
+
+  .pull p {
+    font-size: var(--step-2);
+    line-height: 1.15;
+  }
+
+  .persona {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-2xl);
+  }
+
+  .persona__quote p {
+    font-size: clamp(1.9rem, 1rem + 3.4vw, 4.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+  }
+
+  .persona__who {
+    font-size: var(--step-1);
+  }
+
+  .sunscan {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .sunscan__head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .sunscan__title {
+    font-size: clamp(3rem, 1rem + 9vw, 11rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    color: #ff5a1f;
+  }
+
+  .features {
+    display: grid;
+    gap: var(--space-2xl);
+    margin-top: var(--space-xl);
+  }
+</style>

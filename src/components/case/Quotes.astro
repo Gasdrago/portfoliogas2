@@ -1,0 +1,70 @@
+---
+/** Verbatims d'entretiens — mur de citations à rythme décalé. */
+interface Quote {
+  text: string;
+  who?: string;
+}
+
+interface Props {
+  quotes: Quote[];
+  source?: string;
+}
+
+const { quotes, source } = Astro.props;
+---
+
+<figure class="quotes">
+  <ul role="list" class="quotes__list">
+    {
+      quotes.map((q, i) => (
+        <li class="quotes__item" data-reveal style={`--i: ${i}`}>
+          <blockquote class="quotes__text t-serif">
+            <p>« {q.text} »</p>
+          </blockquote>
+          {q.who && <p class="quotes__who t-meta">— {q.who}</p>}
+        </li>
+      ))
+    }
+  </ul>
+  {source && <figcaption class="quotes__source t-meta">{source}</figcaption>}
+</figure>
+
+<style>
+  .quotes__list {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .quotes__item {
+    display: grid;
+    gap: var(--space-2xs);
+    max-width: 28ch;
+  }
+
+  @media (min-width: 768px) {
+    .quotes__item:nth-child(even) {
+      justify-self: end;
+      text-align: right;
+    }
+
+    .quotes__item:nth-child(3n) {
+      justify-self: center;
+      text-align: center;
+    }
+  }
+
+  .quotes__text {
+    font-size: var(--step-3);
+    line-height: 1.05;
+  }
+
+  .quotes__who {
+    color: var(--fg-subtle);
+  }
+
+  .quotes__source {
+    margin-top: var(--space-l);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--border);
+  }
+</style>

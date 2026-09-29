@@ -1,0 +1,458 @@
+---
+import CaseStudy from '@/layouts/CaseStudy.astro';
+import CaseSection from '@/components/case/CaseSection.astro';
+import Numbered from '@/components/case/Numbered.astro';
+import Statement from '@/components/case/Statement.astro';
+import Branches from '@/components/case/Branches.astro';
+import People from '@/components/case/People.astro';
+import Feature from '@/components/case/Feature.astro';
+import Figure from '@/components/Figure.astro';
+import { decks, slide, getProject } from '@/data/projects';
+
+const project = getProject('inrae');
+const s = (n: number) => slide(decks.inrae, n);
+const lb = 'inrae';
+---
+
+<CaseStudy slug={project.slug} surface="dark" frameBg="#ffffff">
+  <!-- 01 — Contexte ---------------------------------------------------- -->
+  <CaseSection index="01" label="Contexte" title="Un moment de bascule : adopter, ou non." id="contexte">
+    <p class="t-lead lead" data-reveal>
+      Le sujet porte sur un instant précis : celui où un agriculteur envisage d’adopter une
+      technologie numérique. Avant de dessiner quoi que ce soit, il fallait comprendre ce qui freine
+      cette décision — et qui la prend.
+    </p>
+    <div class="tasks" data-reveal style="--i: 1">
+      <p class="t-meta">Missions</p>
+      <ul role="list">
+        {project.tasks.map((t) => <li>{t}</li>)}
+      </ul>
+    </div>
+  </CaseSection>
+
+  <!-- 02 — Analyse ------------------------------------------------------ -->
+  <CaseSection index="02" label="Analyse" title="Décomposer la question." id="analyse">
+    <Branches
+      branches={[
+        { title: 'Accompagner', items: ['Numériquement', 'Physiquement', 'Par l’expérience'] },
+        { title: 'L’agriculteur', items: ['Seul ou en groupe', 'Indépendant ou non', 'Son budget'] },
+        {
+          title: 'La technologie',
+          items: ['Tracteurs à autoguidage', 'Robot de traite', 'Intelligence artificielle'],
+        },
+      ]}
+    />
+    <Figure
+      src={s(5)}
+      alt="Carte mentale de la problématique : au centre la question, reliée à « Accompagner », « Agriculteur » et « Technologie numérique » et à leurs sous-thèmes."
+      caption="Carte mentale d’origine"
+      sizes="(min-width: 1024px) 66vw, 100vw"
+      framed
+      lightbox={lb}
+    />
+  </CaseSection>
+
+  <!-- 03 — Terrain ------------------------------------------------------ -->
+  <CaseSection
+    index="03"
+    label="Terrain"
+    title="Quatre rencontres, quatre regards."
+    layout="full"
+    id="terrain"
+    theme="inrae-light"
+    surface="light"
+  >
+    <People
+      people={[
+        {
+          name: 'Adel',
+          profile: 'Conseiller expertise et ingénieur agronome — 15 ans d’expérience, La Chaudronnerie',
+          quotes: ['C’est un sujet vaste mais, dans l’absolu, ce serait une erreur de dire non.'],
+        },
+        {
+          name: 'Bao Anh',
+          profile: 'Ingénieur / designer — La Chaudronnerie',
+          quotes: ['Cela dépendrait de son utilisation et de son coût.'],
+        },
+        {
+          name: 'Mustafa',
+          profile: 'Maraîcher, 57 ans — ancien professeur de sport, reconverti dans l’agriculture depuis 7 ans',
+          quotes: [
+            'Je ne suis pas pour le numérique.',
+            'Les nouveaux agriculteurs ont une vision différente de ceux qui sont nés dedans et ont grandi avec.',
+            'Être agriculteur, c’est garder le contact physique avec la nature.',
+          ],
+        },
+        {
+          name: 'Sandra',
+          profile: 'Marchande indépendante, 50 ans — dans le métier depuis toute jeune',
+          quotes: [
+            'Les agriculteurs ont du mal à s’en sortir.',
+            'Je n’utilise pas du tout de technologie.',
+            'Ils passent leur vie à rembourser leur dette.',
+          ],
+        },
+      ]}
+    />
+    <div class="trio">
+      <Figure
+        src={s(8)}
+        alt="Entretien avec Adel et Bao Anh à La Chaudronnerie : photos du grand hall industriel, de la façade en brique et d’un livre, « Silence dans les champs »."
+        caption="La Chaudronnerie"
+        sizes="(min-width: 768px) 33vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(9)}
+        alt="Entretien avec Mustafa, maraîcher : photos de rangs de salades sous serre et de plants observés de près."
+        caption="Chez Mustafa"
+        sizes="(min-width: 768px) 33vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(10)}
+        alt="Entretien avec Sandra, marchande : photos d’un marché couvert, d’étals de fruits et légumes et de la foule."
+        caption="Chez Sandra"
+        sizes="(min-width: 768px) 33vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <!-- 04 — Constats ----------------------------------------------------- -->
+  <CaseSection index="04" label="Constats" title="Ce qui freine l’adoption." id="constats">
+    <p class="t-lead lead" data-reveal>
+      De nombreux agriculteurs expriment des réserves face aux technologies numériques, certains
+      allant jusqu’à les rejeter. Cette méfiance est renforcée par un manque d’information sur les
+      outils disponibles. Par ailleurs, l’achat de technologies de pointe implique souvent un
+      endettement à long terme, freinant leur adoption.
+    </p>
+    <Numbered
+      size="l"
+      columns={1}
+      items={[{ title: 'Réticence numérique' }, { title: 'Méconnaissance technologique' }, { title: 'Peur de l’endettement' }]}
+    />
+  </CaseSection>
+
+  <Statement
+    kicker="Problématique"
+    text="Comment faciliter la compréhension et l’intérêt des technologies numériques, dans le but de leur adoption ?"
+  />
+
+  <!-- 05 — Objectifs ---------------------------------------------------- -->
+  <CaseSection index="05" label="Objectifs" title="Informer, simplifier, accompagner." id="objectifs">
+    <Numbered
+      items={[
+        { title: 'Rendre les informations plus accessibles' },
+        { title: 'Faciliter la compréhension des données' },
+        { title: 'Accompagner sur la globalité' },
+      ]}
+    />
+  </CaseSection>
+
+  <!-- 06 — Postulat ----------------------------------------------------- -->
+  <CaseSection index="06" label="Postulat" title="Choisir un tracteur, comme on choisit un ordinateur." id="postulat">
+    <div class="analogy" data-reveal>
+      <div class="analogy__who">
+        <p class="t-meta">Agriculteur</p>
+        <p>veut se renseigner sur une <strong>technologie numérique</strong></p>
+      </div>
+      <span class="analogy__eq t-serif" aria-label="est similaire à">≈</span>
+      <div class="analogy__who">
+        <p class="t-meta">Étudiant</p>
+        <p>veut se renseigner sur l’<strong>achat d’un ordinateur</strong></p>
+      </div>
+    </div>
+    <ul role="list" class="behaviours">
+      {
+        [
+          'Demander à une IA quel produit est fait pour lui',
+          'Regarder des vidéos explicatives du produit',
+          'Comparer les produits pour choisir le plus adapté',
+        ].map((b, i) => (
+          <li data-reveal style={`--i: ${i}`}>
+            <span class="t-index">→</span>
+            {b}
+          </li>
+        ))
+      }
+    </ul>
+    <div class="inspo" data-reveal>
+      <p class="t-meta">Inspirations</p>
+      <ul role="list" class="tags">
+        {['WAT', 'Wiki Agri-Tech', 'Opodo', 'Yuka', 'Naïo Technologies'].map((t) => <li class="tag">{t}</li>)}
+      </ul>
+    </div>
+  </CaseSection>
+
+  <!-- 07 — Concept ------------------------------------------------------ -->
+  <CaseSection index="07" label="Concept" title="Trois étapes vers la décision." layout="full" id="concept">
+    <ol role="list" class="flow">
+      {
+        [
+          ['Analyse du problème', 'Un questionnaire'],
+          ['Données simplifiées', 'Pictogrammes et vidéos explicatives'],
+          ['Prise de décision', 'Des solutions proposées'],
+        ].map(([step, tool], i) => (
+          <li class="flow__step" data-reveal style={`--i: ${i}`}>
+            <span class="flow__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="flow__title">{step}</h3>
+            <p class="flow__tool t-serif">{tool}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="split">
+      <Figure
+        src={s(22)}
+        alt="Storyboard dessiné à la main du parcours de l’agriculteur, en huit cases."
+        caption="Storyboard"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={s(23)}
+        alt="Pictogrammes des caractéristiques : autonomie, vitesse, navigation, poids, énergie, sécurité, motorisation, contrôle, optimisation, temps, gestion, productivité, éclairage, précision, autonome, assistance, donnée, alarme."
+        caption="Système de pictogrammes"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <!-- 08 — Solution ----------------------------------------------------- -->
+  <section class="solution container" aria-labelledby="solution-title">
+    <p class="t-meta" data-reveal><span class="t-index">08</span> Solution</p>
+    <h2 id="solution-title" class="solution__title" data-lines>
+      <span class="line"><span>Vos technologies,</span></span>
+      <span class="line"><span><em class="t-serif">à portée de main.</em></span></span>
+    </h2>
+    <p class="t-lead" data-reveal style="--i: 2">
+      Une maquette de site qui accompagne l’agriculteur de la découverte à la décision : chercher,
+      comprendre, se faire recommander, échanger.
+    </p>
+  </section>
+
+  <div class="container screens">
+    <Feature
+      image={s(26)}
+      alt={project.coverAlt}
+      index="08.1"
+      title="Accueil"
+      text="Une entrée claire vers les trois usages : chercher un produit, se faire recommander, rejoindre la communauté."
+      lightbox={lb}
+    />
+    <Feature
+      image={s(28)}
+      alt="Page « Chercher produit » : barre de recherche, sélection « Le meilleur choix » et « Le moins cher » avec photo, catégorie, prix et note de chaque machine."
+      index="08.2"
+      title="Chercher"
+      text="Un catalogue lisible : chaque machine avec sa catégorie, son prix et sa note, triée par meilleur choix ou par prix."
+      reverse
+      lightbox={lb}
+    />
+    <Feature
+      image={s(33)}
+      alt="Fiche produit VizioPilot Line Assist : description, carrousel photo, avis d’utilisateurs, caractéristiques techniques en pictogrammes et vidéo explicative."
+      index="08.3"
+      title="Comprendre"
+      text="La fiche produit traduit la technique : pictogrammes des caractéristiques, explication en étapes, vidéo et avis d’utilisateurs."
+      lightbox={lb}
+    />
+    <Feature
+      image={s(30)}
+      alt={project.thumbAlt}
+      index="08.4"
+      title="Se faire recommander"
+      text="« Trouvez la machine agricole qui vous correspond » : un questionnaire mène à une recommandation sur mesure."
+      reverse
+      lightbox={lb}
+    />
+    <div class="split">
+      <Figure
+        src={s(31)}
+        alt="Questionnaire : taille de l’exploitation en hectares sur un curseur et activité principale à cocher — céréales, maraîchage, élevage, viticulture."
+        caption="Questionnaire"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={s(32)}
+        alt="Résultats : « Le meilleur choix » et « Les alternatives », trois machines chacune avec prix et note."
+        caption="Recommandations"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+    <Feature
+      image={s(35)}
+      alt="Page « Communauté » : un agriculteur consulte une tablette au milieu d’un champ."
+      index="08.5"
+      title="Échanger"
+      text="Une communauté pour partager témoignages et retours d’expérience entre agriculteurs."
+      lightbox={lb}
+    />
+  </div>
+</CaseStudy>
+
+<style>
+  .lead {
+    max-width: 46ch;
+  }
+
+  .tasks {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .tasks ul {
+    border-top: 1px solid var(--border);
+  }
+
+  .tasks li {
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+
+  .split,
+  .trio {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .trio {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .analogy {
+    display: grid;
+    gap: var(--space-s);
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .analogy {
+      grid-template-columns: 1fr auto 1fr;
+    }
+  }
+
+  .analogy__who {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    font-size: var(--step-1);
+    line-height: 1.3;
+  }
+
+  .analogy__eq {
+    justify-self: center;
+    font-size: var(--step-4);
+    color: var(--accent-text);
+    line-height: 1;
+  }
+
+  .behaviours {
+    display: grid;
+    border-top: 1px solid var(--border);
+  }
+
+  .behaviours li {
+    display: flex;
+    gap: var(--space-s);
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--step-1);
+  }
+
+  .inspo {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .flow {
+    display: grid;
+    gap: var(--col-gap);
+    counter-reset: flow;
+  }
+
+  @media (min-width: 768px) {
+    .flow {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .flow__step {
+    position: relative;
+    display: grid;
+    gap: var(--space-xs);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border-radius: var(--radius-m);
+  }
+
+  @media (min-width: 768px) {
+    .flow__step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: calc(var(--col-gap) * -0.5);
+      top: 50%;
+      translate: 50% -50%;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--c-ink);
+      font-size: 0.9rem;
+    }
+  }
+
+  .flow__n {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--accent-text);
+  }
+
+  .flow__title {
+    font-size: var(--step-2);
+    font-stretch: 88%;
+  }
+
+  .flow__tool {
+    font-size: var(--step-1);
+    color: var(--fg-muted);
+  }
+
+  .solution {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .solution__title {
+    font-size: var(--step-4);
+    font-weight: 600;
+    font-stretch: 80%;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.95;
+  }
+
+  .screens {
+    display: grid;
+    gap: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+</style>

@@ -1,0 +1,170 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { Project } from '@/data/projects';
+
+/**
+ * Accès au dossier de présentation complet. Replié par défaut : les vignettes
+ * d'un <details> fermé ne sont pas chargées.
+ */
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+
+const slides = await Promise.all(
+  project.deck.map(async (image, i) => {
+    const full = await getImage({ src: image, widths: [1080, 1920], format: 'webp', quality: 82 });
+    return {
+      image,
+      src: full.src,
+      srcset: full.srcSet.attribute,
+      alt: `Planche ${i + 1} sur ${project.deck.length} du dossier ${project.client} — ${project.title}`,
+    };
+  }),
+);
+---
+
+<section class="deck container" aria-labelledby={`deck-${project.slug}`}>
+  <details class="deck__details">
+    <summary class="deck__summary">
+      <span class="t-meta">Dossier original</span>
+      <span id={`deck-${project.slug}`} class="deck__title">
+        Voir les {project.deck.length} planches de présentation
+      </span>
+      <span class="deck__icon" aria-hidden="true"></span>
+    </summary>
+    <ul role="list" class="deck__grid">
+      {
+        slides.map((s, i) => (
+          <li>
+            <button
+              class="deck__thumb"
+              type="button"
+              data-lightbox={`deck-${project.slug}`}
+              data-src={s.src}
+              data-srcset={s.srcset}
+              data-alt={s.alt}
+              data-caption={`Planche ${String(i + 1).padStart(2, '0')}`}
+              aria-label={`Agrandir la planche ${i + 1}`}
+            >
+              <Image src={s.image} alt="" widths={[320, 480]} width={480} sizes="(min-width: 1024px) 15vw, 30vw" format="webp" quality={70} loading="lazy" />
+              <span class="deck__n t-meta">{String(i + 1).padStart(2, '0')}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</section>
+
+<style>
+  .deck {
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .deck__summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--space-2xs) var(--space-m);
+    padding-block: var(--space-m);
+    border-block: 1px solid var(--border-strong);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .deck__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .deck__summary .t-meta {
+    grid-column: 1 / -1;
+  }
+
+  .deck__title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    font-stretch: 88%;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .deck__icon {
+    position: relative;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      background var(--dur-1);
+  }
+
+  .deck__icon::before,
+  .deck__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 30% auto;
+    height: 1.5px;
+    background: currentColor;
+    translate: 0 -50%;
+  }
+
+  .deck__icon::after {
+    rotate: 90deg;
+    transition: rotate var(--dur-2) var(--ease-out);
+  }
+
+  .deck__details[open] .deck__icon::after {
+    rotate: 0deg;
+  }
+
+  .deck__summary:hover .deck__icon {
+    background: color-mix(in srgb, var(--fg) 8%, transparent);
+  }
+
+  .deck__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-s) var(--col-gap);
+    padding-top: var(--space-l);
+  }
+
+  @media (min-width: 768px) {
+    .deck__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .deck__grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .deck__thumb {
+    display: grid;
+    gap: var(--space-3xs);
+    width: 100%;
+    text-align: left;
+  }
+
+  .deck__thumb :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--bg-raised);
+    transition:
+      opacity var(--dur-2),
+      transform var(--dur-3) var(--ease-out);
+  }
+
+  .deck__thumb:hover :global(img) {
+    transform: translateY(-3px);
+  }
+
+  .deck__n {
+    color: var(--fg-subtle);
+  }
+</style>
