@@ -1,0 +1,528 @@
+/* ==========================================================================
+   Base — reset, typographie, layout, primitives partagées
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + var(--space-s));
+  background: var(--c-paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: var(--lh-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-title);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+img,
+video,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--c-signal);
+  color: var(--c-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-2xs);
+  left: var(--space-2xs);
+  z-index: calc(var(--z-dialog) + 1);
+  padding: var(--space-xs) var(--space-s);
+  background: var(--c-ink);
+  color: var(--c-paper);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  transform: translateY(-200%);
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* ---- Layout ------------------------------------------------------------ */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+.section {
+  padding-block: var(--section);
+}
+
+.section--tight {
+  padding-block: var(--space-2xl);
+}
+
+.stack > * + * {
+  margin-top: var(--flow, var(--space-s));
+}
+
+/* ---- Typographie ------------------------------------------------------- */
+
+.t-display {
+  font-size: var(--step-5);
+  font-weight: 600;
+  font-stretch: 78%;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
+}
+
+.t-h1 {
+  font-size: var(--step-4);
+  font-weight: 600;
+  font-stretch: 82%;
+  line-height: 0.96;
+  letter-spacing: var(--tracking-display);
+}
+
+.t-h2 {
+  font-size: var(--step-3);
+  font-weight: 600;
+  font-stretch: 88%;
+  line-height: 1.02;
+  letter-spacing: var(--tracking-title);
+}
+
+.t-h3 {
+  font-size: var(--step-2);
+  font-weight: 560;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.t-lead {
+  font-size: var(--step-1);
+  line-height: 1.42;
+  letter-spacing: -0.005em;
+  color: var(--fg-muted);
+  max-width: 38ch;
+}
+
+.t-body {
+  color: var(--fg-muted);
+  max-width: var(--measure);
+}
+
+/* Voix du designer */
+.t-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-stretch: 100%;
+}
+
+/* Voix de l'ingénieur */
+.t-meta {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 450;
+  letter-spacing: var(--tracking-mono);
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+.t-meta--fg {
+  color: var(--fg);
+}
+
+.t-index {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: var(--tracking-mono);
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.t-muted {
+  color: var(--fg-muted);
+}
+
+.t-accent {
+  color: var(--accent);
+}
+
+/* ---- Liens ------------------------------------------------------------- */
+
+.link {
+  --line-scale: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 1px;
+  transition: background-size var(--dur-2) var(--ease-out), color var(--dur-1);
+}
+
+.link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+.link--quiet {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+.link--quiet:hover,
+.link--quiet[aria-current='page'] {
+  background-size: 100% 1px;
+  background-position: 0 100%;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+a:hover > .arrow,
+button:hover > .arrow {
+  transform: translateX(0.25em);
+}
+
+a:hover > .arrow--ne,
+button:hover > .arrow--ne {
+  transform: translate(0.18em, -0.18em);
+}
+
+/* ---- Boutons ----------------------------------------------------------- */
+
+.btn {
+  --btn-bg: var(--fg);
+  --btn-fg: var(--bg);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 3rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--btn-bg);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  line-height: 1;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color var(--dur-2) var(--ease-out), border-color var(--dur-2);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: translateY(101%);
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+.btn:hover::before {
+  transform: none;
+}
+
+.btn:hover {
+  color: var(--c-ink);
+  border-color: var(--accent);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  border-color: var(--border-strong);
+}
+
+/* ---- Tags -------------------------------------------------------------- */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- Filets ------------------------------------------------------------ */
+
+.rule {
+  height: var(--hairline);
+  border: 0;
+  margin: 0;
+  background: var(--border);
+}
+
+/* ---- Médias ------------------------------------------------------------ */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+
+.media img,
+.media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   Révélations au scroll — activées uniquement si JS est présent (.js)
+   et si l'utilisateur n'a pas demandé moins de mouvement.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 2.25rem, 0);
+    transition:
+      opacity var(--dur-3) var(--ease-out),
+      transform var(--dur-3) var(--ease-out);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+
+  .js [data-reveal='fade'] {
+    transform: none;
+  }
+
+  .js [data-reveal='mask'] {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path var(--dur-4) var(--ease-out);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+
+  .js [data-reveal='mask'] :is(img, video) {
+    transform: scale(1.12);
+    transition: transform calc(var(--dur-4) * 1.4) var(--ease-out);
+  }
+
+  .js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .js [data-reveal='mask'].is-in :is(img, video) {
+    transform: none;
+  }
+
+  /* Titres découpés en lignes */
+  .js [data-lines] .line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  .js [data-lines] .line > span {
+    display: block;
+    transform: translate3d(0, 105%, 0);
+    transition: transform var(--dur-4) var(--ease-out);
+    transition-delay: calc(var(--l, 0) * 90ms + var(--delay, 0ms));
+  }
+
+  .js [data-lines].is-in .line > span {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Transitions de page (cross-document View Transitions, amélioration progressive)
+   ========================================================================== */
+
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: vt-out 380ms var(--ease-in-out) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-in 620ms var(--ease-out) both;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 700ms;
+    animation-timing-function: var(--ease-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-1.5rem);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+}
