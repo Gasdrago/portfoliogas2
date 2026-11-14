@@ -1,7 +1,6 @@
 ---
 import CaseStudy from '@/layouts/CaseStudy.astro';
 import CaseSection from '@/components/case/CaseSection.astro';
-import Quotes from '@/components/case/Quotes.astro';
 import Numbered from '@/components/case/Numbered.astro';
 import Statement from '@/components/case/Statement.astro';
 import BarChart from '@/components/case/BarChart.astro';
@@ -118,35 +117,80 @@ const sources = [
 ---
 
 <CaseStudy slug={project.slug} surface="dark">
-  <!-- 01 — Contexte ---------------------------------------------------- -->
-  <CaseSection index="01" label="Contexte" title="Un sujet ouvert, un habitacle saturé." id="contexte">
-    <p class="t-lead case-lead" data-reveal>
-      Le point de départ était volontairement large : imaginer le futur de l’interaction de la
-      mobilité. Nous sommes partis de l’existant — le tableau de bord, ses écrans, ses boutons — et
-      de celles et ceux qui l’utilisent au quotidien.
-    </p>
-    <div class="tasks" data-reveal style="--i: 1">
-      <p class="t-meta">Missions</p>
-      <ul role="list">
-        {project.tasks.map((t) => <li>{t}</li>)}
-      </ul>
-    </div>
-  </CaseSection>
+  <!-- En bref ---------------------------------------------------------- -->
+  <section class="brief container" aria-labelledby="brief-title">
+    <h2 id="brief-title" class="sr-only">Le projet en bref</h2>
+    <dl class="brief__grid">
+      <div class="brief__item" data-reveal>
+        <dt class="t-meta"><span class="t-index">A</span> Constat</dt>
+        <dd>
+          Un tableau de bord surchargé, alors que 87&nbsp;% des usages tiennent en trois applications. Et
+          l’IA générative arrive dans l’habitacle sans règles.
+        </dd>
+      </div>
+      <div class="brief__item" data-reveal style="--i: 1">
+        <dt class="t-meta"><span class="t-index">B</span> Question</dt>
+        <dd class="t-serif brief__q">Comment une IA peut-elle proposer sans s’imposer, quand je conduis&nbsp;?</dd>
+      </div>
+      <div class="brief__item" data-reveal style="--i: 2">
+        <dt class="t-meta"><span class="t-index">C</span> Réponse</dt>
+        <dd>
+          <strong>Main levée</strong> : une boule-copilote qui signale puis attend. L’écran explique, la voix
+          et le volant décident.
+        </dd>
+      </div>
+    </dl>
+    <Video
+      src="media/main-levee.mp4"
+      poster={poster}
+      alt="Film Main levée : la conductrice appuie sur Parole au volant, le copilote affiche « Je vous écoute », puis propose « Éviter la zone encombrée ? » ; elle valide d’un appui sur Oui et le trajet est mis à jour."
+      caption="Film — le copilote propose, la conductrice décide"
+    />
+  </section>
 
-  <!-- 02 — Recherche : habitacle --------------------------------------- -->
-  <CaseSection index="02" label="Recherche" title="Ce que l’on touche, ce que l’on regarde." layout="full" id="recherche">
+  <!-- 01 — Point de départ ---------------------------------------------- -->
+  <CaseSection index="01" label="Point de départ" title="Un habitacle saturé pour trois usages." layout="full" id="recherche">
+    <div class="research">
+      <div class="research__text">
+        <p class="t-lead" data-reveal>
+          Le brief était large : imaginer le futur de l’interaction de la mobilité. L’analyse de
+          l’habitacle et l’enquête d’usage ont resserré le sujet.
+        </p>
+        <p class="kpi" data-reveal style="--i: 1">
+          <span class="kpi__value">87&nbsp;%</span>
+          <span class="kpi__label">des usages déclarés tiennent en trois applications : navigation, musique, communication.</span>
+        </p>
+        <ul role="list" class="tags" data-reveal style="--i: 2" aria-label="Problèmes relevés">
+          {['Surinformation', 'Distraction visuelle', 'Interface peu intuitive'].map((t) => <li class="tag">{t}</li>)}
+        </ul>
+      </div>
+      <div class="research__chart">
+      <BarChart
+        title="Applications les plus utilisées en voiture"
+        highlight={3}
+        data={[
+          { label: 'Navigation', value: 43.5 },
+          { label: 'Musique', value: 26.1 },
+          { label: 'Communication', value: 17.4 },
+          { label: 'Info-trafic', value: 8.7 },
+          { label: 'Autre', value: 4.3 },
+        ]}
+        source="Données présentées dans le dossier de projet."
+      />
+      </div>
+    </div>
     <div class="pair">
       <Figure
         src={s(3)}
         alt="Analyse de l’habitacle : photo du poste de conduite avec une carte de chaleur des zones les plus touchées (rouge) aux moins touchées (vert)."
-        caption="Zones les plus touchées"
+        caption="Ce que l’on touche"
         sizes="(min-width: 768px) 50vw, 100vw"
         lightbox={lb}
       />
       <Figure
         src={s(4)}
         alt="Analyse de l’habitacle : carte de chaleur des zones les plus regardées, du bleu foncé au turquoise."
-        caption="Zones les plus regardées"
+        caption="Ce que l’on regarde"
         sizes="(min-width: 768px) 50vw, 100vw"
         lightbox={lb}
         style="--i: 1"
@@ -154,132 +198,39 @@ const sources = [
     </div>
   </CaseSection>
 
-  <!-- 03 — Entretiens --------------------------------------------------- -->
-  <CaseSection index="03" label="Entretiens" title="La parole des conducteurs." id="entretiens">
-    <Quotes
-      quotes={[
-        { text: 'L’écran n’est pas assez utilisé' },
-        { text: 'Certains boutons sont peu utiles' },
-        { text: 'J’utilise juste le GPS et Spotify' },
-        { text: 'Je ne sais pas à quoi ça sert' },
-        { text: 'L’interface est trop chargée' },
-      ]}
-      source="Verbatims recueillis en entretien"
-    />
-  </CaseSection>
-
-  <!-- 04 — Données ------------------------------------------------------ -->
-  <CaseSection index="04" label="Usages" title="Trois applications concentrent l’essentiel." id="usages">
-    <p class="kpi" data-reveal>
-      <span class="kpi__value">87&nbsp;%</span>
-      <span class="kpi__label">des usages déclarés tiennent en trois applications : navigation, musique, communication.</span>
-    </p>
-    <BarChart
-      title="Applications les plus utilisées en voiture"
-      highlight={3}
-      data={[
-        { label: 'Navigation', value: 43.5 },
-        { label: 'Musique', value: 26.1 },
-        { label: 'Communication', value: 17.4 },
-        { label: 'Info-trafic', value: 8.7 },
-        { label: 'Autre', value: 4.3 },
-      ]}
-    />
-    <div class="charts-2">
-      <BarChart
-        title="Navigation — destinations"
-        highlight={1}
-        data={[
-          { label: 'Adresse', value: 34.2 },
-          { label: 'Travail', value: 26.3 },
-          { label: 'Domicile', value: 21.1 },
-          { label: 'Station essence', value: 10.5 },
-          { label: 'Autre', value: 7.9 },
-        ]}
-      />
-      <BarChart
-        title="Communication — contacts"
-        highlight={1}
-        data={[
-          { label: 'Famille', value: 48.4 },
-          { label: 'Ami', value: 32.3 },
-          { label: 'Un collègue', value: 12.9 },
-          { label: 'Autre', value: 6.5 },
-        ]}
-      />
-    </div>
-    <p class="t-meta">Données présentées dans le dossier de projet.</p>
-  </CaseSection>
-
-  <!-- 05 — Problèmes ---------------------------------------------------- -->
-  <CaseSection index="05" label="Problèmes" title="Trop d’informations, pas assez d’évidence." id="problemes">
-    <Numbered
-      size="l"
-      columns={1}
-      items={[
-        { title: 'Surinformation' },
-        { title: 'Distraction visuelle' },
-        { title: 'Interface pas assez intuitive' },
-      ]}
-    />
-  </CaseSection>
-
-  <!-- 06 — Opportunité --------------------------------------------- -->
-  <CaseSection index="06" label="Opportunité" title="L’IA entre dans l’habitacle." id="opportunite">
+  <!-- 02 — Opportunité --------------------------------------------- -->
+  <CaseSection index="02" label="Opportunité" title="L’IA entre dans l’habitacle." id="opportunite">
     <p class="t-lead case-lead" data-reveal>
-      Un tableau de bord épuré reste un lanceur d’applications : la voiture attend toujours l’ordre.
-      Or les assistants génératifs arrivent en série, et rien ne leur fait de place.
+      Épurer l’écran ne suffit plus : la voiture attend toujours l’ordre, et les assistants génératifs
+      arrivent en série sans que rien ne leur fasse de place.
     </p>
     <Numbered
       items={[
-        { title: 'Ils parlent', text: 'Les assistants génératifs entrent dans l’habitacle : ils parlent, suggèrent, anticipent.' },
-        {
-          title: 'Ils interrompent',
-          text: 'Chaque suggestion est aussi une interruption, et la conductrice ne sait pas toujours d’où elle vient.',
-        },
+        { title: 'Ils parlent', text: 'Ils suggèrent, anticipent, prennent l’initiative.' },
+        { title: 'Ils interrompent', text: 'Chaque suggestion est une interruption, et on ne sait pas toujours d’où elle vient.' },
         { title: 'L’opportunité', text: 'Donner à l’IA un corps lisible et des règles de tour de parole.' },
-      ]}
-    />
-  </CaseSection>
-
-  <!-- 07 — Objectifs ---------------------------------------------------- -->
-  <CaseSection index="07" label="Objectifs" title="Trois intentions de design." id="objectifs">
-    <Numbered
-      items={[
-        { title: 'Nouvelle expérience', text: 'Proposer une expérience intuitive et agréable.' },
-        { title: 'Centraliser la vue', text: 'Pas d’informations parasites : l’essentiel au même endroit.' },
-        {
-          title: 'Simplifier l’interface',
-          text: 'Identifier les usages clés et réaliser une interface synthétique des besoins utilisateurs.',
-        },
       ]}
     />
   </CaseSection>
 
   <Statement kicker="Problématique" text="Comment une IA peut-elle proposer sans s’imposer, quand je conduis ?" />
 
-  <!-- 08 — Solution ----------------------------------------------------- -->
+  <!-- 03 — Solution ----------------------------------------------------- -->
   <section class="solution" data-theme="night" data-surface="dark" aria-labelledby="solution-title">
     <div class="container solution__head">
-      <p class="t-meta" data-reveal><span class="t-index">08</span> Solution</p>
+      <p class="t-meta" data-reveal><span class="t-index">03</span> Solution</p>
       <h2 id="solution-title" class="solution__title" data-lines>
         <span class="line"><span>Main levée</span></span>
       </h2>
-      <p class="solution__tag t-serif" data-reveal style="--i: 2">
-        Un copilote qui propose. Une conductrice qui décide.
-      </p>
-      <p class="t-lead" data-reveal style="--i: 3">
-        Le copilote prend la forme d’une boule posée sur le bandeau de la planche de bord. Il prépare une
-        proposition ; la conductrice l’accepte, la corrige ou la refuse.
-      </p>
-    </div>
-    <div class="container">
-      <Video
-        src="media/main-levee.mp4"
-        poster={poster}
-        alt="Film Main levée : la conductrice appuie sur Parole au volant, le copilote affiche « Je vous écoute », puis propose « Éviter la zone encombrée ? » ; elle valide d’un appui sur Oui et le trajet est mis à jour."
-        caption="Film — le copilote propose, la conductrice décide"
-      />
+      <div class="solution__intro">
+        <p class="solution__tag t-serif" data-reveal style="--i: 2">
+          Un copilote qui propose. Une conductrice qui décide.
+        </p>
+        <p class="t-lead" data-reveal style="--i: 3">
+          Le copilote prend la forme d’une boule posée sur le bandeau de la planche de bord. Il prépare une
+          proposition ; la conductrice l’accepte, la corrige ou la refuse.
+        </p>
+      </div>
     </div>
     <Figure
       src={habitacleEtats}
@@ -291,8 +242,8 @@ const sources = [
     />
   </section>
 
-  <!-- 09 — Le rôle du copilote ------------------------------------------ -->
-  <CaseSection index="09" label="Le rôle du copilote" title="Il prépare une proposition. Je l’accepte, je la corrige ou je la refuse." layout="full" id="role">
+  <!-- 04 — Le rôle du copilote ------------------------------------------ -->
+  <CaseSection index="04" label="Le rôle du copilote" title="Il prépare une proposition. Je l’accepte, je la corrige ou je la refuse." layout="full" id="role">
     <div class="split">
       <Figure
         src={role}
@@ -314,8 +265,8 @@ const sources = [
     </div>
   </CaseSection>
 
-  <!-- 10 — Qui fait quoi ------------------------------------------------ -->
-  <CaseSection index="10" label="Qui fait quoi" title="Trois supports, trois rôles." layout="full" id="supports">
+  <!-- 05 — Qui fait quoi ------------------------------------------------ -->
+  <CaseSection index="05" label="Qui fait quoi" title="Trois supports, trois rôles." layout="full" id="supports">
     <ul role="list" class="tiles">
       {
         supports.map((t, i) => (
@@ -330,8 +281,8 @@ const sources = [
     </ul>
   </CaseSection>
 
-  <!-- 11 — L'objet ------------------------------------------------------ -->
-  <CaseSection index="11" label="L’objet" title="Une boule de 9 cm, posée sur le bandeau en aluminium." layout="full" id="objet">
+  <!-- 06 — L'objet ------------------------------------------------------ -->
+  <CaseSection index="06" label="L’objet" title="Une boule de 9 cm, posée sur le bandeau en aluminium." layout="full" id="objet">
     <Annotated
       image={objetFace}
       alt="La boule de face, visage Compagnon, à côté de l’écran qui affiche « Bonjour »."
@@ -362,8 +313,8 @@ const sources = [
     <p class="t-meta" data-reveal>Rendus Blender. Dimensions et mécanique : intentions de conception, non validées par un prototype physique.</p>
   </CaseSection>
 
-  <!-- 12 — Personnalisation --------------------------------------------- -->
-  <CaseSection index="12" label="Personnalisation · uniquement à l’arrêt" title="Trois apparences, une seule grammaire." layout="full" id="personnalisation">
+  <!-- 07 — Personnalisation --------------------------------------------- -->
+  <CaseSection index="07" label="Personnalisation · uniquement à l’arrêt" title="Trois apparences, une seule grammaire." layout="full" id="personnalisation">
     <ul role="list" class="themes">
       {
         themes.map((t, i) => (
@@ -394,8 +345,8 @@ const sources = [
     <p class="t-meta" data-reveal>Les teintes sont limitées, et la signification des états reste identique d’un thème à l’autre.</p>
   </CaseSection>
 
-  <!-- 13 — États -------------------------------------------------------- -->
-  <CaseSection index="13" label="États et transitions" title="Neuf états, reconnaissables par la forme autant que par la couleur." layout="full" id="etats">
+  <!-- 08 — États -------------------------------------------------------- -->
+  <CaseSection index="08" label="États et transitions" title="Neuf états, reconnaissables par la forme autant que par la couleur." layout="full" id="etats">
     <Figure
       src={etats}
       alt="Les neuf états de la boule, thème Compagnon : accueil, veille, proposition prête, écoute, préparation, proposition, confirmation, refus, indisponible."
@@ -413,8 +364,8 @@ const sources = [
     <p class="t-meta" data-reveal>Rendus Blender, thème Compagnon. Les transitions durent quelques dixièmes de seconde.</p>
   </CaseSection>
 
-  <!-- 14 — Scénario ----------------------------------------------------- -->
-  <CaseSection index="14" label="Scénario principal · adapter un trajet" title="« Je préfère un trajet plus tranquille »" layout="full" id="scenario">
+  <!-- 09 — Scénario ----------------------------------------------------- -->
+  <CaseSection index="09" label="Scénario principal · adapter un trajet" title="« Je préfère un trajet plus tranquille »" layout="full" id="scenario">
     <ol role="list" class="tiles tiles--4">
       {
         scenario.map((t, i) => (
@@ -433,8 +384,8 @@ const sources = [
     <p class="t-meta" data-reveal>Images du film. Valeurs de démonstration ; comportement de l’IA scénarisé.</p>
   </CaseSection>
 
-  <!-- 15 — Le volant ---------------------------------------------------- -->
-  <CaseSection index="15" label="Le volant" title="Parole, Oui, Non : la décision reste au volant." layout="full" id="volant">
+  <!-- 10 — Le volant ---------------------------------------------------- -->
+  <CaseSection index="10" label="Le volant" title="Parole, Oui, Non : la décision reste au volant." layout="full" id="volant">
     <p class="t-lead" data-reveal>
       Parole ouvre l’échange ou interrompt le copilote à tout moment. Oui accepte, Non refuse. Le volant
       a été repensé pour décider sans lâcher la route des yeux.
@@ -457,8 +408,8 @@ const sources = [
     </div>
   </CaseSection>
 
-  <!-- 16 — Fonctions complémentaires ----------------------------------- -->
-  <CaseSection index="16" label="Fonctions complémentaires et reprise en main" title="La même logique pour la recharge, l’appel et la panne." layout="full" id="fonctions">
+  <!-- 11 — Fonctions complémentaires ----------------------------------- -->
+  <CaseSection index="11" label="Fonctions complémentaires et reprise en main" title="La même logique pour la recharge, l’appel et la panne." layout="full" id="fonctions">
     <ul role="list" class="tiles">
       {
         functions.map((t, i) => (
@@ -473,8 +424,8 @@ const sources = [
     <p class="t-meta" data-reveal>Parole interrompt à tout moment. Un appui long sur Non suspend les propositions non essentielles.</p>
   </CaseSection>
 
-  <!-- 17 — Prototype et limites ---------------------------------------- -->
-  <CaseSection index="17" label="Prototype, faisabilité, limites" title="Ce qui existe, ce qui reste une hypothèse." layout="full" id="limites">
+  <!-- 12 — Prototype et limites ---------------------------------------- -->
+  <CaseSection index="12" label="Prototype, faisabilité, limites" title="Ce qui existe, ce qui reste une hypothèse." layout="full" id="limites">
     <Cards
       cards={[
         {
@@ -545,22 +496,8 @@ const sources = [
     max-width: 44ch;
   }
 
-  .tasks {
-    display: grid;
-    gap: var(--space-s);
-  }
 
-  .tasks ul {
-    display: grid;
-    border-top: 1px solid var(--border);
-  }
 
-  .tasks li {
-    padding-block: var(--space-s);
-    border-bottom: 1px solid var(--border);
-    font-size: var(--step-1);
-    letter-spacing: -0.01em;
-  }
 
   .pair,
   .trio,
@@ -611,15 +548,99 @@ const sources = [
     max-width: 30ch;
   }
 
-  .charts-2 {
+
+  /* En bref */
+  .brief {
     display: grid;
-    gap: var(--space-xl) var(--col-gap);
+    gap: var(--space-l);
+    padding-block: var(--space-xl) var(--space-l);
   }
 
-  @media (min-width: 1280px) {
-    .charts-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  .brief__grid {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .brief__grid {
+      grid-template-columns: 1fr 1.25fr 1fr;
     }
+  }
+
+  .brief__item {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .brief__item dt {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .brief__item dd {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--fg-muted);
+  }
+
+  .brief__item dd strong {
+    color: var(--fg);
+  }
+
+  .brief__q {
+    font-size: var(--step-2) !important;
+    line-height: 1.12 !important;
+    color: var(--fg) !important;
+  }
+
+  /* Point de départ */
+  .research {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .research {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .research__text {
+      grid-column: 1 / 6;
+    }
+
+    .research__chart {
+      grid-column: 7 / -1;
+    }
+  }
+
+  .research__text {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 1024px) {
+    .solution__intro {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: end;
+    }
+
+    .solution__intro > :first-child {
+      grid-column: 1 / 7;
+    }
+
+    .solution__intro > :last-child {
+      grid-column: 8 / -1;
+    }
+  }
+
+  .solution__intro {
+    gap: var(--space-m);
   }
 
   /* Tuiles image + texte */
