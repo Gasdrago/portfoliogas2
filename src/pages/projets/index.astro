@@ -14,7 +14,7 @@ import { href } from '@/lib/url';
 >
   <PageHead kicker="(Projets) Études de cas" lines={['Du terrain', 'à l’interface.']} serifLine={1}>
     <p>
-      Cinq études de cas, de l’analyse d’usage au prototype. Chacune
+      Six études de cas, de l’analyse d’usage au prototype. Chacune
       part d’une question, pas d’une solution.
     </p>
   </PageHead>
@@ -59,6 +59,12 @@ import { href } from '@/lib/url';
               <p class="t-body" data-reveal style="--i: 3">{p.summary}</p>
               <p class="work__foot" data-reveal style="--i: 4">
                 <span class="tag">{p.discipline}</span>
+                {p.prototype && (
+                  <a class="link t-meta t-meta--fg" href={p.prototype.href} target="_blank" rel="noopener">
+                    {p.prototype.label} <span class="arrow arrow--ne" aria-hidden="true">↗</span>
+                    <span class="sr-only">— {p.title} (ouvre un nouvel onglet)</span>
+                  </a>
+                )}
                 <a class="link t-meta t-meta--fg work__more" href={href(`projets/${p.slug}/`)} data-astro-prefetch>
                   Lire l’étude <span class="sr-only">{p.client} — {p.title}</span>
                   <span class="arrow" aria-hidden="true">→</span>

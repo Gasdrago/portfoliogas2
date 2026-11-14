@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const proto = project.prototype;
+const proto = project.prototypeTop ? undefined : project.prototype;
 ---
 
 {

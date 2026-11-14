@@ -188,6 +188,18 @@
   --focus: #1f3fb0;
 }
 
+/* Manuels scolaires numériques — papier chaud, orange et corail du dossier */
+[data-theme='idf'] {
+  --bg: #fbf6ee;
+  --bg-raised: #f3e8d8;
+  --fg: #1f1812;
+  --fg-muted: #4a3e33;
+  --fg-subtle: #6b5c4e;
+  --accent: #f2994a;
+  --accent-text: #a8461a;
+  --focus: #a8461a;
+}
+
 /* Earth to Earth — graphite et violet EvoBIM */
 [data-theme='earth'] {
   --bg: #111317;
