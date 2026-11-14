@@ -238,6 +238,7 @@ export const projects: Project[] = [
     tasks: [],
     context: 'Projet — CY École de Design',
     team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
+    role: 'Designer — impliqué à chaque étape, du terrain au test',
     selection: 'Conseil et innovation',
     theme: 'idf',
     cover: idfCover,
