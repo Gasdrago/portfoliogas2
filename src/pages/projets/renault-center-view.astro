@@ -6,45 +6,114 @@ import Numbered from '@/components/case/Numbered.astro';
 import Statement from '@/components/case/Statement.astro';
 import BarChart from '@/components/case/BarChart.astro';
 import Annotated from '@/components/case/Annotated.astro';
-import Branches from '@/components/case/Branches.astro';
+import Cards from '@/components/case/Cards.astro';
+import Video from '@/components/case/Video.astro';
 import Figure from '@/components/Figure.astro';
 import { decks, slide, getProject } from '@/data/projects';
 import volant from '@/assets/crops/renault-volant.jpg';
+import poster from '@/assets/crops/main-levee-poster.jpg';
+import habitacleEtats from '@/assets/projects/renault-copilote/habitacle-etats.png';
+import volantDetails from '@/assets/projects/renault-copilote/volant-details.png';
+import compagnon from '@/assets/projects/renault-copilote/compagnon.png';
+import role from '@/assets/projects/renault-copilote/role.jpg';
+import supportBoule from '@/assets/projects/renault-copilote/support-boule.jpg';
+import supportEcran from '@/assets/projects/renault-copilote/support-ecran.jpg';
+import supportVolant from '@/assets/projects/renault-copilote/support-volant.jpg';
+import objetFace from '@/assets/projects/renault-copilote/objet-face.jpg';
+import objetProfil from '@/assets/projects/renault-copilote/objet-profil.jpg';
+import themeCompagnon from '@/assets/projects/renault-copilote/theme-compagnon.jpg';
+import themeOnde from '@/assets/projects/renault-copilote/theme-onde.jpg';
+import themeMinimal from '@/assets/projects/renault-copilote/theme-minimal.jpg';
+import themeBague from '@/assets/projects/renault-copilote/theme-bague.jpg';
+import etats from '@/assets/projects/renault-copilote/etats.jpg';
+import sc1 from '@/assets/projects/renault-copilote/sc1.jpg';
+import sc2 from '@/assets/projects/renault-copilote/sc2.jpg';
+import sc3 from '@/assets/projects/renault-copilote/sc3.jpg';
+import sc4 from '@/assets/projects/renault-copilote/sc4.jpg';
+import fRecharge from '@/assets/projects/renault-copilote/f-recharge.jpg';
+import fAppel from '@/assets/projects/renault-copilote/f-appel.jpg';
+import fIndispo from '@/assets/projects/renault-copilote/f-indispo.jpg';
 
 const project = getProject('renault-center-view');
 const s = (n: number) => slide(decks.renault, n);
 const lb = 'renault';
 
-// Arborescence reprise de la planche « Accueil » (26).
-const tree: { title: string; items: [string, string][] }[] = [
+// Trois supports, trois rôles.
+const supports = [
   {
-    title: 'Musique',
-    items: [
-      ['Flow', 'lance une musique aléatoire'],
-      ['Playlist n°1', 'lance la playlist'],
-      ['Recherche vocale', 'lance la recherche vocale'],
-      ['Conducteur', 'active le mode conducteur'],
-      ['Passagers', 'active le mode passagers'],
-    ],
+    image: supportBoule,
+    alt: 'Gros plan sur la boule : un visage lumineux de deux yeux et un arc, derrière le verre fumé.',
+    kicker: 'La boule',
+    title: 'L’état et l’intention',
+    text: 'Un signe simple : je veille, j’écoute, je prépare, je propose.',
   },
   {
-    title: 'Téléphone',
-    items: [
-      ['Appel manqué', 'appelle la dernière personne'],
-      ['Favoris', 'appelle un favori'],
-      ['Recherche vocale', 'lance la recherche vocale'],
-    ],
+    image: supportEcran,
+    alt: 'L’écran central propose « Éviter la zone encombrée ? » avec le temps ajouté, l’heure d’arrivée et le tracé du détour.',
+    kicker: 'L’écran central',
+    title: 'Les options et leurs conséquences',
+    text: 'Le trajet, le temps ajouté, la raison de la proposition.',
   },
   {
-    title: 'Navigation',
-    items: [
-      ['Domicile', 'itinéraire vers le domicile'],
-      ['Travail', 'itinéraire vers le travail'],
-      ['Carburant', 'station essence la plus proche'],
-      ['Restaurants', 'restaurant le plus proche'],
-      ['Recherche vocale', 'lance la recherche vocale'],
-    ],
+    image: supportVolant,
+    alt: 'Les touches Oui (coche) et Non (croix) sur la branche droite du volant.',
+    kicker: 'La voix et le volant',
+    title: 'La décision',
+    text: 'Parole ouvre ou interrompt. Oui accepte. Non refuse.',
   },
+];
+
+const themes = [
+  { image: themeCompagnon, name: 'Compagnon', text: 'Deux yeux, un arc.' },
+  { image: themeOnde, name: 'Onde', text: 'Une courbe.' },
+  { image: themeMinimal, name: 'Minimal', text: 'Un trait.' },
+];
+
+const scenario = [
+  { image: sc1, step: 'Signal', text: 'Une proposition est prête. Le copilote attend.' },
+  { image: sc2, step: 'Parole', text: 'J’appuie sur Parole et je dis ma préférence.' },
+  { image: sc3, step: 'Proposition', text: 'Éviter la zone encombrée : +3 min, arrivée 18:45.' },
+  { image: sc4, step: 'Décision', text: 'Oui au volant. Le trajet est mis à jour.' },
+];
+
+const functions = [
+  {
+    image: fRecharge,
+    title: 'Préparer une recharge',
+    text: 'Une estimation, affichée comme telle. Pas de disponibilité de borne inventée.',
+    alt: 'Le copilote affiche un éclair et l’écran propose « Une pause recharge sur le trajet ? ».',
+  },
+  {
+    image: fAppel,
+    title: 'Différer un appel',
+    text: 'Ni rappel ni message sans mon autorisation.',
+    alt: 'Le copilote affiche un combiné et l’écran propose « Rappeler Camille à l’arrivée ? ».',
+  },
+  {
+    image: fIndispo,
+    title: 'Indisponible',
+    text: 'Le copilote le dit. Les commandes du véhicule restent actives.',
+    alt: 'La boule en état indisponible, l’écran indique « Copilote indisponible ».',
+  },
+];
+
+const sources = [
+  ['Renault, reno, l’avatar officiel', 'https://www.renault.fr/vehicules-electriques/r4-e-tech-electrique/virtual-assistant-reno.html'],
+  ['Automotive World, Gemini dans openR link · juin 2026', 'https://www.automotiveworld.com/news/google-gemini-rolls-out-across-renaults-vehicle-fleet/'],
+  ['Google, Gemini dans les voitures Google built-in · avril 2026', 'https://blog.google/products/android/cars-with-google-built-in-gemini-tips-2026'],
+  ['eWeek, MBUX Virtual Assistant · janvier 2025', 'https://www.eweek.com/news/mercedes-gemini-ai-navigation'],
+  ['BMW Group, iX3 au CES 2026', 'https://press.bmwgroup.com/usa/article/detail/T0454794EN_US/the-bmw-ix3-ushers-in-next-generation-innovations-at-ces-2026'],
+  ['Bosch, AI-powered cockpit · janvier 2026', 'https://www.bosch-presse.de/pressportal/us/en/image-31172.html'],
+  ['S&P Global, entretien avec Cerence AI · janvier 2026', 'https://autotechinsight.spglobal.com/news/5285942/a-conversation-with-cerence-ai-at-ces'],
+  ['Volkswagen, Hello ID. Light', 'https://volkswagen-newsroom.com/en/stories/hello-id-light-how-the-new-id-models-communicate-with-the-vehicle-occupants-via-a-light-strip-6963'],
+  ['Euro NCAP, protocoles 2026', 'https://www.euroncap.com/en/press-media/press-releases/euro-ncap-announces-2026-protocol-changes-to-tackle-modern-driving-risks'],
+  ['Smart Eye, ADDW obligatoire · juillet 2026', 'https://smarteye.se/news/advanced-driver-distraction-warning-systems-now-mandatory-across-all-new-eu-vehicles/'],
+  ['McFarlane, coordination de l’interruption · 2002', 'https://doi.org/10.1207/s15327051hci1701_2'],
+  ['Drews, Pasupathi et Strayer, passager et téléphone · 2008', 'https://www.apa.org/news/press/releases/2008/12/phone-driving'],
+  ['Kim et al., moments opportuns en conduite · 2018', 'https://doi.org/10.1145/3287053'],
+  ['Du et al., proactivité d’un assistant embarqué · 2024', 'https://arxiv.org/abs/2403.09135'],
+  ['Flemisch et al., H-Mode · 2008', 'https://elib.dlr.de/57618/1/FISITA2008_DLR_FlemischEtAl_CooperativeControl.pdf'],
+  ['Poly Haven, wide_street_01 · image d’environnement, licence CC0', 'https://polyhaven.com/a/wide_street_01'],
 ];
 ---
 
@@ -102,8 +171,8 @@ const tree: { title: string; items: [string, string][] }[] = [
   <!-- 04 — Données ------------------------------------------------------ -->
   <CaseSection index="04" label="Usages" title="Trois applications concentrent l’essentiel." id="usages">
     <p class="kpi" data-reveal>
-      <span class="kpi__value">+85&nbsp;%</span>
-      <span class="kpi__label">des applications utilisées par les conducteurs sont parmi trois applications.</span>
+      <span class="kpi__value">87&nbsp;%</span>
+      <span class="kpi__label">des usages déclarés tiennent en trois applications : navigation, musique, communication.</span>
     </p>
     <BarChart
       title="Applications les plus utilisées en voiture"
@@ -147,17 +216,34 @@ const tree: { title: string; items: [string, string][] }[] = [
     <Numbered
       size="l"
       columns={1}
-      items={[{ title: 'Surinformation' }, { title: 'Distraction visuelle' }, { title: 'Interface pas assez intuitive' }]}
+      items={[
+        { title: 'Surinformation' },
+        { title: 'Distraction visuelle' },
+        { title: 'Interface pas assez intuitive' },
+      ]}
     />
   </CaseSection>
 
-  <Statement
-    kicker="Problématique reformulée"
-    text="Comment épurer l’interface et transformer l’interaction afin de rendre la conduite plus agréable, adaptée et sécuritaire ?"
-  />
+  <!-- 06 — Opportunité --------------------------------------------- -->
+  <CaseSection index="06" label="Opportunité" title="L’IA entre dans l’habitacle." id="opportunite">
+    <p class="t-lead case-lead" data-reveal>
+      Un tableau de bord épuré reste un lanceur d’applications : la voiture attend toujours l’ordre.
+      Or les assistants génératifs arrivent en série, et rien ne leur fait de place.
+    </p>
+    <Numbered
+      items={[
+        { title: 'Ils parlent', text: 'Les assistants génératifs entrent dans l’habitacle : ils parlent, suggèrent, anticipent.' },
+        {
+          title: 'Ils interrompent',
+          text: 'Chaque suggestion est aussi une interruption, et la conductrice ne sait pas toujours d’où elle vient.',
+        },
+        { title: 'L’opportunité', text: 'Donner à l’IA un corps lisible et des règles de tour de parole.' },
+      ]}
+    />
+  </CaseSection>
 
-  <!-- 06 — Objectifs ---------------------------------------------------- -->
-  <CaseSection index="06" label="Objectifs" title="Trois intentions de design." id="objectifs">
+  <!-- 07 — Objectifs ---------------------------------------------------- -->
+  <CaseSection index="07" label="Objectifs" title="Trois intentions de design." id="objectifs">
     <Numbered
       items={[
         { title: 'Nouvelle expérience', text: 'Proposer une expérience intuitive et agréable.' },
@@ -170,183 +256,287 @@ const tree: { title: string; items: [string, string][] }[] = [
     />
   </CaseSection>
 
-  <!-- 07 — Solution ----------------------------------------------------- -->
-  <section class="solution" aria-labelledby="solution-title">
+  <Statement kicker="Problématique" text="Comment une IA peut-elle proposer sans s’imposer, quand je conduis ?" />
+
+  <!-- 08 — Solution ----------------------------------------------------- -->
+  <section class="solution" data-theme="night" data-surface="dark" aria-labelledby="solution-title">
     <div class="container solution__head">
-      <p class="t-meta" data-reveal><span class="t-index">07</span> Solution</p>
+      <p class="t-meta" data-reveal><span class="t-index">08</span> Solution</p>
       <h2 id="solution-title" class="solution__title" data-lines>
-        <span class="line"><span>Center View :</span></span>
-        <span class="line"><span><em class="t-serif">l’essentiel, au centre.</em></span></span>
+        <span class="line"><span>Main levée</span></span>
       </h2>
-      <p class="t-lead" data-reveal style="--i: 2">
-        Un bandeau d’écran épuré qui ne garde que les trois usages majeurs — musique, téléphone,
-        navigation — et une interface personnalisable selon le conducteur.
+      <p class="solution__tag t-serif" data-reveal style="--i: 2">
+        Un copilote qui propose. Une conductrice qui décide.
+      </p>
+      <p class="t-lead" data-reveal style="--i: 3">
+        Le copilote prend la forme d’une boule posée sur le bandeau de la planche de bord. Il prépare une
+        proposition ; la conductrice l’accepte, la corrige ou la refuse.
       </p>
     </div>
-    <Figure src={s(12)} alt={project.coverAlt} sizes="100vw" class="bleed" lightbox={lb} />
-    <div class="container mosaic">
-      <Figure
-        src={s(13)}
-        alt="Interface personnalisable : les icônes des applications disposées dans le bandeau d’écran."
-        caption="Interface personnalisable"
-        sizes="(min-width: 1024px) 60vw, 100vw"
-        class="mosaic__a"
-        lightbox={lb}
-      />
-      <Figure
-        src={s(15)}
-        alt="Sous-menu musique : Flow, Playlist 1, recherche vocale, modes Conducteur et Passagers."
-        caption="Sous-menu musique"
-        sizes="(min-width: 1024px) 40vw, 100vw"
-        class="mosaic__b"
-        lightbox={lb}
-      />
-      <Figure
-        src={s(16)}
-        alt="Lecteur de musique affiché à gauche du bandeau d’écran."
-        caption="Lecture en cours"
-        sizes="(min-width: 1024px) 40vw, 100vw"
-        class="mosaic__c"
-        lightbox={lb}
-      />
-      <Figure
-        src={s(17)}
-        alt="Sous-menu musique ouvert au centre du bandeau d’écran."
-        caption="Menu musique"
-        sizes="(min-width: 1024px) 60vw, 100vw"
-        class="mosaic__d"
-        lightbox={lb}
+    <div class="container">
+      <Video
+        src="media/main-levee.mp4"
+        poster={poster}
+        alt="Film Main levée : la conductrice appuie sur Parole au volant, le copilote affiche « Je vous écoute », puis propose « Éviter la zone encombrée ? » ; elle valide d’un appui sur Oui et le trajet est mis à jour."
+        caption="Film — le copilote propose, la conductrice décide"
       />
     </div>
-  </section>
-
-  <!-- 08 — Architecture ------------------------------------------------- -->
-  <CaseSection index="08" label="Architecture" title="Trois applications, une action par geste." id="architecture">
-    <Branches branches={tree} />
     <Figure
-      src={s(26)}
-      alt="Arborescence depuis l’accueil : Musique, Téléphone et Navigation, chacune avec ses raccourcis et leur action."
-      caption="Arborescence d’origine"
-      sizes="(min-width: 1024px) 66vw, 100vw"
-      lightbox={lb}
-    />
-  </CaseSection>
-
-  <!-- 09 — Modes audio & usages ---------------------------------------- -->
-  <CaseSection index="09" label="Usages" title="Conduire, écouter, appeler." layout="full" id="usages-ecran">
-    <div class="pair">
-      <Figure
-        src={s(18)}
-        alt="Mode Passagers : vue de dessus de l’habitacle, le son diffusé vers les places passagers."
-        caption="Mode Passagers"
-        sizes="(min-width: 768px) 50vw, 100vw"
-        lightbox={lb}
-      />
-      <Figure
-        src={s(19)}
-        alt="Mode Conducteur : vue de dessus de l’habitacle, le son diffusé vers la place conducteur."
-        caption="Mode Conducteur"
-        sizes="(min-width: 768px) 50vw, 100vw"
-        lightbox={lb}
-      />
-    </div>
-    <div class="trio">
-      <Figure
-        src={s(21)}
-        alt="Carte de navigation affichée derrière le volant."
-        caption="Navigation au combiné"
-        sizes="(min-width: 768px) 33vw, 100vw"
-        lightbox={lb}
-      />
-      <Figure
-        src={s(22)}
-        alt="Bandeau d’écran : carte et raccourcis Domicile, Travail, Carburant, Restaurants."
-        caption="Raccourcis de navigation"
-        sizes="(min-width: 768px) 33vw, 100vw"
-        lightbox={lb}
-      />
-      <Figure
-        src={s(24)}
-        alt="Notification d’appel entrant dans le bandeau d’écran, avec boutons accepter et refuser."
-        caption="Appel entrant"
-        sizes="(min-width: 768px) 33vw, 100vw"
-        lightbox={lb}
-      />
-    </div>
-  </CaseSection>
-
-  <!-- 10 — Pare-brise --------------------------------------------------- -->
-  <section class="hud" aria-labelledby="hud-title">
-    <Figure
-      src={s(28)}
-      alt={project.thumbAlt}
+      src={habitacleEtats}
+      alt="L’habitacle avec le copilote sur la planche de bord et un bandeau qui propose « Un trajet plus calme ? » (Accepter, Plus tard) ; en dessous, la boule en gros plan et ses états : veille, écoute, proposition."
+      caption="L’habitacle et la boule : veille, écoute, proposition"
       sizes="100vw"
       class="bleed"
       lightbox={lb}
     />
-    <div class="container hud__text">
-      <p class="t-meta" data-reveal><span class="t-index">10</span> Le pare-brise</p>
-      <h2 id="hud-title" class="t-h2" data-reveal style="--i: 1">
-        Les yeux sur la route, <em class="t-serif">l’information dessus.</em>
-      </h2>
-      <p class="t-body" data-reveal style="--i: 2">
-        L’affichage tête haute superpose à la route ce qui compte pendant la conduite : vitesse,
-        limitation, prochaine direction et météo.
-      </p>
-    </div>
   </section>
 
-  <!-- 11 — Volant ------------------------------------------------------- -->
-  <CaseSection index="11" label="Le volant" title="Un volant repensé pour piloter l’écran." layout="full" id="volant">
+  <!-- 09 — Le rôle du copilote ------------------------------------------ -->
+  <CaseSection index="09" label="Le rôle du copilote" title="Il prépare une proposition. Je l’accepte, je la corrige ou je la refuse." layout="full" id="role">
+    <div class="split">
+      <Figure
+        src={role}
+        alt="Le copilote affiche une bifurcation et l’écran propose « Éviter la zone encombrée ? » avec deux boutons."
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <div class="stack-s">
+        <Numbered
+          columns={1}
+          items={[
+            { title: 'Il part de ce que je lui ai dit, pas de ce qu’il devine de moi.' },
+            { title: 'Il signale qu’il a quelque chose, puis il attend.' },
+            { title: 'Sans réponse, rien ne change.' },
+          ]}
+        />
+        <p class="t-meta" data-reveal>Aucune déduction certaine du stress ou de l’émotion. Aucune action de conduite.</p>
+      </div>
+    </div>
+  </CaseSection>
+
+  <!-- 10 — Qui fait quoi ------------------------------------------------ -->
+  <CaseSection index="10" label="Qui fait quoi" title="Trois supports, trois rôles." layout="full" id="supports">
+    <ul role="list" class="tiles">
+      {
+        supports.map((t, i) => (
+          <li class="tile" data-reveal style={`--i: ${i}`}>
+            <Figure src={t.image} alt={t.alt} ratio="16 / 9" sizes="(min-width: 768px) 33vw, 100vw" reveal={false} lightbox={lb} />
+            <p class="t-meta tile__kicker">{t.kicker}</p>
+            <h3 class="tile__title">{t.title}</h3>
+            <p class="t-body">{t.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </CaseSection>
+
+  <!-- 11 — L'objet ------------------------------------------------------ -->
+  <CaseSection index="11" label="L’objet" title="Une boule de 9 cm, posée sur le bandeau en aluminium." layout="full" id="objet">
+    <Annotated
+      image={objetFace}
+      alt="La boule de face, visage Compagnon, à côté de l’écran qui affiche « Bonjour »."
+      lightbox={lb}
+      notes={[
+        { term: 'Verre fumé bombé', text: 'La surface d’affichage est derrière le verre.' },
+        { term: 'Bague moletée et repère', text: 'À l’arrêt : tourner pour parcourir, presser pour choisir.' },
+        { term: 'Fourche, pivots, butées', text: 'Une orientation légère vers la personne, bornée.' },
+        { term: 'Embase', text: 'Grille et micros.' },
+      ]}
+    />
+    <div class="pair">
+      <Figure
+        src={objetProfil}
+        alt="La boule de profil : verre bombé, fourche et pivot à bague moletée."
+        caption="Profil — fourche et pivot"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={volantDetails}
+        alt="Le volant et ses commandes, l’intégration de la boule sur le bandeau en aluminium, et les matières : cuir surpiqué, aluminium brossé, filet lumineux."
+        caption="Intégration, matières et finitions"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+    <p class="t-meta" data-reveal>Rendus Blender. Dimensions et mécanique : intentions de conception, non validées par un prototype physique.</p>
+  </CaseSection>
+
+  <!-- 12 — Personnalisation --------------------------------------------- -->
+  <CaseSection index="12" label="Personnalisation · uniquement à l’arrêt" title="Trois apparences, une seule grammaire." layout="full" id="personnalisation">
+    <ul role="list" class="themes">
+      {
+        themes.map((t, i) => (
+          <li data-reveal style={`--i: ${i}`}>
+            <Figure src={t.image} alt={`La boule en apparence ${t.name} : ${t.text.toLowerCase()}`} ratio="1 / 1" sizes="(min-width: 768px) 25vw, 33vw" reveal={false} />
+            <h3 class="tile__title">{t.name}</h3>
+            <p class="t-body">{t.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="split">
+      <Figure
+        src={themeBague}
+        alt="À l’arrêt, l’écran de personnalisation montre les trois apparences ; la boule affiche l’aperçu de l’onde."
+        caption="La bague parcourt les thèmes ; la boule montre l’aperçu tout de suite"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={compagnon}
+        alt="Le copilote en apparence Compagnon : « Bonjour Mélina, où allons-nous ? » à l’écran ; vignettes écouter, proposer, se personnaliser à l’arrêt."
+        caption="Une présence personnalisable"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+    <p class="t-meta" data-reveal>Les teintes sont limitées, et la signification des états reste identique d’un thème à l’autre.</p>
+  </CaseSection>
+
+  <!-- 13 — États -------------------------------------------------------- -->
+  <CaseSection index="13" label="États et transitions" title="Neuf états, reconnaissables par la forme autant que par la couleur." layout="full" id="etats">
+    <Figure
+      src={etats}
+      alt="Les neuf états de la boule, thème Compagnon : accueil, veille, proposition prête, écoute, préparation, proposition, confirmation, refus, indisponible."
+      sizes="(min-width: 1680px) 1600px, 100vw"
+      tone="none"
+      lightbox={lb}
+    />
+    <Cards
+      cards={[
+        { title: 'En conduite', text: 'La veille est stable et très discrète.' },
+        { title: 'Proposition prête', text: 'Une transition courte, puis un signal fixe. Pas de clignotement.' },
+        { title: 'Refus', text: 'Retour au calme, sans déception simulée.' },
+      ]}
+    />
+    <p class="t-meta" data-reveal>Rendus Blender, thème Compagnon. Les transitions durent quelques dixièmes de seconde.</p>
+  </CaseSection>
+
+  <!-- 14 — Scénario ----------------------------------------------------- -->
+  <CaseSection index="14" label="Scénario principal · adapter un trajet" title="« Je préfère un trajet plus tranquille »" layout="full" id="scenario">
+    <ol role="list" class="tiles tiles--4">
+      {
+        scenario.map((t, i) => (
+          <li class="tile" data-reveal style={`--i: ${i}`}>
+            <Figure src={t.image} alt={`Étape ${i + 1}, ${t.step.toLowerCase()} : ${t.text}`} ratio="16 / 9" sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" reveal={false} lightbox={lb} />
+            <p class="t-meta tile__kicker">{i + 1} · {t.step}</p>
+            <p class="t-body">{t.text}</p>
+          </li>
+        ))
+      }
+    </ol>
     <p class="t-lead" data-reveal>
-      Dans le but de rendre la conduite plus intuitive et sécurisée, le volant a été repensé en y
-      ajoutant les fonctionnalités nécessaires pour accompagner la gestion des applications.
+      Données de navigation, préférence dite, calcul du copilote, décision de la conductrice : chaque
+      source est nommée à l’écran.
+    </p>
+    <p class="t-meta" data-reveal>Images du film. Valeurs de démonstration ; comportement de l’IA scénarisé.</p>
+  </CaseSection>
+
+  <!-- 15 — Le volant ---------------------------------------------------- -->
+  <CaseSection index="15" label="Le volant" title="Parole, Oui, Non : la décision reste au volant." layout="full" id="volant">
+    <p class="t-lead" data-reveal>
+      Parole ouvre l’échange ou interrompt le copilote à tout moment. Oui accepte, Non refuse. Le volant
+      a été repensé pour décider sans lâcher la route des yeux.
     </p>
     <Annotated
       image={volant}
-      alt="Rendu 3D du nouveau volant, vu de trois quarts, avec ses commandes intégrées."
+      alt="Rendu 3D du volant, vu de trois quarts, avec ses commandes intégrées."
       lightbox={lb}
       notes={[
         { term: 'Clignotant', text: 'Intégré directement aux branches du volant.' },
-        {
-          term: 'Flèches de sélection',
-          text: 'Naviguer entre les raccourcis ; ces boutons ont plusieurs fonctionnalités en fonction du mode activé.',
-        },
+        { term: 'Flèches de sélection', text: 'Ces boutons ont plusieurs fonctionnalités en fonction du mode activé.' },
         { term: 'Bouton +/−', text: 'Ajuster, selon le mode actif.' },
-        { term: 'Validation', text: 'Deux boutons, ✓ et ✗, pour confirmer ou annuler.' },
-        { term: 'Roulette', text: 'Sert à changer d’application sur l’écran.' },
+        { term: 'Validation', text: 'Deux boutons, ✓ et ✗ : Oui et Non.' },
       ]}
     />
     <div class="trio">
       <Figure src={s(31)} alt="Détail du volant : clignotant, flèches de sélection et bouton plus/moins." caption="Commandes gauche" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
       <Figure src={s(32)} alt="Détail du volant : clignotant et boutons de validation." caption="Commandes droite" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
-      <Figure src={s(33)} alt="Détail du volant : la roulette rouge au dos de la branche." caption="Roulette" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
+      <Figure src={s(30)} alt="Pictogrammes des boutons : croix, coche et flèches." caption="Design des boutons" sizes="(min-width: 768px) 33vw, 100vw" lightbox={lb} />
     </div>
-    <Figure
-      src={s(30)}
-      alt="Pictogrammes des boutons : croix, coche et flèches, en traits blancs sur fond noir."
-      caption="Design des boutons"
-      sizes="(min-width: 1024px) 66vw, 100vw"
-      class="narrow"
-      lightbox={lb}
-    />
   </CaseSection>
 
-  <!-- 12 — Ensemble ----------------------------------------------------- -->
-  <section class="finale" aria-labelledby="finale-title">
-    <div class="container">
-      <p class="t-meta" data-reveal><span class="t-index">12</span> Vue d’ensemble</p>
-      <h2 id="finale-title" class="t-h2" data-reveal style="--i: 1">
-        Écran, pare-brise, volant : <em class="t-serif">un seul système.</em>
-      </h2>
-    </div>
-    <Figure
-      src={s(34)}
-      alt="Vue d’ensemble du poste de conduite : volant repensé, bandeau d’écran à trois applications et affichage sur le pare-brise."
-      sizes="100vw"
-      class="bleed"
-      lightbox={lb}
+  <!-- 16 — Fonctions complémentaires ----------------------------------- -->
+  <CaseSection index="16" label="Fonctions complémentaires et reprise en main" title="La même logique pour la recharge, l’appel et la panne." layout="full" id="fonctions">
+    <ul role="list" class="tiles">
+      {
+        functions.map((t, i) => (
+          <li class="tile" data-reveal style={`--i: ${i}`}>
+            <Figure src={t.image} alt={t.alt} ratio="16 / 9" sizes="(min-width: 768px) 33vw, 100vw" reveal={false} lightbox={lb} />
+            <h3 class="tile__title">{t.title}</h3>
+            <p class="t-body">{t.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="t-meta" data-reveal>Parole interrompt à tout moment. Un appui long sur Non suspend les propositions non essentielles.</p>
+  </CaseSection>
+
+  <!-- 17 — Prototype et limites ---------------------------------------- -->
+  <CaseSection index="17" label="Prototype, faisabilité, limites" title="Ce qui existe, ce qui reste une hypothèse." layout="full" id="limites">
+    <Cards
+      cards={[
+        {
+          title: 'Réalisé',
+          items: ['Maquette 3D de l’habitacle et de la boule dans Blender', 'Écrans animés en calques éditables', 'Film de 45 s et version courte'],
+        },
+        {
+          title: 'Hypothèses',
+          items: ['Lisibilité de la boule en plein soleil', 'Retour haptique des touches', 'Orientation motorisée, bruit et tenue aux chocs'],
+        },
+        {
+          title: 'À tester',
+          items: [
+            'Comprend-on les neuf états sans explication ?',
+            'Le signal fixe est-il remarqué sans détourner le regard ?',
+            'Un visage aide-t-il, ou gêne-t-il ?',
+          ],
+        },
+      ]}
     />
+    <p class="note" data-reveal>
+      Aucun test utilisateur n’a été mené. Le comportement de l’IA est scénarisé : ce n’est pas un
+      assistant embarqué fonctionnel, ni un produit Renault.
+    </p>
+  </CaseSection>
+
+  <!-- Synthèse ---------------------------------------------------------- -->
+  <section class="synthese container" aria-labelledby="synthese-title">
+    <p class="t-meta" data-reveal>Synthèse</p>
+    <h2 id="synthese-title" class="synthese__title t-serif" data-reveal style="--i: 1">
+      Une présence, trois rôles, un dernier mot.
+    </h2>
+    <ul role="list" class="synthese__list">
+      {
+        ['La boule donne un corps lisible au copilote.', 'L’écran explique, la voix et le volant décident.', 'Le film montre le scénario complet.'].map(
+          (t, i) => (
+            <li data-reveal style={`--i: ${i + 2}`}>{t}</li>
+          ),
+        )
+      }
+    </ul>
+  </section>
+
+  <!-- Sources ----------------------------------------------------------- -->
+  <section class="container sources" aria-labelledby="sources-title">
+    <details>
+      <summary class="sources__summary">
+        <span class="t-meta">Références relevées le 13 novembre 2026</span>
+        <span id="sources-title" class="sources__title">Constructeurs, réglementation et recherche</span>
+      </summary>
+      <ul role="list" class="sources__list">
+        {
+          sources.map(([label, url]) => (
+            <li>
+              <a class="link" href={url} target="_blank" rel="noopener">
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
   </section>
 </CaseStudy>
 
@@ -373,19 +563,31 @@ const tree: { title: string; items: [string, string][] }[] = [
   }
 
   .pair,
-  .trio {
+  .trio,
+  .split {
     display: grid;
     gap: var(--space-m) var(--col-gap);
   }
 
   @media (min-width: 768px) {
-    .pair {
+    .pair,
+    .split {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .trio {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+  }
+
+  .split {
+    align-items: center;
+  }
+
+  .stack-s {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
   }
 
   .kpi {
@@ -420,11 +622,93 @@ const tree: { title: string; items: [string, string][] }[] = [
     }
   }
 
+  /* Tuiles image + texte */
+  .tiles {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .tiles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tiles--4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .tiles--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .tile {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+  }
+
+  .tile__kicker {
+    margin-top: var(--space-2xs);
+    color: var(--accent-text);
+  }
+
+  .tile__title {
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+
+  .themes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .themes {
+      max-width: 60rem;
+    }
+  }
+
+  .themes li {
+    display: grid;
+    gap: var(--space-3xs);
+    align-content: start;
+  }
+
+  .synthese {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-2xl);
+  }
+
+  .synthese__title {
+    font-size: clamp(2rem, 1.2rem + 3.6vw, 5.2rem);
+    line-height: 1.02;
+    max-width: 18ch;
+  }
+
+  .synthese__list {
+    display: grid;
+    gap: var(--space-s) var(--col-gap);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-m);
+    font-size: var(--step-1);
+  }
+
+  @media (min-width: 768px) {
+    .synthese__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
   /* Solution */
   .solution {
-    padding-block: var(--space-2xl);
     display: grid;
     gap: var(--space-xl);
+    padding-top: var(--space-2xl);
   }
 
   .solution__head {
@@ -433,90 +717,64 @@ const tree: { title: string; items: [string, string][] }[] = [
   }
 
   .solution__title {
-    font-size: var(--step-4);
+    font-size: clamp(3rem, 1rem + 9vw, 11rem);
     font-weight: 600;
-    font-stretch: 80%;
-    letter-spacing: var(--tracking-display);
-    line-height: 0.95;
+    font-stretch: 76%;
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    color: #5fe0d8;
+  }
+
+  .solution__tag {
+    font-size: var(--step-3);
+    line-height: 1.05;
   }
 
   :global(.bleed) {
     width: 100%;
   }
 
-  .mosaic {
+
+
+
+  .note {
+    padding: var(--space-s) var(--space-m);
+    border: 1px dashed var(--border-strong);
+    color: var(--fg-muted);
+  }
+
+  .sources {
+    padding-top: var(--space-xl);
+  }
+
+  .sources__summary {
     display: grid;
-    gap: var(--space-l) var(--col-gap);
+    gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--border-strong);
+    cursor: pointer;
+    list-style: none;
   }
 
-  @media (min-width: 1024px) {
-    .mosaic {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      align-items: start;
-    }
-
-    .mosaic :global(.mosaic__a) {
-      grid-column: 1 / 8;
-    }
-
-    .mosaic :global(.mosaic__b) {
-      grid-column: 9 / -1;
-      margin-top: var(--space-2xl);
-    }
-
-    .mosaic :global(.mosaic__c) {
-      grid-column: 2 / 6;
-    }
-
-    .mosaic :global(.mosaic__d) {
-      grid-column: 7 / -1;
-      margin-top: calc(var(--space-xl) * -1);
-    }
+  .sources__summary::-webkit-details-marker {
+    display: none;
   }
 
-  /* Pare-brise */
-  .hud {
-    padding-block: var(--space-2xl) 0;
+  .sources__title {
+    font-size: var(--step-1);
+    font-weight: 600;
   }
 
-  .hud__text {
+  .sources__list {
     display: grid;
-    gap: var(--space-m);
-    padding-top: var(--space-l);
+    gap: var(--space-2xs) var(--col-gap);
+    padding-bottom: var(--space-m);
+    font-size: var(--step--1);
   }
 
-  @media (min-width: 1024px) {
-    .hud__text {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--col-gap);
-      align-items: start;
+  @media (min-width: 768px) {
+    .sources__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
-    .hud__text > :nth-child(1) {
-      grid-column: 1 / 4;
-    }
-
-    .hud__text > :nth-child(2) {
-      grid-column: 4 / 10;
-    }
-
-    .hud__text > :nth-child(3) {
-      grid-column: 10 / -1;
-    }
-  }
-
-  :global(.narrow) {
-    max-width: 56rem;
-  }
-
-  .finale {
-    display: grid;
-    gap: var(--space-l);
-    padding-top: var(--space-2xl);
-  }
-
-  .finale .container {
-    display: grid;
-    gap: var(--space-m);
   }
 </style>

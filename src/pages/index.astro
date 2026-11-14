@@ -8,6 +8,7 @@ import LabStrip from '@/components/LabStrip.astro';
 import { projects, decks, slide, getProject } from '@/data/projects';
 import { site } from '@/data/site';
 import mobotixSquare from '@/assets/crops/mobotix-app-square.jpg';
+import renaultHabitacle from '@/assets/crops/renault-habitacle.jpg';
 import { href } from '@/lib/url';
 
 const [renault, inrae, mobotix, laposte, earth] = projects;
@@ -15,9 +16,9 @@ const [renault, inrae, mobotix, laposte, earth] = projects;
 const reel = [
   {
     project: renault,
-    image: slide(decks.renault, 28),
-    alt: renault.thumbAlt,
-    position: '50% 70%',
+    image: renaultHabitacle,
+    alt: 'Habitacle Renault : volant, combiné d’instruments, et la boule du copilote posée sur la planche de bord, à côté d’un bandeau qui propose « Un trajet plus calme ? ».',
+    position: '50% 50%',
   },
   {
     project: inrae,
@@ -45,7 +46,7 @@ const method = [
   {
     step: 'Définir',
     lead: 'Reformuler jusqu’à la bonne question.',
-    text: '« Comment épurer l’interface et transformer l’interaction afin de rendre la conduite plus agréable, adaptée et sécuritaire ? »',
+    text: '« Comment une IA peut-elle proposer sans s’imposer, quand je conduis ? »',
     ref: getProject('renault-center-view'),
   },
   {
