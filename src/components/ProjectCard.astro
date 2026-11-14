@@ -28,6 +28,7 @@ const position = {
   'mobotix-sun-scan': 'center',
   'la-poste': 'center',
   'earth-to-earth': 'center',
+  'manuels-scolaires-numeriques': 'center',
 }[project.slug];
 ---
 
@@ -86,6 +87,10 @@ const position = {
 
   .pcard[data-project-theme='earth'] {
     --card-accent: #7b6cff;
+  }
+
+  .pcard[data-project-theme='idf'] {
+    --card-accent: #f2994a;
   }
 
   .pcard__link {

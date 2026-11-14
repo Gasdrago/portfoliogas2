@@ -3,6 +3,8 @@ import mobotixPortrait from '@/assets/crops/mobotix-app-portrait.jpg';
 import laposteMascot from '@/assets/crops/laposte-postit.jpg';
 import earthCover from '@/assets/crops/earth-evobim.jpg';
 import earthBim from '@/assets/crops/earth-bim.jpg';
+import idfCover from '@/assets/projects/idf/visuels/cover.jpg';
+import idfManette from '@/assets/projects/idf/visuels/manette.jpg';
 import renaultCover from '@/assets/projects/renault-copilote/je-vous-ecoute.png';
 import renaultCompagnon from '@/assets/crops/renault-compagnon.jpg';
 
@@ -13,7 +15,7 @@ import renaultCompagnon from '@/assets/crops/renault-compagnon.jpg';
  * l'information n'est pas fournie, et les composants ne les affichent pas.
  */
 
-export type ProjectTheme = 'renault' | 'mobotix' | 'inrae' | 'laposte' | 'earth';
+export type ProjectTheme = 'renault' | 'mobotix' | 'inrae' | 'laposte' | 'earth' | 'idf';
 
 export interface Project {
   slug: string;
@@ -45,6 +47,12 @@ export interface Project {
   outcome?: string;
   /** Prototype en ligne, présenté après le contenu de l'étude de cas. */
   prototype?: { href: string; label: string };
+  /** Affiche le bouton du prototype en haut de la fiche plutôt qu'après le contenu. */
+  prototypeTop?: boolean;
+  /** Légende de l'image d'ouverture : ce qu'il faut y remarquer. */
+  coverCaption?: string;
+  /** Sélection du portfolio à laquelle le projet est rattaché. */
+  selection?: 'Conseil et innovation' | 'Ingénierie';
 }
 
 type Glob = Record<string, { default: ImageMetadata }>;
@@ -69,6 +77,9 @@ const renaultCopiloteSlides = sortDeck(
 const laposteDeck = sortDeck(
   import.meta.glob<{ default: ImageMetadata }>('../assets/projects/la-poste/*.png', { eager: true }),
 );
+const idfDeck = sortDeck(
+  import.meta.glob<{ default: ImageMetadata }>('../assets/projects/idf/planches/*.jpg', { eager: true }),
+);
 const earthDeck = sortDeck(
   import.meta.glob<{ default: ImageMetadata }>('../assets/projects/earth-to-earth/*.png', { eager: true }),
 );
@@ -86,6 +97,7 @@ export const decks = {
   inrae: inraeDeck,
   laposte: laposteDeck,
   earth: earthDeck,
+  idf: idfDeck,
 };
 
 export const projects: Project[] = [
@@ -213,6 +225,32 @@ export const projects: Project[] = [
       label: 'Maquette EvoBIM (Figma Make)',
     },
   },
+  {
+    slug: 'manuels-scolaires-numeriques',
+    index: '06',
+    client: 'Région Île-de-France',
+    title: 'Manuels scolaires numériques',
+    question:
+      'Comp-AI-gnons aide les lycéens à travailler leur manuel numérique avec un compagnon IA et une manette sensorielle, pour réviser à leur rythme et avec moins de stress.',
+    discipline: 'UX & design produit',
+    summary:
+      'Vers un renouveau des habitudes pédagogiques : quatre compagnons IA et une manette haptique pour faire du manuel numérique un espace bienveillant.',
+    tasks: [],
+    context: 'Projet — CY École de Design',
+    team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
+    selection: 'Conseil et innovation',
+    theme: 'idf',
+    cover: idfCover,
+    coverAlt:
+      'Les quatre Comp-AI-gnons — un caméléon, une tortue, un panda et un singe — en 3D sur un fond dégradé jaune-orange.',
+    coverCaption:
+      'À remarquer : quatre personnalités distinctes — l’animateur, le mentor, le complice, le calme — pour s’adapter à des élèves aux besoins très différents.',
+    thumb: idfManette,
+    thumbAlt: 'La manette interactive en rendu 3D, avec ses touches, ses lumières et son joystick annotés.',
+    deck: idfDeck,
+    prototype: { href: 'https://empathic-learning-grove.lovable.app/', label: 'Tester le prototype' },
+    prototypeTop: true,
+  },
 ];
 
 /**
@@ -227,15 +265,7 @@ export interface OtherProject {
   href?: string;
 }
 
-export const otherProjects: OtherProject[] = [
-  {
-    // À compléter : contexte, année et description du projet IDF.
-    name: 'IDF',
-    discipline: 'Prototype interactif',
-    note: 'Prototype en ligne',
-    href: 'https://empathic-learning-grove.lovable.app/',
-  },
-];
+export const otherProjects: OtherProject[] = [];
 
 export const getProject = (slug: string): Project => {
   const project = projects.find((p) => p.slug === slug);

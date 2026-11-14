@@ -1,0 +1,545 @@
+---
+import CaseStudy from '@/layouts/CaseStudy.astro';
+import CaseSection from '@/components/case/CaseSection.astro';
+import Statement from '@/components/case/Statement.astro';
+import Cards from '@/components/case/Cards.astro';
+import Figure from '@/components/Figure.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { getProject } from '@/data/projects';
+
+import sb11 from '@/assets/projects/idf/visuels/sb1-1.jpg';
+import sb12 from '@/assets/projects/idf/visuels/sb1-2.jpg';
+import sb13 from '@/assets/projects/idf/visuels/sb1-3.jpg';
+import sb14 from '@/assets/projects/idf/visuels/sb1-4.jpg';
+import sb21 from '@/assets/projects/idf/visuels/sb2-1.jpg';
+import sb22 from '@/assets/projects/idf/visuels/sb2-2.jpg';
+import sb23 from '@/assets/projects/idf/visuels/sb2-3.jpg';
+import sb31 from '@/assets/projects/idf/visuels/sb3-1.jpg';
+import sb32 from '@/assets/projects/idf/visuels/sb3-2.jpg';
+import sb33 from '@/assets/projects/idf/visuels/sb3-3.jpg';
+import sb34 from '@/assets/projects/idf/visuels/sb3-4.jpg';
+import manette from '@/assets/projects/idf/visuels/manette.jpg';
+import haptique from '@/assets/projects/idf/visuels/haptique.jpg';
+import croquis from '@/assets/projects/idf/visuels/croquis.jpg';
+import rendus from '@/assets/projects/idf/visuels/rendus.jpg';
+import poc from '@/assets/projects/idf/visuels/poc.jpg';
+import test from '@/assets/projects/idf/visuels/test.jpg';
+import cAnimateur from '@/assets/projects/idf/visuels/c-animateur.jpg';
+import cMentor from '@/assets/projects/idf/visuels/c-mentor.jpg';
+import cComplice from '@/assets/projects/idf/visuels/c-complice.jpg';
+import cCalme from '@/assets/projects/idf/visuels/c-calme.jpg';
+
+const project = getProject('manuels-scolaires-numeriques');
+const lb = 'idf';
+
+// Parcours en trois étapes — panneaux du storyboard du dossier.
+const journey: { step: string; title: string; text: string; panels: [ImageMetadata, string][] }[] = [
+  {
+    step: 'Ce que vit l’élève',
+    title: 'Réviser seul, sans envie',
+    text: 'Pleurs devant le manuel, isolement, cours qui endort, porte qui se ferme : le storyboard part d’un élève pour qui le travail scolaire est devenu une source de stress.',
+    panels: [
+      [sb11, 'Un élève en pleurs devant son manuel.'],
+      [sb12, 'Un élève seul sous la pluie, à l’écart d’autres élèves.'],
+      [sb13, 'Une classe qui s’endort pendant le cours.'],
+      [sb14, 'Un élève claque la porte, une pile de manuels derrière lui.'],
+    ],
+  },
+  {
+    step: 'Ce qu’il utilise',
+    title: 'Une manette, un compagnon',
+    text: 'Il découvre la manette qui s’allume, choisit son compagnon à l’écran, puis répond à l’exercice : la manette vibre et le compagnon valide.',
+    panels: [
+      [sb21, 'La manette s’illumine en sortant de sa boîte, devant un ordinateur.'],
+      [sb22, 'À l’écran, les quatre compagnons ; l’élève en choisit un, un cœur s’affiche.'],
+      [sb23, 'L’élève appuie sur la manette, qui vibre ; une coche verte valide sa réponse.'],
+    ],
+  },
+  {
+    step: 'Ce qu’il obtient',
+    title: 'Progresser, et le partager',
+    text: 'Des niveaux visibles entre camarades, des échanges, de l’entraide : la révision redevient un moment partagé, jusque dans la classe.',
+    panels: [
+      [sb31, 'Quatre élèves et leurs pseudonymes de niveau, de « Faker lvl.5 » à « Huffractal lvl.406 ».'],
+      [sb32, 'Un élève échange avec ses camarades, une bulle avec un cœur.'],
+      [sb33, 'Des élèves réunis et souriants.'],
+      [sb34, 'Une classe enthousiaste, les compagnons affichés au tableau.'],
+    ],
+  },
+];
+
+const companions = [
+  {
+    image: cAnimateur,
+    name: 'L’animateur',
+    role: 'Fait de l’apprentissage un jeu, utilise l’humour et des défis interactifs.',
+    signals: 'Lumières immersives, vibrations scénarisées, voix expressives et bruitages.',
+  },
+  {
+    image: cMentor,
+    name: 'Le mentor',
+    role: 'Apporte des explications détaillées, donne du contexte historique et scientifique.',
+    signals: 'Lumières directionnelles sur les points clés, vibrations légères qui guident sans donner la réponse.',
+  },
+  {
+    image: cComplice,
+    name: 'Le complice',
+    role: 'Encourage, motive, donne des défis et des récompenses.',
+    signals: 'Lumières expressives, vibrations engageantes, réactions audio pleines d’humour.',
+  },
+  {
+    image: cCalme,
+    name: 'Le calme',
+    role: 'Rassurant, il aide à gérer le stress et propose une approche douce.',
+    signals: 'Lumière douce et progressive, vibrations légères, ambiance sonore apaisante.',
+  },
+];
+
+const personas = [
+  ['Aurélien B.', 'TDAH', 'Seconde générale'],
+  ['Julie H.', 'Anxieuse', 'Terminale générale'],
+  ['Omar T.', 'Facilité', 'Première générale'],
+  ['Marie W.', 'Démoralisée', 'Première technologique'],
+];
+---
+
+<CaseStudy slug={project.slug} surface="light" frameBg="#ffffff">
+  <!-- En bref ----------------------------------------------------------- -->
+  <section class="brief container" aria-labelledby="brief-title">
+    <h2 id="brief-title" class="sr-only">Le projet en bref</h2>
+    <dl class="brief__grid">
+      <div data-reveal>
+        <dt class="t-meta">Besoin</dt>
+        <dd>
+          Le manuel scolaire, papier ou numérique, reste associé à la fatigue, au stress et aux sacs
+          lourds. Le projet cherche à en faire un espace « soigneux » pour l’élève.
+        </dd>
+      </div>
+      <div data-reveal style="--i: 1">
+        <dt class="t-meta">Public</dt>
+        <dd>Des lycéens, de la seconde à la terminale, aux profils très différents.</dd>
+      </div>
+      <div data-reveal style="--i: 2">
+        <dt class="t-meta">Équipe</dt>
+        <dd>Gaspard Bayle, Kevidu D. Kussiyage et Alexandre Vo Thanh — CY École de Design, avec la Région Île-de-France.</dd>
+      </div>
+      <div data-reveal style="--i: 3">
+        <dt class="t-meta">Statut du prototype</dt>
+        <dd>
+          Démo web en ligne, testée avec des utilisateurs ; manette modélisée en 3D (Blender) ; affichage
+          test avec QR code dans trois lieux. Le dossier ne présente pas de manette physique.
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- 01 — Parcours ------------------------------------------------------ -->
+  <CaseSection index="01" label="Parcours" title="De la révision subie au progrès partagé." layout="full" id="parcours">
+    <ol role="list" class="journey">
+      {
+        journey.map((j, i) => (
+          <li class="journey__step">
+            <div class="journey__text" data-reveal>
+              <p class="t-index">
+                {String(i + 1).padStart(2, '0')} · {j.step}
+              </p>
+              <h3 class="journey__title">{j.title}</h3>
+              <p class="t-body">{j.text}</p>
+            </div>
+            <ul role="list" class:list={['journey__panels', `journey__panels--${j.panels.length}`]}>
+              {j.panels.map(([img, alt], k) => (
+                <li data-reveal style={`--i: ${k}`}>
+                  <Image
+                    src={img}
+                    alt={alt}
+                    widths={[320, 640]}
+                    width={640}
+                    sizes="(min-width: 1024px) 22vw, 50vw"
+                    format="webp"
+                    quality={80}
+                    loading="lazy"
+                    class="journey__img"
+                  />
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="t-meta">Extraits du storyboard du dossier. Les écrans réels sont à découvrir dans la démo.</p>
+  </CaseSection>
+
+  <!-- 02 — Choix de conception ------------------------------------------ -->
+  <CaseSection index="02" label="Choix de conception" title="Trois décisions, trois besoins." layout="full" id="choix">
+    <ol role="list" class="choices">
+      <li class="choice" data-reveal>
+        <span class="choice__n">01</span>
+        <h3 class="choice__title">Une manette qui engage le corps</h3>
+        <p><strong>Choix :</strong> touches, joystick, lumières et coussinet haptique, en plus de l’écran.</p>
+        <p class="choice__need">
+          <span class="t-meta">Besoin documenté</span> « Engager les sens grâce aux interactions sonores et
+          gestuelles » et « offrir une nouvelle posture d’apprentissage, différente de la classe ».
+        </p>
+      </li>
+      <li class="choice" data-reveal style="--i: 1">
+        <span class="choice__n">02</span>
+        <h3 class="choice__title">Quatre compagnons, pas un seul ton</h3>
+        <p><strong>Choix :</strong> l’élève choisit entre un animateur, un mentor, un complice et un calme.</p>
+        <p class="choice__need">
+          <span class="t-meta">Besoin documenté</span> Les personas vont du TDAH à l’anxiété, de la
+          démotivation à la facilité ; les objectifs visent une solution qui « s’adapte » et met
+          « l’élève au centre ».
+        </p>
+      </li>
+      <li class="choice" data-reveal style="--i: 2">
+        <span class="choice__n">03</span>
+        <h3 class="choice__title">Des retours qui rassurent</h3>
+        <p><strong>Choix :</strong> lumières douces, vibrations légères, feedback instantané et progression visible.</p>
+        <p class="choice__need">
+          <span class="t-meta">Besoin documenté</span> « Réduction du stress » et « apprentissage ludique »
+          pour donner « un sentiment de maîtrise et de satisfaction ».
+        </p>
+      </li>
+    </ol>
+  </CaseSection>
+
+  <!-- 03 — Les compagnons ------------------------------------------------ -->
+  <CaseSection index="03" label="La solution" title="Comp-AI-gnons : quatre caractères, une même manette." layout="full" id="compagnons">
+    <ul role="list" class="companions">
+      {
+        companions.map((c, i) => (
+          <li class="companion" data-reveal style={`--i: ${i}`}>
+            <Image
+              src={c.image}
+              alt={`${c.name}, compagnon IA`}
+              widths={[240]}
+              width={240}
+              sizes="7rem"
+              format="webp"
+              quality={82}
+              loading="lazy"
+              class="companion__img"
+            />
+            <div>
+              <h3 class="companion__name">{c.name}</h3>
+              <p>{c.role}</p>
+              <p class="companion__signals"><span class="t-meta">Sur la manette</span> {c.signals}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="split">
+      <Figure
+        src={manette}
+        alt="Rendu 3D de la manette, annoté : touches, lumières et joystick."
+        caption="La manette : touches, lumières, joystick"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+      <Figure
+        src={haptique}
+        alt="Vue de dessous de la manette en rendu 3D, avec le coussinet haptique."
+        caption="Le coussinet haptique, sous la paume"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+    <div class="split">
+      <Figure
+        src={croquis}
+        alt="Croquis de recherche de la manette au crayon : plusieurs formes, puis une version annotée avec joystick et lumières."
+        caption="Croquis de recherche"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={rendus}
+        alt="Rendus 3D de déclinaisons de la manette en rose et en jaune, avec boutons et lumières."
+        caption="Déclinaisons en 3D"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+  <Statement
+    kicker="Problématique"
+    text="Comment accompagner l’élève en créant un espace « soigneux / bienveillant » pour son épanouissement scolaire ?"
+  />
+
+  <!-- 04 — Recherche ---------------------------------------------------- -->
+  <CaseSection index="04" label="Recherche" title="Observations, interviews, POC." layout="full" id="recherche">
+    <ul role="list" class="personas" aria-label="Personas issus des interviews">
+      {
+        personas.map(([name, trait, level], i) => (
+          <li data-reveal style={`--i: ${i}`}>
+            <span class="personas__trait">{trait}</span>
+            <strong>{name}</strong>
+            <span class="t-meta">{level}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="t-meta">Personas issus des interviews. Cadre de réflexion : Joan Tronto, <em>Un monde vulnérable</em> et <em>Caring Democracy</em>.</p>
+    <Cards
+      cards={[
+        { title: 'Simulation multisensorielle', text: 'Augmente l’engagement, réduit la monotonie, répond à divers styles d’apprentissage.' },
+        { title: 'Accessibilité', text: 'Permet aux élèves ayant des besoins spécifiques de mieux participer, grâce à des outils adaptés.' },
+        { title: 'Réduction du stress', text: 'Des environnements interactifs et bien conçus favorisent l’immersion et la gestion émotionnelle.' },
+        { title: 'Apprentissage ludique', text: 'Des outils interactifs donnent un sentiment de maîtrise et de satisfaction.' },
+      ]}
+    />
+    <div class="split">
+      <Figure
+        src={poc}
+        alt="Affiche « Débloque ton compagnon sur le manuel numérique — Scan moi » avec QR code, posée sur un présentoir de médiathèque."
+        caption="POC : 55 scans à La Fontaine (Paris), à la médiathèque Landowski (Boulogne-Billancourt) et à Léonard de Vinci (Saint-Germain-en-Laye)"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+      <Figure
+        src={test}
+        alt="Test utilisateur : des élèves essaient la démo web sur ordinateur portable."
+        caption="Test utilisateur de la démo"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        framed
+        lightbox={lb}
+      />
+    </div>
+  </CaseSection>
+
+</CaseStudy>
+
+<style>
+  .brief {
+    padding-block: var(--space-xl) var(--space-m);
+  }
+
+  .brief__grid {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .brief__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .brief__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .brief__grid > div {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .brief__grid dd {
+    color: var(--fg-muted);
+  }
+
+  /* Parcours */
+  .journey {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .journey__step {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 1024px) {
+    .journey__step {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .journey__text {
+      grid-column: 1 / 5;
+    }
+
+    .journey__panels {
+      grid-column: 5 / -1;
+    }
+  }
+
+  .journey__text {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .journey__title {
+    font-size: var(--step-2);
+    font-stretch: 88%;
+  }
+
+  .journey__panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xs);
+  }
+
+  @media (min-width: 768px) {
+    .journey__panels--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .journey__panels--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .journey__panels--3 > li:last-child {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    .journey__panels--3 > li:last-child {
+      grid-column: auto;
+    }
+  }
+
+  .journey__panels li {
+    padding: var(--space-2xs);
+    background: #ffffff;
+    border: 1px solid var(--border);
+  }
+
+  .journey__panels :global(.journey__img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+  }
+
+  /* Choix */
+  .choices {
+    display: grid;
+    gap: var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .choices {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .choice {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border-top: 3px solid var(--accent);
+  }
+
+  .choice__n {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--accent-text);
+  }
+
+  .choice__title {
+    font-size: var(--step-1);
+  }
+
+  .choice__need {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--border);
+    color: var(--fg-muted);
+  }
+
+  /* Compagnons */
+  .companions {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .companions {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .companion {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: var(--space-s);
+    align-items: start;
+    padding: var(--space-s);
+    background: #ffffff;
+    border: 1px solid var(--border);
+  }
+
+  .companion :global(.companion__img) {
+    width: 6rem;
+    height: auto;
+  }
+
+  .companion__name {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-3xs);
+  }
+
+  .companion__signals {
+    display: grid;
+    gap: var(--space-3xs);
+    margin-top: var(--space-xs);
+    font-size: var(--step--1);
+    color: var(--fg-muted);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 768px) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Personas */
+  .personas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .personas {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .personas li {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-s);
+    background: var(--bg-raised);
+  }
+
+  .personas__trait {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--accent-text);
+  }
+</style>
