@@ -98,7 +98,7 @@ export const projects: Project[] = [
     year: '2024 — 2026',
     discipline: 'Design d’innovation',
     summary:
-      'Un copilote IA qui propose sans interrompre : il lève la main, la conductrice choisit quand lui donner la parole.',
+      'Un copilote qui propose, une conductrice qui décide : une boule donne un corps lisible à l’IA, l’écran explique, la voix et le volant décident.',
     tasks: [
       'Définir l’interaction et analyser le tableau de bord automobile',
       'Identifier les problèmes utilisateurs et formuler une problématique',
@@ -112,9 +112,9 @@ export const projects: Project[] = [
     thumb: renaultCompagnon,
     thumbAlt:
       'La boule-compagnon sur la planche de bord, visage lumineux souriant ; l’écran affiche « Bonjour Mélina, où allons-nous ? ».',
-    // Dossier : recherche (1–11), zones sonores (18–19), volant (29–33), puis le concept Main levée.
+    // Dossier : recherche (1–11), volant (29–33), puis le copilote Main levée.
     deck: [
-      ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 29, 30, 31, 32, 33].map((n) => slide(renaultDeck, n)),
+      ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 29, 30, 31, 32, 33].map((n) => slide(renaultDeck, n)),
       ...renaultCopiloteSlides,
     ],
   },
