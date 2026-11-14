@@ -3,6 +3,8 @@ import mobotixPortrait from '@/assets/crops/mobotix-app-portrait.jpg';
 import laposteMascot from '@/assets/crops/laposte-postit.jpg';
 import earthCover from '@/assets/crops/earth-evobim.jpg';
 import earthBim from '@/assets/crops/earth-bim.jpg';
+import renaultCover from '@/assets/projects/renault-copilote/je-vous-ecoute.png';
+import renaultCompagnon from '@/assets/crops/renault-compagnon.jpg';
 
 /**
  * Projets — contenu extrait des planches de présentation originales
@@ -61,6 +63,9 @@ const mobotixDeck = sortDeck(
 const inraeDeck = sortDeck(
   import.meta.glob<{ default: ImageMetadata }>('../assets/projects/inrae/*.png', { eager: true }),
 );
+const renaultCopiloteSlides = sortDeck(
+  import.meta.glob<{ default: ImageMetadata }>('../assets/projects/renault/slides-copilote/*.png', { eager: true }),
+);
 const laposteDeck = sortDeck(
   import.meta.glob<{ default: ImageMetadata }>('../assets/projects/la-poste/*.png', { eager: true }),
 );
@@ -88,12 +93,12 @@ export const projects: Project[] = [
     slug: 'renault-center-view',
     index: '01',
     client: 'Renault',
-    title: 'Center View',
+    title: 'Main levée',
     question: 'Comment créer le futur de l’interaction de la mobilité ?',
-    year: '2024',
+    year: '2024 — 2026',
     discipline: 'Design d’innovation',
     summary:
-      'Repenser le poste de conduite : un tableau de bord épuré autour de trois usages, un volant réinventé et un affichage tête haute.',
+      'Un copilote IA qui propose sans interrompre : il lève la main, la conductrice choisit quand lui donner la parole.',
     tasks: [
       'Définir l’interaction et analyser le tableau de bord automobile',
       'Identifier les problèmes utilisateurs et formuler une problématique',
@@ -101,13 +106,17 @@ export const projects: Project[] = [
       'Concevoir un nouveau volant et des boutons adaptés',
     ],
     theme: 'renault',
-    cover: slide(renaultDeck, 12),
+    cover: renaultCover,
     coverAlt:
-      'Rendu du tableau de bord Center View : un bandeau d’écran épuré qui n’affiche que trois applications — musique, téléphone et navigation.',
-    thumb: slide(renaultDeck, 28),
+      'Le copilote Main levée : une boule noire au logo Renault posée sur la planche de bord, à côté d’un bandeau d’écran qui affiche « Je vous écoute ».',
+    thumb: renaultCompagnon,
     thumbAlt:
-      'Affichage tête haute sur le pare-brise : vitesse, limitation, guidage et météo superposés à la route.',
-    deck: renaultDeck,
+      'La boule-compagnon sur la planche de bord, visage lumineux souriant ; l’écran affiche « Bonjour Mélina, où allons-nous ? ».',
+    // Dossier : recherche (1–11), zones sonores (18–19), volant (29–33), puis le concept Main levée.
+    deck: [
+      ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 29, 30, 31, 32, 33].map((n) => slide(renaultDeck, n)),
+      ...renaultCopiloteSlides,
+    ],
   },
   {
     slug: 'inrae',
