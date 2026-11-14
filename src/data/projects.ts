@@ -209,7 +209,7 @@ export const projects: Project[] = [
     thumbAlt: 'Interface de la plateforme EvoBIM sur un ordinateur portable : maquette 3D du bâtiment et curseur de transformation.',
     deck: earthDeck,
     prototype: {
-      href: 'https://www.figma.com/make/8D06cxDeiikSyaadFha6nV/BIM-4.0-Interface-Design?t=3uyEEpW3xLaEzS2c-20&fullscreen=1',
+      href: 'https://www.figma.com/make/8D06cxDeiikSyaadFha6nV/BIM-4.0-Interface-Design?fullscreen=1&t=xAgHVvosUZ9dBJwq-1&code-node-id=0-9',
       label: 'Maquette EvoBIM (Figma Make)',
     },
   },
