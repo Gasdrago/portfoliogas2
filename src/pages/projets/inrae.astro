@@ -7,6 +7,7 @@ import Branches from '@/components/case/Branches.astro';
 import People from '@/components/case/People.astro';
 import Feature from '@/components/case/Feature.astro';
 import Figure from '@/components/Figure.astro';
+import InraeDecision from '@/components/demos/InraeDecision.astro';
 import { decks, slide, getProject } from '@/data/projects';
 
 const project = getProject('inrae');
@@ -15,6 +16,29 @@ const lb = 'inrae';
 ---
 
 <CaseStudy slug={project.slug} surface="dark" frameBg="#ffffff">
+  <!-- En bref + démo ---------------------------------------------------- -->
+  <section class="brief container" aria-labelledby="brief-title">
+    <h2 id="brief-title" class="sr-only">Le projet en bref</h2>
+    <dl class="brief__grid">
+      <div data-reveal>
+        <dt class="t-meta">Constat</dt>
+        <dd>Réticence au numérique, méconnaissance des outils, peur de l’endettement : trois freins relevés sur le terrain.</dd>
+      </div>
+      <div data-reveal style="--i: 1">
+        <dt class="t-meta">Réponse</dt>
+        <dd>
+          Une plateforme qui part de la situation de l’agriculteur, <strong>simplifie l’information</strong> et
+          l’amène à une décision éclairée.
+        </dd>
+      </div>
+      <div data-reveal style="--i: 2">
+        <dt class="t-meta">Ce qui existe</dt>
+        <dd>Quatre entretiens de terrain, un storyboard, un système de pictogrammes et une maquette de site.</dd>
+      </div>
+    </dl>
+    <InraeDecision />
+  </section>
+
   <!-- 01 — Contexte ---------------------------------------------------- -->
   <CaseSection index="01" label="Contexte" title="Un moment de bascule : adopter, ou non." id="contexte">
     <p class="t-lead lead" data-reveal>
@@ -298,6 +322,41 @@ const lb = 'inrae';
 </CaseStudy>
 
 <style>
+  .brief {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-xl) var(--space-m);
+  }
+
+  .brief__grid {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .brief__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .brief__grid > div {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .brief__grid dd {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--fg-muted);
+  }
+
+  .brief__grid dd strong {
+    color: var(--fg);
+  }
+
   .lead {
     max-width: 46ch;
   }

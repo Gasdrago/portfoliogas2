@@ -1,0 +1,531 @@
+---
+/**
+ * Démo Sun Scan — produite pour le portfolio (pas un livrable du projet d'origine).
+ * Elle rejoue le principe de la solution : la caméra-bouée détecte, l'application
+ * alerte, le maître-nageur décide. Données et comportement scénarisés.
+ */
+const swimmers = [
+  [120, 150], [170, 185], [215, 140], [260, 190], [300, 160], [150, 215], [240, 225], [330, 205],
+];
+---
+
+<section class="ssd" data-ssd data-state="veille" aria-labelledby="ssd-title">
+  <header class="ssd__head">
+    <p class="ssd__badge">Démo réalisée pour le portfolio · données scénarisées</p>
+    <h3 id="ssd-title" class="ssd__title">De la bouée à la décision, en trois temps</h3>
+    <ol role="list" class="ssd__steps">
+      <li><button type="button" data-ssd-go="detection"><span>1</span> La caméra détecte</button></li>
+      <li><button type="button" data-ssd-go="alerte"><span>2</span> L’application alerte</button></li>
+      <li><button type="button" data-ssd-go="decision"><span>3</span> Le maître-nageur décide</button></li>
+    </ol>
+  </header>
+
+  <div class="ssd__stage">
+    <!-- Vue de la caméra-bouée -->
+    <figure class="ssd__scene">
+      <svg viewBox="0 0 440 300" role="img" aria-label="Vue schématique de la plage depuis la caméra-bouée : zone de baignade, nageurs, chaise du maître-nageur.">
+        <rect width="440" height="300" fill="#bfe3ee" />
+        <path d="M0 250 Q110 232 220 250 T440 246 V300 H0 Z" fill="#f1e2c2" />
+        <path class="ssd__wave" d="M0 60 Q55 52 110 60 T220 60 T330 60 T440 60" />
+        <path class="ssd__wave" d="M0 100 Q55 92 110 100 T220 100 T330 100 T440 100" />
+        <rect class="ssd__zone" x="90" y="120" width="270" height="118" rx="10" />
+        <text x="98" y="136" class="ssd__label">ZONE DE BAIGNADE</text>
+        {swimmers.map(([x, y]) => <circle cx={x} cy={y} r="5" class="ssd__swimmer" />)}
+        <!-- Nageur qui sort de la zone -->
+        <g class="ssd__target">
+          <circle class="ssd__ring" cx="0" cy="0" r="14" />
+          <circle cx="0" cy="0" r="6" class="ssd__swimmer ssd__swimmer--out" />
+        </g>
+        <!-- Chaise + bouée-caméra -->
+        <g transform="translate(206 262)">
+          <rect x="-3" y="-4" width="6" height="26" fill="#6b5a45" />
+          <circle r="11" fill="#ff5a1f" />
+          <circle r="5" fill="#fff" />
+          <circle r="2.5" fill="#111a33" />
+        </g>
+        <line class="ssd__sight" x1="206" y1="262" x2="372" y2="88" />
+        <text x="222" y="286" class="ssd__label">SUN SCAN</text>
+      </svg>
+      <figcaption class="ssd__caption" data-ssd-scene-caption>La caméra-bouée observe la zone de baignade.</figcaption>
+    </figure>
+
+    <!-- Application du maître-nageur -->
+    <div class="ssd__phone" aria-live="polite">
+      <div class="ssd__screen ssd__screen--home">
+        <p class="ssd__app">Sun Scan <span>Plage · poste 2</span></p>
+        <p class="ssd__risk"><strong data-ssd-risk>35 %</strong> niveau de risque</p>
+        <ul role="list" class="ssd__events">
+          <li data-ssd-new hidden><span class="ssd__pin ssd__pin--alert"></span> Nageur sorti de la zone <em>à l’instant</em></li>
+          <li><span class="ssd__pin"></span> Enfant non accompagné <em>il y a 12 min</em></li>
+          <li><span class="ssd__pin"></span> Danger marin signalé <em>il y a 40 min</em></li>
+        </ul>
+      </div>
+
+      <div class="ssd__screen ssd__screen--alert">
+        <p class="ssd__alert-kicker">Alerte</p>
+        <p class="ssd__alert-title">Sortie de zone</p>
+        <p class="ssd__alert-text">Un nageur s’éloigne, côté nord-est. Détecté par la caméra il y a 8 s.</p>
+        <div class="ssd__actions">
+          <button type="button" class="ssd__action ssd__action--primary" data-ssd-decide="localiser">Localiser</button>
+          <button type="button" class="ssd__action" data-ssd-decide="appeler">Appeler</button>
+          <button type="button" class="ssd__action ssd__action--quiet" data-ssd-decide="fausse">Fausse alerte</button>
+        </div>
+      </div>
+
+      <div class="ssd__screen ssd__screen--result">
+        <p class="ssd__alert-kicker">Décision</p>
+        <p class="ssd__alert-title" data-ssd-result-title>—</p>
+        <p class="ssd__alert-text" data-ssd-result-text></p>
+        <button type="button" class="ssd__action" data-ssd-go="veille">Rejouer</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="ssd__status" data-ssd-status>
+    Appuyez sur « La caméra détecte » pour lancer le scénario.
+  </p>
+</section>
+
+<script>
+  type State = 'veille' | 'detection' | 'alerte' | 'decision' | 'resultat';
+
+  const copy: Record<string, { status: string; scene: string }> = {
+    veille: {
+      status: 'Appuyez sur « La caméra détecte » pour lancer le scénario.',
+      scene: 'La caméra-bouée observe la zone de baignade.',
+    },
+    detection: {
+      status: '1 · La caméra repère un nageur qui sort de la zone. Rien ne s’affiche encore en grand : l’événement entre dans le fil.',
+      scene: 'Un nageur franchit la limite de la zone.',
+    },
+    alerte: {
+      status: '2 · L’application passe en alerte : un seul écran, la cause, et les actions les plus importantes.',
+      scene: 'L’alerte est envoyée au maître-nageur.',
+    },
+    decision: {
+      status: '3 · C’est le maître-nageur qui décide : localiser, appeler, ou classer en fausse alerte.',
+      scene: 'En attente de la décision du maître-nageur.',
+    },
+  };
+
+  const results: Record<string, { title: string; text: string; scene: string }> = {
+    localiser: {
+      title: 'Nageur localisé',
+      text: 'La direction est indiquée depuis le poste. Le maître-nageur garde la main sur la suite.',
+      scene: 'La caméra indique la direction du nageur depuis le poste.',
+    },
+    appeler: {
+      title: 'Appel lancé',
+      text: 'Les secours sont prévenus avec la position détectée. L’événement est consigné.',
+      scene: 'La position détectée est transmise avec l’appel.',
+    },
+    fausse: {
+      title: 'Classée sans suite',
+      text: 'L’alerte est fermée et consignée comme fausse alerte. Le niveau de risque redescend.',
+      scene: 'L’alerte est levée ; la surveillance continue.',
+    },
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-ssd]').forEach((root) => {
+    const status = root.querySelector<HTMLElement>('[data-ssd-status]')!;
+    const sceneCaption = root.querySelector<HTMLElement>('[data-ssd-scene-caption]')!;
+    const risk = root.querySelector<HTMLElement>('[data-ssd-risk]')!;
+    const newEvent = root.querySelector<HTMLElement>('[data-ssd-new]')!;
+    const resultTitle = root.querySelector<HTMLElement>('[data-ssd-result-title]')!;
+    const resultText = root.querySelector<HTMLElement>('[data-ssd-result-text]')!;
+    const steps = Array.from(root.querySelectorAll<HTMLButtonElement>('.ssd__steps [data-ssd-go]'));
+    const order: State[] = ['detection', 'alerte', 'decision'];
+
+    const set = (state: State) => {
+      root.dataset.state = state;
+      root.dataset.choice = '';
+      const c = copy[state];
+      if (c) {
+        status.textContent = c.status;
+        sceneCaption.textContent = c.scene;
+      }
+      const reached = order.indexOf(state);
+      steps.forEach((b, i) => b.setAttribute('aria-current', String(i === reached)));
+      newEvent.hidden = state === 'veille';
+      risk.textContent = state === 'veille' ? '35 %' : '65 %';
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-ssd-go]').forEach((b) =>
+      b.addEventListener('click', () => set(b.dataset.ssdGo as State)),
+    );
+
+    root.querySelectorAll<HTMLButtonElement>('[data-ssd-decide]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const r = results[b.dataset.ssdDecide ?? ''];
+        if (!r) return;
+        root.dataset.state = 'resultat';
+        root.dataset.choice = b.dataset.ssdDecide;
+        resultTitle.textContent = r.title;
+        resultText.textContent = r.text;
+        sceneCaption.textContent = r.scene;
+        status.textContent = `Décision prise : ${r.title.toLowerCase()}. Elle revient toujours au maître-nageur, jamais à la caméra.`;
+        risk.textContent = b.dataset.ssdDecide === 'fausse' ? '35 %' : '65 %';
+        steps.forEach((s, i) => s.setAttribute('aria-current', String(i === 2)));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .ssd {
+    --ssd-orange: #ff5a1f;
+    --ssd-ink: #111a33;
+    display: grid;
+    gap: var(--space-m);
+    padding: clamp(1rem, 3vw, 2rem);
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+  }
+
+  .ssd__head {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .ssd__badge {
+    justify-self: start;
+    padding: 0.3rem 0.7rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+  }
+
+  .ssd__title {
+    font-size: var(--step-2);
+    font-stretch: 88%;
+  }
+
+  .ssd__steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .ssd__steps button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--bg);
+    font-weight: 500;
+    transition:
+      background var(--dur-2) var(--ease-out),
+      color var(--dur-2);
+  }
+
+  .ssd__steps button span {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .ssd__steps button[aria-current='true'] {
+    background: var(--ssd-ink);
+    color: #fff;
+    border-color: var(--ssd-ink);
+  }
+
+  .ssd__stage {
+    display: grid;
+    gap: var(--space-m);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .ssd__stage {
+      grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.8fr);
+    }
+  }
+
+  .ssd__scene {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .ssd__scene svg {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-m);
+  }
+
+  .ssd__wave {
+    fill: none;
+    stroke: #fff;
+    stroke-opacity: 0.55;
+    stroke-width: 1.5;
+  }
+
+  .ssd__zone {
+    fill: rgb(255 255 255 / 0.18);
+    stroke: #fff;
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+  }
+
+  .ssd__label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    fill: var(--ssd-ink);
+  }
+
+  .ssd__swimmer {
+    fill: var(--ssd-ink);
+  }
+
+  .ssd__target {
+    transform: translate(320px, 150px);
+    transition: transform 1.6s var(--ease-in-out);
+  }
+
+  .ssd:not([data-state='veille']) .ssd__target {
+    transform: translate(372px, 88px);
+  }
+
+  .ssd__swimmer--out {
+    transition: fill var(--dur-2);
+  }
+
+  .ssd:not([data-state='veille']) .ssd__swimmer--out {
+    fill: var(--ssd-orange);
+  }
+
+  .ssd__ring {
+    fill: none;
+    stroke: var(--ssd-orange);
+    stroke-width: 2;
+    opacity: 0;
+  }
+
+  .ssd:not([data-state='veille']) .ssd__ring {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ssd[data-state='detection'] .ssd__ring,
+    .ssd[data-state='alerte'] .ssd__ring,
+    .ssd[data-state='decision'] .ssd__ring {
+      animation: ssd-pulse 1.4s ease-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+  }
+
+  @keyframes ssd-pulse {
+    from {
+      transform: scale(0.6);
+      opacity: 1;
+    }
+    to {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+
+  .ssd__sight {
+    stroke: var(--ssd-orange);
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+    opacity: 0;
+    transition: opacity var(--dur-2);
+  }
+
+  .ssd[data-choice='localiser'] .ssd__sight,
+  .ssd[data-choice='appeler'] .ssd__sight {
+    opacity: 1;
+  }
+
+  .ssd[data-choice='fausse'] .ssd__ring {
+    opacity: 0;
+  }
+
+  .ssd[data-choice='fausse'] .ssd__swimmer--out {
+    fill: var(--ssd-ink);
+  }
+
+  .ssd__caption {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+  }
+
+  /* Téléphone */
+  .ssd__phone {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 17rem);
+    aspect-ratio: 9 / 16;
+    padding: 0.6rem;
+    border-radius: 2rem;
+    background: var(--ssd-ink);
+    box-shadow: var(--shadow-float);
+  }
+
+  .ssd__screen {
+    position: absolute;
+    inset: 0.6rem;
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding: 1.25rem 1rem;
+    border-radius: 1.5rem;
+    background: #fff;
+    color: var(--ssd-ink);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      visibility 0s linear var(--dur-2);
+  }
+
+  .ssd[data-state='veille'] .ssd__screen--home,
+  .ssd[data-state='detection'] .ssd__screen--home,
+  .ssd[data-state='alerte'] .ssd__screen--alert,
+  .ssd[data-state='decision'] .ssd__screen--alert,
+  .ssd[data-state='resultat'] .ssd__screen--result {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      visibility 0s;
+  }
+
+  .ssd__app {
+    display: grid;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .ssd__app span {
+    font-weight: 400;
+    font-size: 0.75rem;
+    opacity: 0.65;
+  }
+
+  .ssd__risk {
+    display: grid;
+    padding: 0.75rem;
+    border-radius: 0.9rem;
+    background: #eef1fa;
+    font-size: 0.75rem;
+  }
+
+  .ssd__risk strong {
+    font-size: 2rem;
+    line-height: 1;
+    font-stretch: 80%;
+  }
+
+  .ssd__events {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+
+  .ssd__events li {
+    display: grid;
+    grid-template-columns: 0.6rem 1fr;
+    gap: 0 0.5rem;
+    align-items: baseline;
+  }
+
+  .ssd__events em {
+    grid-column: 2;
+    font-style: normal;
+    opacity: 0.6;
+    font-size: 0.7rem;
+  }
+
+  .ssd__pin {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #9aa3bd;
+  }
+
+  .ssd__pin--alert {
+    background: var(--ssd-orange);
+  }
+
+  .ssd__screen--alert {
+    background: var(--ssd-orange);
+    color: #1a0d05;
+    align-content: center;
+  }
+
+  .ssd__alert-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ssd__alert-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-stretch: 82%;
+    line-height: 1;
+  }
+
+  .ssd__alert-text {
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .ssd__screen--result {
+    align-content: center;
+  }
+
+  .ssd__actions {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+
+  .ssd__action {
+    min-height: 2.75rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.8rem;
+    border: 1.5px solid currentColor;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .ssd__action--primary {
+    background: #1a0d05;
+    color: #fff;
+    border-color: #1a0d05;
+  }
+
+  .ssd__action--quiet {
+    border-style: dashed;
+    font-weight: 500;
+  }
+
+  /* Tant que l'on n'est pas à l'étape « décision », les actions sont visibles mais inertes. */
+  .ssd[data-state='alerte'] .ssd__actions {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .ssd__status {
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border);
+    font-size: var(--step-0);
+    max-width: 62ch;
+    min-height: 3.2em;
+  }
+</style>

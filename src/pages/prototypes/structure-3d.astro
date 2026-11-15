@@ -1,0 +1,448 @@
+---
+/**
+ * Prototype — « L'éclaté de la boule » : animatique d'une animation 3D à produire.
+ * Le schéma SVG ci-dessous tient la place des futurs rendus Blender : il sert à régler
+ * le découpage en actes, le rythme au scroll et les légendes. Page hors navigation, non indexée.
+ */
+import Base from '@/layouts/Base.astro';
+import { href } from '@/lib/url';
+
+// Pièces de la boule Main levée (source : présentation du projet), de l'avant vers le socle.
+const parts = [
+  { id: 'verre', name: 'Verre fumé bombé', text: 'La surface d’affichage est derrière le verre.', dy: -230 },
+  { id: 'ecran', name: 'Écran', text: 'Il porte l’état du copilote : veille, écoute, proposition.', dy: -150 },
+  { id: 'bague', name: 'Bague moletée', text: 'À l’arrêt : tourner pour parcourir, presser pour choisir.', dy: -70 },
+  { id: 'fourche', name: 'Fourche et pivots', text: 'Une orientation légère vers la personne, bornée.', dy: 10 },
+  { id: 'embase', name: 'Embase', text: 'Grille et micros.', dy: 90 },
+];
+
+const acts = [
+  { n: '01', name: 'L’objet', text: 'La boule assemblée, en veille. Un quart de tour lent.' },
+  { n: '02', name: 'L’éclaté', text: 'Les cinq pièces se séparent le long de l’axe. Chaque légende apparaît avec sa pièce.' },
+  { n: '03', name: 'Le remontage', text: 'Les pièces se rejoignent ; l’objet redevient une présence, pas un mécanisme.' },
+  { n: '04', name: 'La vie', text: 'L’écran s’allume : veille, écoute, proposition.' },
+];
+---
+
+<Base
+  title="Prototype — structure 3D au scroll"
+  description="Animatique d’une animation 3D à produire : l’éclaté de la boule Main levée, pilotée au scroll."
+  theme="night"
+  bareFooter
+>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <article data-surface="dark">
+    <header class="intro container">
+      <p class="t-meta"><a class="link link--quiet" href={href('')}>← Portfolio</a> · Prototype de travail</p>
+      <h1 class="intro__title">
+        L’éclaté <em class="t-serif">de la boule</em>
+      </h1>
+      <p class="t-lead">
+        Animatique d’une animation 3D <strong>à produire</strong> pour la fiche Main levée. Le schéma tient la
+        place des rendus Blender : il sert à régler le découpage, le rythme au scroll et les légendes.
+        Faites défiler.
+      </p>
+    </header>
+
+    <section class="seq" data-seq aria-label="Animatique : la boule s’ouvre pièce par pièce au défilement">
+      <div class="seq__sticky">
+        <div class="seq__stage container">
+          <svg class="seq__svg" viewBox="0 0 400 560" role="img" aria-label="Schéma de la boule : cinq pièces qui se séparent verticalement puis se rejoignent.">
+            <!-- Pièces (vue éclatée) -->
+            <g class="seq__layers">
+              {
+                parts.map((p) => (
+                  <g class="seq__layer" style={`--dy: ${p.dy}px`} data-part={p.id}>
+                    {p.id === 'verre' && <path d="M110 330 A90 90 0 0 1 290 330 A90 26 0 0 1 110 330 Z" class="g-glass" />}
+                    {p.id === 'ecran' && (
+                      <>
+                        <ellipse cx="200" cy="330" rx="84" ry="24" class="g-screen" />
+                        <path d="M176 326 v8 M224 326 v8 M186 338 q14 6 28 0" class="g-face" />
+                      </>
+                    )}
+                    {p.id === 'bague' && <ellipse cx="200" cy="330" rx="92" ry="27" class="g-ring" />}
+                    {p.id === 'fourche' && <path d="M96 318 v26 a104 30 0 0 0 208 0 v-26" class="g-fork" />}
+                    {p.id === 'embase' && (
+                      <>
+                        <path d="M130 330 h140 l18 44 h-176 Z" class="g-base" />
+                        <path d="M160 356 h80 M166 364 h68" class="g-grille" />
+                      </>
+                    )}
+                    <g class="seq__label">
+                      <line x1="300" y1="330" x2="326" y2="330" />
+                      <text x="332" y="334">{p.name}</text>
+                    </g>
+                  </g>
+                ))
+              }
+            </g>
+            <!-- Objet assemblé -->
+            <g class="seq__ball">
+              <path d="M130 372 h140 l18 44 h-176 Z" class="g-base" />
+              <path d="M104 320 v26 a96 30 0 0 0 192 0 v-26" class="g-fork" />
+              <circle cx="200" cy="300" r="92" class="g-ballbody" />
+              <path d="M132 262 a80 80 0 0 1 60 -46" class="g-shine" />
+              <g class="seq__face">
+                <path d="M176 290 v18 M224 290 v18 M184 326 q16 10 32 0" class="g-face" />
+              </g>
+            </g>
+          </svg>
+
+          <ol role="list" class="seq__acts">
+            {
+              acts.map((a, i) => (
+                <li class="seq__act" data-act={i}>
+                  <span class="t-index">{a.n}</span>
+                  <div>
+                    <h2 class="seq__act-name">{a.name}</h2>
+                    <p>{a.text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+        <div class="seq__bar" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <section class="spec container" aria-labelledby="spec-title">
+      <h2 id="spec-title" class="t-h2">Cahier de rendu pour Blender</h2>
+      <dl class="spec__grid">
+        <div>
+          <dt class="t-meta">Pièces</dt>
+          <dd>
+            <ul role="list">
+              {parts.map((p) => <li><strong>{p.name}</strong> — {p.text}</li>)}
+            </ul>
+          </dd>
+        </div>
+        <div>
+          <dt class="t-meta">Séquence</dt>
+          <dd>
+            120 images, caméra fixe, sans flou de mouvement : c’est le défilement qui donne la vitesse.
+            Objet centré dans un carré, pour être recadré sur téléphone sans rien perdre.
+          </dd>
+        </div>
+        <div>
+          <dt class="t-meta">Export</dt>
+          <dd>
+            Fond uni de la couleur de la page. WebP, 1280 px de large sur ordinateur (une image sur deux et
+            640 px sur téléphone). Une image fixe de secours pour « réduire les animations ».
+          </dd>
+        </div>
+        <div>
+          <dt class="t-meta">Dans la fiche</dt>
+          <dd>
+            Le bloc remplace la section « L’objet » de Main levée. Les légendes restent du texte HTML,
+            lisible sans l’animation.
+          </dd>
+        </div>
+      </dl>
+    </section>
+  </article>
+</Base>
+
+<script>
+  const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const ramp = (p: number, a: number, b: number) => clamp((p - a) / (b - a));
+  const ease = (t: number) => t * t * (3 - 2 * t);
+
+  document.querySelectorAll<HTMLElement>('[data-seq]').forEach((seq) => {
+    const acts = Array.from(seq.querySelectorAll<HTMLElement>('[data-act]'));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const rect = seq.getBoundingClientRect();
+      const p = clamp(-rect.top / (rect.height - window.innerHeight));
+      // Actes : 0–0,15 objet · 0,15–0,6 éclaté · 0,6–0,82 remontage · 0,82–1 vie
+      const explode = ease(ramp(p, 0.15, 0.45)) * (1 - ease(ramp(p, 0.62, 0.82)));
+      const glow = ease(ramp(p, 0.84, 0.95));
+      seq.style.setProperty('--e', (reduced ? (p > 0.15 && p < 0.72 ? 1 : 0) : explode).toFixed(3));
+      seq.style.setProperty('--g', glow.toFixed(3));
+      seq.style.setProperty('--p', p.toFixed(3));
+      const act = p < 0.15 ? 0 : p < 0.62 ? 1 : p < 0.82 ? 2 : 3;
+      acts.forEach((a, i) => a.classList.toggle('is-current', i === act));
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  });
+</script>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: calc(var(--header-h) + var(--space-xl));
+    padding-bottom: var(--space-xl);
+  }
+
+  .intro__title {
+    font-size: clamp(3rem, 1rem + 9vw, 10rem);
+    font-weight: 600;
+    font-stretch: 76%;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+  }
+
+  .intro__title em {
+    font-weight: 400;
+    color: #5fe0d8;
+  }
+
+  .intro .t-lead {
+    max-width: 52ch;
+  }
+
+  .seq {
+    --e: 0;
+    --g: 0;
+    --p: 0;
+    height: 420vh;
+  }
+
+  .seq__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: hidden;
+  }
+
+  .seq__stage {
+    display: grid;
+    gap: var(--space-s);
+    align-items: center;
+    min-height: 0;
+    padding-top: var(--header-h);
+  }
+
+  @media (min-width: 900px) {
+    .seq__stage {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .seq__svg {
+    width: 100%;
+    height: 100%;
+    max-height: 56svh;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  @media (min-width: 900px) {
+    .seq__svg {
+      max-height: 80svh;
+    }
+  }
+
+  /* Tracés */
+  .g-glass {
+    fill: rgb(95 224 216 / 0.14);
+    stroke: #5fe0d8;
+    stroke-width: 1.5;
+  }
+
+  .g-screen {
+    fill: #05080a;
+    stroke: #c9c6bf;
+    stroke-width: 1.5;
+  }
+
+  .g-ring {
+    fill: none;
+    stroke: #c9c6bf;
+    stroke-width: 7;
+    stroke-dasharray: 2 3;
+  }
+
+  .g-fork,
+  .g-base {
+    fill: #1a1a18;
+    stroke: #c9c6bf;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .g-fork {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+  }
+
+  .g-grille {
+    stroke: #9a978f;
+    stroke-width: 1.5;
+    stroke-dasharray: 2 4;
+    fill: none;
+  }
+
+  .g-ballbody {
+    fill: #05080a;
+    stroke: #c9c6bf;
+    stroke-width: 1.5;
+  }
+
+  .g-shine {
+    fill: none;
+    stroke: #f6f5f1;
+    stroke-opacity: 0.5;
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .g-face {
+    fill: none;
+    stroke: #5fe0d8;
+    stroke-width: 5;
+    stroke-linecap: round;
+  }
+
+  /* Mouvement piloté par --e (éclaté) et --g (allumage) */
+  .seq__layers {
+    opacity: calc(var(--e) * 4);
+  }
+
+  .seq__layer {
+    transform: translateY(calc(var(--dy) * var(--e)));
+  }
+
+  .seq__layer .g-face {
+    stroke-width: 2.5;
+    opacity: 0.6;
+  }
+
+  .seq__label {
+    opacity: calc((var(--e) - 0.6) * 2.5);
+  }
+
+  .seq__label line {
+    stroke: #9a978f;
+    stroke-width: 1;
+  }
+
+  .seq__label text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    fill: #f6f5f1;
+  }
+
+  /* Sur écran étroit, les légendes du schéma sortiraient du cadre : la liste des actes suffit. */
+  @media (max-width: 899px) {
+    .seq__label text {
+      font-size: 10px;
+    }
+  }
+
+  .seq__ball {
+    opacity: calc(1 - var(--e) * 4);
+    transform-origin: 200px 300px;
+    transform: rotate(calc((1 - var(--p)) * -8deg));
+  }
+
+  .seq__face {
+    opacity: var(--g);
+  }
+
+  /* Actes */
+  .seq__acts {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: center;
+  }
+
+  .seq__act {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: var(--space-xs);
+    padding-block: var(--space-xs);
+    border-top: 1px solid var(--border);
+    color: var(--fg-subtle);
+    transition: color var(--dur-2);
+  }
+
+  .seq__act p {
+    display: none;
+    max-width: 40ch;
+  }
+
+  .seq__act-name {
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+
+  .seq__act.is-current {
+    color: var(--fg);
+  }
+
+  .seq__act.is-current p {
+    display: block;
+    color: var(--fg-muted);
+  }
+
+  .seq__bar {
+    height: 2px;
+    background: var(--border);
+  }
+
+  .seq__bar span {
+    display: block;
+    height: 100%;
+    background: #5fe0d8;
+    transform-origin: left;
+    transform: scaleX(var(--p));
+  }
+
+  .spec {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-2xl);
+  }
+
+  .spec__grid {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 900px) {
+    .spec__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .spec__grid > div {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .spec__grid dd {
+    color: var(--fg-muted);
+  }
+
+  .spec__grid ul {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .spec__grid strong {
+    color: var(--fg);
+  }
+</style>

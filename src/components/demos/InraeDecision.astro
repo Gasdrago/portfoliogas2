@@ -1,0 +1,475 @@
+---
+/**
+ * Parcours de décision INRAE — produit pour le portfolio (pas un livrable d'origine).
+ * Il rejoue le concept du projet : un questionnaire, des données simplifiées,
+ * une prise de décision. Les technologies et les ordres de grandeur sont fictifs.
+ */
+---
+
+<section class="ind" data-ind data-step="1" aria-labelledby="ind-title">
+  <header class="ind__head">
+    <p class="ind__badge">Démo réalisée pour le portfolio · données fictives</p>
+    <h3 id="ind-title" class="ind__title">Trois étapes vers la décision</h3>
+    <ol role="list" class="ind__steps" aria-label="Étapes">
+      <li data-ind-tab="1"><span>1</span> Ma situation</li>
+      <li data-ind-tab="2"><span>2</span> Ce qu’on me propose</li>
+      <li data-ind-tab="3"><span>3</span> Ma décision</li>
+    </ol>
+  </header>
+
+  <!-- 1. Questionnaire -->
+  <form class="ind__panel" data-ind-panel="1">
+    <fieldset class="ind__field">
+      <legend>Mon activité principale</legend>
+      <div class="ind__choices">
+        {
+          ['Céréales', 'Maraîchage', 'Élevage', 'Viticulture'].map((a, i) => (
+            <label class="ind__choice">
+              <input type="radio" name="activite" value={a} checked={i === 1} />
+              <span>{a}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div class="ind__field">
+      <label for="ind-surface">Taille de l’exploitation : <output data-ind-surface-out>12 ha</output></label>
+      <input id="ind-surface" type="range" name="surface" min="2" max="200" value="12" step="1" />
+    </div>
+
+    <fieldset class="ind__field">
+      <legend>Ce qui compte le plus pour moi</legend>
+      <div class="ind__choices">
+        {
+          [
+            ['temps', 'Gagner du temps'],
+            ['penibilite', 'Réduire la pénibilité'],
+            ['cout', 'Limiter l’investissement'],
+          ].map(([v, l], i) => (
+            <label class="ind__choice">
+              <input type="radio" name="priorite" value={v} checked={i === 2} />
+              <span>{l}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <button type="submit" class="ind__btn">Voir ce qui me correspond →</button>
+  </form>
+
+  <!-- 2. Recommandation -->
+  <div class="ind__panel" data-ind-panel="2" hidden>
+    <p class="ind__recap" data-ind-recap></p>
+    <ul role="list" class="ind__cards" data-ind-cards></ul>
+    <p class="ind__legend">
+      Investissement : € faible · €€ moyen · €€€ élevé — ordres de grandeur fictifs, pour la démonstration.
+    </p>
+    <div class="ind__row">
+      <button type="button" class="ind__btn ind__btn--ghost" data-ind-goto="1">← Modifier mes réponses</button>
+      <button type="button" class="ind__btn" data-ind-goto="3">Décider →</button>
+    </div>
+  </div>
+
+  <!-- 3. Décision -->
+  <div class="ind__panel" data-ind-panel="3" hidden>
+    <p class="ind__recap">
+      Pour <strong data-ind-pick>—</strong>, décider ne veut pas forcément dire acheter :
+    </p>
+    <div class="ind__decisions">
+      <button type="button" class="ind__decision" data-ind-decide="essayer">
+        <strong>Essayer avant d’acheter</strong>
+        <span>Voir l’outil en service chez un agriculteur déjà équipé.</span>
+      </button>
+      <button type="button" class="ind__decision" data-ind-decide="conseiller">
+        <strong>En parler à un conseiller</strong>
+        <span>Être rappelé avec ma fiche, sans engagement.</span>
+      </button>
+      <button type="button" class="ind__decision" data-ind-decide="plus-tard">
+        <strong>Pas maintenant</strong>
+        <span>Garder la fiche et y revenir quand je veux.</span>
+      </button>
+    </div>
+    <p class="ind__result" data-ind-result aria-live="polite" hidden></p>
+    <div class="ind__row">
+      <button type="button" class="ind__btn ind__btn--ghost" data-ind-goto="2">← Revoir les propositions</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  type Tech = { name: string; cost: 1 | 2 | 3; minHa: number; gain: string[]; what: string };
+
+  // Catalogue fictif, par activité. « gain » liste les priorités auxquelles la technologie répond.
+  const catalogue: Record<string, Tech[]> = {
+    Céréales: [
+      { name: 'Autoguidage du tracteur', cost: 2, minHa: 40, gain: ['temps', 'penibilite'], what: 'Le tracteur suit sa ligne tout seul : moins de recoupements, moins de fatigue.' },
+      { name: 'Capteurs de sol', cost: 1, minHa: 5, gain: ['cout', 'temps'], what: 'Savoir où et quand intervenir, parcelle par parcelle.' },
+      { name: 'Station météo connectée', cost: 1, minHa: 2, gain: ['cout'], what: 'Des prévisions à l’échelle de l’exploitation.' },
+    ],
+    Maraîchage: [
+      { name: 'Robot de désherbage', cost: 3, minHa: 8, gain: ['penibilite', 'temps'], what: 'Il désherbe entre les rangs à votre place.' },
+      { name: 'Irrigation pilotée', cost: 2, minHa: 3, gain: ['temps', 'cout'], what: 'L’arrosage se règle selon l’humidité du sol.' },
+      { name: 'Station météo connectée', cost: 1, minHa: 2, gain: ['cout'], what: 'Des prévisions à l’échelle de l’exploitation.' },
+    ],
+    Élevage: [
+      { name: 'Robot de traite', cost: 3, minHa: 30, gain: ['temps', 'penibilite'], what: 'La traite se fait sans astreinte matin et soir.' },
+      { name: 'Colliers de suivi du troupeau', cost: 2, minHa: 10, gain: ['temps'], what: 'Une alerte quand un animal change de comportement.' },
+      { name: 'Station météo connectée', cost: 1, minHa: 2, gain: ['cout'], what: 'Des prévisions à l’échelle de l’exploitation.' },
+    ],
+    Viticulture: [
+      { name: 'Robot enjambeur', cost: 3, minHa: 15, gain: ['penibilite', 'temps'], what: 'Il travaille le sol entre les rangs de vigne.' },
+      { name: 'Capteurs de sol', cost: 1, minHa: 3, gain: ['cout', 'temps'], what: 'Savoir où et quand intervenir, parcelle par parcelle.' },
+      { name: 'Station météo connectée', cost: 1, minHa: 2, gain: ['cout'], what: 'Des prévisions à l’échelle de l’exploitation.' },
+    ],
+  };
+
+  const priorityLabel: Record<string, string> = {
+    temps: 'gagner du temps',
+    penibilite: 'réduire la pénibilité',
+    cout: 'limiter l’investissement',
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-ind]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('form')!;
+    const surface = form.elements.namedItem('surface') as HTMLInputElement;
+    const surfaceOut = root.querySelector<HTMLElement>('[data-ind-surface-out]')!;
+    const cards = root.querySelector<HTMLElement>('[data-ind-cards]')!;
+    const recap = root.querySelector<HTMLElement>('[data-ind-recap]')!;
+    const pick = root.querySelector<HTMLElement>('[data-ind-pick]')!;
+    const result = root.querySelector<HTMLElement>('[data-ind-result]')!;
+    let chosen = '';
+
+    const go = (step: string) => {
+      root.dataset.step = step;
+      root.querySelectorAll<HTMLElement>('[data-ind-panel]').forEach((p) => (p.hidden = p.dataset.indPanel !== step));
+      root.querySelectorAll<HTMLElement>('[data-ind-tab]').forEach((t) =>
+        t.setAttribute('aria-current', String(t.dataset.indTab === step)),
+      );
+      if (step !== '3') result.hidden = true;
+    };
+
+    surface.addEventListener('input', () => (surfaceOut.textContent = `${surface.value} ha`));
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const activite = String(data.get('activite'));
+      const priorite = String(data.get('priorite'));
+      const ha = Number(data.get('surface'));
+
+      const ranked = catalogue[activite]
+        .map((t) => {
+          const fits = ha >= t.minHa;
+          const match = t.gain.includes(priorite);
+          const reasons = [
+            match ? `Répond à votre priorité : ${priorityLabel[priorite]}.` : `Ne vise pas d’abord à ${priorityLabel[priorite]}.`,
+            fits ? `Adapté à ${ha} ha.` : `Se justifie plutôt à partir de ${t.minHa} ha.`,
+          ];
+          const score = (match ? 2 : 0) + (fits ? 2 : -2) - (priorite === 'cout' ? t.cost - 1 : 0);
+          return { ...t, reasons, score };
+        })
+        .sort((a, b) => b.score - a.score);
+
+      recap.textContent = `${activite}, ${ha} ha, priorité : ${priorityLabel[priorite]}.`;
+      cards.replaceChildren(
+        ...ranked.map((t, i) => {
+          const li = document.createElement('li');
+          li.className = 'ind__card' + (i === 0 ? ' is-best' : '');
+          const tag = document.createElement('p');
+          tag.className = 'ind__card-tag';
+          tag.textContent = i === 0 ? 'Le meilleur choix pour vous' : 'Alternative';
+          const h = document.createElement('h4');
+          h.textContent = t.name;
+          const what = document.createElement('p');
+          what.textContent = t.what;
+          const cost = document.createElement('p');
+          cost.className = 'ind__card-cost';
+          cost.textContent = `Investissement : ${'€'.repeat(t.cost)}`;
+          const ul = document.createElement('ul');
+          t.reasons.forEach((r) => {
+            const item = document.createElement('li');
+            item.textContent = r;
+            ul.append(item);
+          });
+          li.append(tag, h, what, cost, ul);
+          return li;
+        }),
+      );
+      chosen = ranked[0].name;
+      pick.textContent = chosen;
+      go('2');
+    });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-ind-goto]').forEach((b) =>
+      b.addEventListener('click', () => go(b.dataset.indGoto ?? '1')),
+    );
+
+    const outcomes: Record<string, string> = {
+      essayer: 'Décision : essayer d’abord. Une visite chez un agriculteur équipé est proposée — aucun achat engagé.',
+      conseiller: 'Décision : en parler. Un conseiller rappelle avec la fiche sous les yeux — aucun achat engagé.',
+      'plus-tard': 'Décision : pas maintenant. La fiche est gardée ; refuser est aussi une décision éclairée.',
+    };
+    root.querySelectorAll<HTMLButtonElement>('[data-ind-decide]').forEach((b) =>
+      b.addEventListener('click', () => {
+        root.querySelectorAll('[data-ind-decide]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+        result.textContent = `${chosen} — ${outcomes[b.dataset.indDecide ?? '']}`;
+        result.hidden = false;
+      }),
+    );
+
+    go('1');
+  });
+</script>
+
+<style>
+  .ind {
+    display: grid;
+    gap: var(--space-m);
+    padding: clamp(1rem, 3vw, 2rem);
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+  }
+
+  .ind__head {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .ind__badge {
+    justify-self: start;
+    padding: 0.3rem 0.7rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+  }
+
+  .ind__title {
+    font-size: var(--step-2);
+    font-stretch: 88%;
+  }
+
+  .ind__steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    padding-bottom: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-subtle);
+  }
+
+  .ind__steps li {
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: baseline;
+  }
+
+  .ind__steps span {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .ind__steps li[aria-current='true'] {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .ind__steps li[aria-current='true'] span {
+    color: var(--accent-text);
+  }
+
+  .ind__panel {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .ind__field {
+    display: grid;
+    gap: var(--space-xs);
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  .ind__field legend,
+  .ind__field > label {
+    padding: 0;
+    font-weight: 600;
+  }
+
+  .ind__choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .ind__choice {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .ind__choice input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+  }
+
+  .ind__choice span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    transition:
+      background var(--dur-1),
+      color var(--dur-1);
+  }
+
+  .ind__choice input:checked + span {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+
+  .ind__choice input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .ind input[type='range'] {
+    width: min(100%, 28rem);
+    accent-color: var(--accent);
+    min-height: 2rem;
+  }
+
+  .ind__btn {
+    justify-self: start;
+    min-height: 2.9rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-pill);
+    background: var(--fg);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  .ind__btn--ghost {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+    font-weight: 500;
+  }
+
+  .ind__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .ind__recap {
+    font-size: var(--step-1);
+  }
+
+  .ind__cards {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  @media (min-width: 900px) {
+    .ind__cards {
+      grid-template-columns: 1.25fr 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .ind__cards :global(.ind__card) {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-s);
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .ind__cards :global(.ind__card.is-best) {
+    border-color: var(--accent);
+    border-width: 2px;
+  }
+
+  .ind__cards :global(.ind__card-tag) {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .ind__cards :global(h4) {
+    font-size: var(--step-1);
+    line-height: 1.15;
+  }
+
+  .ind__cards :global(.ind__card-cost) {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .ind__cards :global(ul) {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs) 0 0;
+    margin: 0;
+    list-style: none;
+    border-top: 1px solid var(--border);
+    font-size: var(--step--1);
+    color: var(--fg-muted);
+  }
+
+  .ind__legend {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--fg-subtle);
+  }
+
+  .ind__decisions {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  @media (min-width: 900px) {
+    .ind__decisions {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .ind__decision {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-s);
+    border: 1px solid var(--border-strong);
+    text-align: left;
+    transition:
+      background var(--dur-1),
+      border-color var(--dur-1);
+  }
+
+  .ind__decision span {
+    color: var(--fg-muted);
+    font-size: var(--step--1);
+  }
+
+  .ind__decision[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+
+  .ind__result {
+    padding: var(--space-s);
+    border-left: 3px solid var(--accent);
+    background: var(--bg);
+  }
+</style>
