@@ -15,6 +15,17 @@ import renaultCompagnon from '@/assets/crops/renault-compagnon.jpg';
  * l'information n'est pas fournie, et les composants ne les affichent pas.
  */
 
+/**
+ * Deux lectures du portfolio. « Ingénierie » n'est pas une lecture tant qu'aucun
+ * projet ne montre du code ou une simulation réalisés par Gaspard.
+ */
+export type Selection = 'Conseil & innovation' | 'Produit & prototype';
+
+export const selections: { name: Selection; verbs: string; id: string }[] = [
+  { name: 'Conseil & innovation', verbs: 'Cadrer, enquêter, recommander', id: 'conseil' },
+  { name: 'Produit & prototype', verbs: 'Concevoir, modéliser, démontrer', id: 'produit' },
+];
+
 export type ProjectTheme = 'renault' | 'mobotix' | 'inrae' | 'laposte' | 'earth' | 'idf';
 
 export interface Project {
@@ -51,8 +62,12 @@ export interface Project {
   prototypeTop?: boolean;
   /** Légende de l'image d'ouverture : ce qu'il faut y remarquer. */
   coverCaption?: string;
-  /** Sélection du portfolio à laquelle le projet est rattaché. */
-  selection?: 'Conseil et innovation' | 'Ingénierie';
+  /** Lecture du portfolio à laquelle le projet est rattaché. */
+  selection: Selection;
+  /** Fait vérifiable issu du dossier, affiché sur les aperçus. */
+  proof: string;
+  /** Livrables du projet, tels qu'ils apparaissent dans le dossier. */
+  deliverables: string[];
 }
 
 type Glob = Record<string, { default: ImageMetadata }>;
@@ -117,6 +132,15 @@ export const projects: Project[] = [
       'Élaborer un nouveau tableau de bord plus intuitif, simple et sécurisé',
       'Concevoir un nouveau volant et des boutons adaptés',
     ],
+    selection: 'Produit & prototype',
+    proof: '87 % des usages tiennent en trois applications',
+    deliverables: [
+      'Analyse de l’habitacle',
+      'Enquête d’usage',
+      'Maquette 3D (Blender)',
+      'Écrans animés',
+      'Film de démonstration',
+    ],
     theme: 'renault',
     cover: renaultCover,
     coverAlt:
@@ -131,8 +155,141 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'inrae',
+    slug: 'la-poste',
     index: '02',
+    client: 'La Poste',
+    title: 'Post-it',
+    question: 'Quel avenir pour l’IA à La Poste ?',
+    discipline: 'UX design & IA',
+    summary:
+      'Quinze entretiens, un site qu’on n’explore pas : Post-it, un assistant IA né du logo de La Poste pour guider chaque recherche.',
+    tasks: [],
+    context: 'Projet d’entreprise — CY École de Design',
+    team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
+    selection: 'Conseil & innovation',
+    proof: '15 entretiens, de 16 à 64 ans',
+    deliverables: [
+      '15 entretiens',
+      'Analyse de l’arborescence du site',
+      'Principes d’une IA éthique',
+      'Mascotte et storyboard',
+      'Prototype web',
+    ],
+    theme: 'laposte',
+    cover: slide(laposteDeck, 26),
+    coverAlt:
+      'Storyboard illustré : un usager perdu devant le site de La Poste, puis Post-it apparaît à l’écran et l’accompagne jusqu’à sa demande.',
+    thumb: laposteMascot,
+    thumbAlt: 'Post-it, la mascotte de l’assistant IA : un oiseau bleu à crête jaune, dérivé du logo de La Poste.',
+    deck: laposteDeck,
+    prototype: { href: 'https://postal-simplicity.lovable.app', label: 'Prototype Postal Simplicity' },
+  },
+  {
+    slug: 'earth-to-earth',
+    index: '03',
+    client: 'Earth to Earth',
+    title: 'EvoBIM',
+    question:
+      'Quelle organisation industrielle innovante pour optimiser la conception et la réalisation de bâtiments de logements abordables ?',
+    discipline: 'Design systémique & innovation',
+    summary:
+      'Industrialiser des bâtiments évolutifs : une filière intégrée, du sourcing local à la maintenance, pilotée par une plateforme BIM 4.0.',
+    tasks: [],
+    context: 'Projet — CY École de Design',
+    team: 'Gaspard Bayle, Matthys Tachon-Panafieu, Améline Guérineau',
+    selection: 'Conseil & innovation',
+    proof: '6 familles d’acteurs cartographiées, 4 entretiens',
+    deliverables: [
+      'Carte des acteurs',
+      'Entretiens métiers',
+      'Benchmark international',
+      'Modèle de filière intégrée',
+      'Business model',
+      'Maquette d’interface',
+    ],
+    theme: 'earth',
+    cover: earthCover,
+    coverAlt: 'EvoBIM — « Penser en système. Construire l’avenir. » : le logo au-dessus d’une ligne de bâtiments dessinés et d’une grue.',
+    thumb: earthBim,
+    thumbAlt: 'Interface de la plateforme EvoBIM sur un ordinateur portable : maquette 3D du bâtiment et curseur de transformation.',
+    deck: earthDeck,
+    prototype: {
+      href: 'https://www.figma.com/make/8D06cxDeiikSyaadFha6nV/BIM-4.0-Interface-Design?fullscreen=1&t=xAgHVvosUZ9dBJwq-1&code-node-id=0-9',
+      label: 'Maquette EvoBIM (Figma Make)',
+    },
+  },
+  {
+    slug: 'mobotix-sun-scan',
+    index: '04',
+    client: 'Mobotix',
+    title: 'Sun Scan',
+    question: 'Comment faire de la caméra un outil pour l’utilisateur ?',
+    year: '2023',
+    discipline: 'Design produit',
+    summary:
+      'Faire passer la caméra de la surveillance à la bienveillance : un habillage en bouée de sauvetage et une application pour les maîtres-nageurs.',
+    tasks: [
+      'Définir les objectifs du projet et élaborer une stratégie',
+      'Tester le POC (Proof of Concept)',
+      'Designer une application mobile « Sun Scan »',
+      'Concevoir un habillage de caméra',
+    ],
+    selection: 'Produit & prototype',
+    proof: 'POC mené en piscine',
+    deliverables: [
+      'Stratégie produit',
+      'POC terrain',
+      'Habillage de la caméra',
+      'Maquettes de l’application',
+    ],
+    theme: 'mobotix',
+    cover: slide(mobotixDeck, 20),
+    coverAlt:
+      'Maquettes de l’application Sun Scan : écran d’accueil, alerte de sortie de zone, niveau de risque et statistiques de fréquentation.',
+    thumb: mobotixPortrait,
+    thumbAlt:
+      'Écrans superposés de l’application Sun Scan : démarrage, alerte « sortie de zone », niveau de risque et statistiques.',
+    deck: mobotixDeck,
+  },
+  {
+    slug: 'manuels-scolaires-numeriques',
+    index: '05',
+    client: 'Région Île-de-France',
+    title: 'Manuels scolaires numériques',
+    question:
+      'Comp-AI-gnons aide les lycéens à travailler leur manuel numérique avec un compagnon IA et une manette sensorielle, pour réviser à leur rythme et avec moins de stress.',
+    discipline: 'UX & design produit',
+    summary:
+      'Vers un renouveau des habitudes pédagogiques : quatre compagnons IA et une manette haptique pour faire du manuel numérique un espace bienveillant.',
+    tasks: [],
+    context: 'Projet — CY École de Design',
+    team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
+    role: 'Designer — impliqué à chaque étape, du terrain au test',
+    selection: 'Produit & prototype',
+    proof: 'POC : 55 scans dans 3 lieux',
+    deliverables: [
+      'Interviews et personas',
+      'POC par QR code',
+      'Quatre compagnons IA',
+      'Manette modélisée en 3D',
+      'Prototype web',
+      'Test utilisateur',
+    ],
+    theme: 'idf',
+    cover: idfCover,
+    coverAlt:
+      'Les quatre Comp-AI-gnons — un caméléon, une tortue, un panda et un singe — en 3D sur un fond dégradé jaune-orange.',
+    coverCaption:
+      'À remarquer : quatre personnalités distinctes — l’animateur, le mentor, le complice, le calme — pour s’adapter à des élèves aux besoins très différents.',
+    thumb: idfManette,
+    thumbAlt: 'La manette interactive en rendu 3D, avec ses touches, ses lumières et son joystick annotés.',
+    deck: idfDeck,
+    prototype: { href: 'https://empathic-learning-grove.lovable.app/', label: 'Tester le prototype' },
+    prototypeTop: true,
+  },
+  {
+    slug: 'inrae',
+    index: '06',
     client: 'INRAE',
     title: 'Technologies à portée de main',
     question:
@@ -147,6 +304,15 @@ export const projects: Project[] = [
       'Repenser l’interface d’un site web',
       'Concevoir une maquette de site',
     ],
+    selection: 'Conseil & innovation',
+    proof: '4 entretiens de terrain',
+    deliverables: [
+      'Entretiens de terrain',
+      'Carte mentale du problème',
+      'Storyboard',
+      'Système de pictogrammes',
+      'Maquette de site',
+    ],
     theme: 'inrae',
     cover: slide(inraeDeck, 26),
     coverAlt:
@@ -154,103 +320,6 @@ export const projects: Project[] = [
     thumb: slide(inraeDeck, 30),
     thumbAlt: 'Écran « Produit pour vous » de la maquette, sur une photographie de serre.',
     deck: inraeDeck,
-  },
-  {
-    slug: 'mobotix-sun-scan',
-    index: '03',
-    client: 'Mobotix',
-    title: 'Sun Scan',
-    question: 'Comment faire de la caméra un outil pour l’utilisateur ?',
-    year: '2023',
-    discipline: 'Design produit',
-    summary:
-      'Faire passer la caméra de la surveillance à la bienveillance : un habillage en bouée de sauvetage et une application pour les maîtres-nageurs.',
-    tasks: [
-      'Définir les objectifs du projet et élaborer une stratégie',
-      'Tester le POC (Proof of Concept)',
-      'Designer une application mobile « Sun Scan »',
-      'Concevoir un habillage de caméra',
-    ],
-    theme: 'mobotix',
-    cover: slide(mobotixDeck, 20),
-    coverAlt:
-      'Maquettes de l’application Sun Scan : écran d’accueil, alerte de sortie de zone, niveau de risque et statistiques de fréquentation.',
-    thumb: mobotixPortrait,
-    thumbAlt:
-      'Écrans superposés de l’application Sun Scan : démarrage, alerte « sortie de zone », niveau de risque et statistiques.',
-    deck: mobotixDeck,
-  },
-  {
-    slug: 'la-poste',
-    index: '04',
-    client: 'La Poste',
-    title: 'Post-it',
-    question: 'Quel avenir pour l’IA à La Poste ?',
-    discipline: 'UX design & IA',
-    summary:
-      'Quinze entretiens, un site qu’on n’explore pas : Post-it, un assistant IA né du logo de La Poste pour guider chaque recherche.',
-    tasks: [],
-    context: 'Projet d’entreprise — CY École de Design',
-    team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
-    theme: 'laposte',
-    cover: slide(laposteDeck, 26),
-    coverAlt:
-      'Storyboard illustré : un usager perdu devant le site de La Poste, puis Post-it apparaît à l’écran et l’accompagne jusqu’à sa demande.',
-    thumb: laposteMascot,
-    thumbAlt: 'Post-it, la mascotte de l’assistant IA : un oiseau bleu à crête jaune, dérivé du logo de La Poste.',
-    deck: laposteDeck,
-    prototype: { href: 'https://postal-simplicity.lovable.app', label: 'Prototype Postal Simplicity' },
-  },
-  {
-    slug: 'earth-to-earth',
-    index: '05',
-    client: 'Earth to Earth',
-    title: 'EvoBIM',
-    question:
-      'Quelle organisation industrielle innovante pour optimiser la conception et la réalisation de bâtiments de logements abordables ?',
-    discipline: 'Design systémique & innovation',
-    summary:
-      'Industrialiser des bâtiments évolutifs : une filière intégrée, du sourcing local à la maintenance, pilotée par une plateforme BIM 4.0.',
-    tasks: [],
-    context: 'Projet — CY École de Design',
-    team: 'Gaspard Bayle, Matthys Tachon-Panafieu, Améline Guérineau',
-    theme: 'earth',
-    cover: earthCover,
-    coverAlt: 'EvoBIM — « Penser en système. Construire l’avenir. » : le logo au-dessus d’une ligne de bâtiments dessinés et d’une grue.',
-    thumb: earthBim,
-    thumbAlt: 'Interface de la plateforme EvoBIM sur un ordinateur portable : maquette 3D du bâtiment et curseur de transformation.',
-    deck: earthDeck,
-    prototype: {
-      href: 'https://www.figma.com/make/8D06cxDeiikSyaadFha6nV/BIM-4.0-Interface-Design?fullscreen=1&t=xAgHVvosUZ9dBJwq-1&code-node-id=0-9',
-      label: 'Maquette EvoBIM (Figma Make)',
-    },
-  },
-  {
-    slug: 'manuels-scolaires-numeriques',
-    index: '06',
-    client: 'Région Île-de-France',
-    title: 'Manuels scolaires numériques',
-    question:
-      'Comp-AI-gnons aide les lycéens à travailler leur manuel numérique avec un compagnon IA et une manette sensorielle, pour réviser à leur rythme et avec moins de stress.',
-    discipline: 'UX & design produit',
-    summary:
-      'Vers un renouveau des habitudes pédagogiques : quatre compagnons IA et une manette haptique pour faire du manuel numérique un espace bienveillant.',
-    tasks: [],
-    context: 'Projet — CY École de Design',
-    team: 'Gaspard Bayle, Kevidu D. Kussiyage, Alexandre Vo Thanh',
-    role: 'Designer — impliqué à chaque étape, du terrain au test',
-    selection: 'Conseil et innovation',
-    theme: 'idf',
-    cover: idfCover,
-    coverAlt:
-      'Les quatre Comp-AI-gnons — un caméléon, une tortue, un panda et un singe — en 3D sur un fond dégradé jaune-orange.',
-    coverCaption:
-      'À remarquer : quatre personnalités distinctes — l’animateur, le mentor, le complice, le calme — pour s’adapter à des élèves aux besoins très différents.',
-    thumb: idfManette,
-    thumbAlt: 'La manette interactive en rendu 3D, avec ses touches, ses lumières et son joystick annotés.',
-    deck: idfDeck,
-    prototype: { href: 'https://empathic-learning-grove.lovable.app/', label: 'Tester le prototype' },
-    prototypeTop: true,
   },
 ];
 

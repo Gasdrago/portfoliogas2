@@ -3,16 +3,22 @@ import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
-import ProjectIndex from '@/components/ProjectIndex.astro';
 import LabStrip from '@/components/LabStrip.astro';
-import { projects, decks, slide, getProject } from '@/data/projects';
+import { projects, selections, getProject } from '@/data/projects';
 import { site } from '@/data/site';
 import mobotixSquare from '@/assets/crops/mobotix-app-square.jpg';
 import renaultHabitacle from '@/assets/crops/renault-habitacle.jpg';
+import manetteSquare from '@/assets/crops/idf-manette-square.jpg';
 import { href } from '@/lib/url';
 
-const [renault, inrae, mobotix, laposte, earth, idf] = projects;
+const renault = getProject('renault-center-view');
+const laposte = getProject('la-poste');
+const earth = getProject('earth-to-earth');
+const mobotix = getProject('mobotix-sun-scan');
+const idf = getProject('manuels-scolaires-numeriques');
+const inrae = getProject('inrae');
 
+// Visuel d'ouverture : trois objets conçus, un par projet « produit ».
 const reel = [
   {
     project: renault,
@@ -21,20 +27,23 @@ const reel = [
     position: '50% 50%',
   },
   {
-    project: inrae,
-    image: slide(decks.inrae, 26),
-    alt: inrae.coverAlt,
-    position: '50% 50%',
-  },
-  {
     project: mobotix,
     image: mobotixSquare,
     alt: mobotix.thumbAlt,
     position: 'center',
   },
+  {
+    project: idf,
+    image: manetteSquare,
+    alt: 'Rendu 3D de la manette Comp-AI-gnons : une forme pyramidale rose, avec boutons, joystick et coussinet.',
+    position: 'center',
+  },
 ];
 
-const domains = ['Design d’innovation', 'UX/UI design', 'Design produit', 'Design d’espace', 'Ingénierie informatique'];
+const lectures = selections.map((sel) => ({
+  ...sel,
+  projects: projects.filter((p) => p.selection === sel.name),
+}));
 
 const method = [
   {
@@ -141,40 +150,96 @@ const personLd = {
     </div>
 
     <div class="hero__intro">
-      <p class="hero__lead" data-reveal="load" style="--i: 4">
-        Je conçois des expériences numériques pour améliorer la vie des utilisateurs, en croisant <em class="t-serif">recherche terrain</em>, <em class="t-serif">design</em> et <em class="t-serif">ingénierie</em>.
+      <p class="hero__status" data-reveal="load" style="--i: 3">
+        <span class="hero__dot" aria-hidden="true"></span>
+        <span>En recherche de stage — conseil en transformation &amp; innovation, ingénierie logicielle et industrielle</span>
       </p>
-      <ul role="list" class="tags hero__domains" aria-label="Domaines" data-reveal="load" style="--i: 5">
-        {domains.map((d) => <li class="tag">{d}</li>)}
+      <p class="hero__lead" data-reveal="load" style="--i: 4">
+        Je pars du terrain pour <em class="t-serif">cadrer</em> un problème, je <em class="t-serif">conçois</em> la réponse et je la rends <em class="t-serif">testable</em> : maquette, prototype, démonstration.
+      </p>
+      <ul role="list" class="hero__cta" data-reveal="load" style="--i: 5">
+        {
+          lectures.map((l, i) => (
+            <li>
+              <a class:list={['btn', { 'btn--ghost': i > 0 }]} href={`#lecture-${l.id}`}>
+                Lecture {l.name.toLowerCase()} <span class="arrow" aria-hidden="true">↓</span>
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
 
     <div class="hero__bottom t-meta">
       <p><span class="t-meta--fg">{site.companyProjects}</span> projets d’entreprises</p>
-      <a href="#selection" class="hero__scroll link link--quiet">Voir les projets <span class="arrow" aria-hidden="true">↓</span></a>
+      <a href={href(site.cv)} class="hero__scroll link link--quiet" download>Télécharger le CV <span class="arrow" aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+
+  <!-- ============================================================= LECTURES -->
+  <section id="lectures" class="section--tight container" aria-labelledby="lectures-title">
+    <SectionHead index="01" label="Deux lectures" id="lectures-title">
+      <Fragment slot="title">
+        <span class="line"><span>Six projets,</span></span>
+        <span class="line"><span><em class="t-serif">deux façons de les lire.</em></span></span>
+      </Fragment>
+      <p slot="aside">
+        Selon ce que vous cherchez : une démarche de cadrage et de recommandation, ou un objet conçu,
+        modélisé et démontré.
+      </p>
+    </SectionHead>
+
+    <div class="lectures">
+      {
+        lectures.map((l) => (
+          <section class="lecture" id={`lecture-${l.id}`} aria-labelledby={`lecture-${l.id}-title`}>
+            <header class="lecture__head" data-reveal>
+              <h3 class="lecture__name" id={`lecture-${l.id}-title`}>
+                {l.name}
+              </h3>
+              <p class="lecture__verbs t-serif">{l.verbs}</p>
+            </header>
+            <ol role="list" class="lecture__list">
+              {l.projects.map((p, i) => (
+                <li data-reveal style={`--i: ${i + 1}`}>
+                  <a class="lecture__row" href={href(`projets/${p.slug}/`)} data-astro-prefetch>
+                    <span class="t-index">{p.index}</span>
+                    <span class="lecture__project">
+                      <span class="lecture__title">
+                        {p.client} <span class="t-serif">— {p.title}</span>
+                      </span>
+                      <span class="lecture__proof">{p.proof}</span>
+                    </span>
+                    <span class="arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
+      }
     </div>
   </section>
 
   <!-- ============================================================ SÉLECTION -->
   <section id="selection" class="section container" aria-labelledby="selection-title">
-    <SectionHead index="01" label="Études de cas" id="selection-title">
+    <SectionHead index="02" label="Études de cas" id="selection-title">
       <Fragment slot="title">
-        <span class="line"><span>Six projets,</span></span>
-        <span class="line"><span><em class="t-serif">six terrains.</em></span></span>
+        <span class="line"><span>Du problème</span></span>
+        <span class="line"><span><em class="t-serif">à la preuve.</em></span></span>
       </Fragment>
       <p slot="aside">
-        Un poste de conduite, une plateforme agricole, une caméra repensée, un assistant IA, une
-        filière du bâtiment, un manuel scolaire : de l’objet au système, chaque projet part d’une question.
+        Chaque fiche dit ce qui a été cherché, ce qui a été produit et ce qui reste une hypothèse.
       </p>
     </SectionHead>
 
     <div class="selection">
       <ProjectCard project={renault} variant="feature" class="selection__feature" />
-      <ProjectCard project={inrae} variant="wide" class="selection__a" />
-      <ProjectCard project={mobotix} variant="tall" class="selection__b" />
-      <ProjectCard project={laposte} variant="tall" class="selection__c" />
-      <ProjectCard project={earth} variant="wide" class="selection__d" />
-      <ProjectCard project={idf} variant="wide" class="selection__e" />
+      <ProjectCard project={laposte} variant="wide" class="selection__a" />
+      <ProjectCard project={earth} variant="tall" class="selection__b" />
+      <ProjectCard project={mobotix} variant="tall" class="selection__c" />
+      <ProjectCard project={idf} variant="wide" class="selection__d" />
+      <ProjectCard project={inrae} variant="wide" class="selection__e" />
     </div>
   </section>
 
@@ -182,7 +247,7 @@ const personLd = {
   <section class="method" data-theme="night" data-surface="dark" aria-labelledby="method-title">
     <div class="section container method__grid">
       <div class="method__intro">
-        <p class="t-meta" data-reveal><span class="t-index">(02)</span> Méthode</p>
+        <p class="t-meta" data-reveal><span class="t-index">(03)</span> Méthode</p>
         <h2 id="method-title" class="t-h2" data-lines>
           <span class="line"><span>Diverger pour comprendre,</span></span>
           <span class="line"><span><em class="t-serif">converger pour décider.</em></span></span>
@@ -224,7 +289,7 @@ const personLd = {
   <!-- ==================================================================== LAB -->
   <section class="section lab-teaser" aria-labelledby="lab-title">
     <div class="container">
-      <SectionHead index="03" label="Lab" id="lab-title">
+      <SectionHead index="04" label="Lab" id="lab-title">
         <Fragment slot="title">
           <span class="line"><span>Typographie, 3D,</span></span>
           <span class="line"><span><em class="t-serif">image.</em></span></span>
@@ -238,11 +303,6 @@ const personLd = {
     <LabStrip />
   </section>
 
-  <!-- ================================================================= INDEX -->
-  <section class="section container" aria-labelledby="index-title">
-    <SectionHead index="04" label="Index" id="index-title" title="Tous les projets" />
-    <ProjectIndex />
-  </section>
 </Base>
 
 <style>
@@ -283,6 +343,33 @@ const personLd = {
     border-top: 1px solid var(--border);
     padding: var(--space-xs) 0 0;
     align-items: baseline;
+  }
+
+  .hero__status {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  .hero__dot {
+    flex: none;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--c-signal);
+    translate: 0 -0.05em;
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding: 0;
   }
 
   .hero__title {
@@ -568,6 +655,82 @@ const personLd = {
     from {
       opacity: 0;
     }
+  }
+
+  /* ---- Lectures --------------------------------------------------------- */
+  .section--tight {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .lectures {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .lectures {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: calc(var(--col-gap) * 3);
+    }
+  }
+
+  .lecture {
+    scroll-margin-top: calc(var(--header-h) + var(--space-m));
+  }
+
+  .lecture__head {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-bottom: var(--space-s);
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .lecture__name {
+    font-size: var(--step-3);
+    font-stretch: 84%;
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+  }
+
+  .lecture__verbs {
+    font-size: var(--step-1);
+    color: var(--fg-muted);
+  }
+
+  .lecture__row {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr auto;
+    gap: var(--space-xs);
+    align-items: baseline;
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    transition: padding var(--dur-2) var(--ease-out);
+  }
+
+  .lecture__row:hover {
+    padding-left: var(--space-xs);
+  }
+
+  .lecture__project {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .lecture__title {
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  .lecture__title .t-serif {
+    font-weight: 400;
+    font-size: 1.06em;
+  }
+
+  .lecture__proof {
+    font-size: var(--step--1);
+    color: var(--fg-muted);
   }
 
   /* ---- Sélection -------------------------------------------------------- */

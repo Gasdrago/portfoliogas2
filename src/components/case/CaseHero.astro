@@ -18,7 +18,7 @@ const facts = [
   ...(project.role ? [{ term: 'Rôle', value: project.role }] : []),
   ...(project.team ? [{ term: 'Équipe', value: project.team }] : []),
   ...(project.duration ? [{ term: 'Durée', value: project.duration }] : []),
-  ...(project.selection ? [{ term: 'Sélection', value: project.selection }] : []),
+  { term: 'Lecture', value: project.selection },
 ];
 
 const words = project.title.split(' ');
@@ -60,6 +60,13 @@ const words = project.title.split(' ');
         ))
       }
     </dl>
+
+    <div class="chero__deliv" data-reveal="load" style="--i: 5">
+      <p class="t-meta">Livrables</p>
+      <ul role="list" class="tags">
+        {project.deliverables.map((d) => <li class="tag">{d}</li>)}
+      </ul>
+    </div>
   </div>
 
   <figure class="chero__figure">
@@ -159,6 +166,23 @@ const words = project.title.split(' ');
     font-size: var(--step-2);
     line-height: 1.15;
     max-width: 36ch;
+  }
+
+  .chero__deliv {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .chero__deliv .tag {
+    color: var(--fg);
+  }
+
+  @media (min-width: 1024px) {
+    .chero__deliv {
+      grid-column: 1 / -1;
+      grid-template-columns: 8rem 1fr;
+      align-items: center;
+    }
   }
 
   .chero__figure {
