@@ -4,23 +4,18 @@ import CaseSection from '@/components/case/CaseSection.astro';
 import Statement from '@/components/case/Statement.astro';
 import Cards from '@/components/case/Cards.astro';
 import Figure from '@/components/Figure.astro';
+import Video from '@/components/case/Video.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { getProject } from '@/data/projects';
 
-import sb11 from '@/assets/projects/idf/visuels/sb1-1.jpg';
-import sb12 from '@/assets/projects/idf/visuels/sb1-2.jpg';
-import sb13 from '@/assets/projects/idf/visuels/sb1-3.jpg';
-import sb14 from '@/assets/projects/idf/visuels/sb1-4.jpg';
-import sb21 from '@/assets/projects/idf/visuels/sb2-1.jpg';
-import sb22 from '@/assets/projects/idf/visuels/sb2-2.jpg';
-import sb23 from '@/assets/projects/idf/visuels/sb2-3.jpg';
-import sb31 from '@/assets/projects/idf/visuels/sb3-1.jpg';
-import sb32 from '@/assets/projects/idf/visuels/sb3-2.jpg';
-import sb33 from '@/assets/projects/idf/visuels/sb3-3.jpg';
-import sb34 from '@/assets/projects/idf/visuels/sb3-4.jpg';
-import manette from '@/assets/projects/idf/visuels/manette.jpg';
-import haptique from '@/assets/projects/idf/visuels/haptique.jpg';
+import story1 from '@/assets/projects/idf/visuels/story-1.jpg';
+import story2 from '@/assets/projects/idf/visuels/story-2.jpg';
+import story3 from '@/assets/projects/idf/visuels/story-3.jpg';
+import story4 from '@/assets/projects/idf/visuels/story-4.jpg';
+import story5 from '@/assets/projects/idf/visuels/story-5.jpg';
+import story6 from '@/assets/projects/idf/visuels/story-6.jpg';
+import manettePoster from '@/assets/crops/idf-manette-poster.jpg';
 import croquis from '@/assets/projects/idf/visuels/croquis.jpg';
 import rendus from '@/assets/projects/idf/visuels/rendus.jpg';
 import poc from '@/assets/projects/idf/visuels/poc.jpg';
@@ -37,36 +32,46 @@ const lb = 'idf';
 const journey: { step: string; title: string; text: string; panels: [ImageMetadata, string][] }[] = [
   {
     step: 'Ce que vit l’élève',
-    title: 'Réviser seul, sans envie',
-    text: 'Pleurs devant le manuel, isolement, cours qui endort, porte qui se ferme : le storyboard part d’un élève pour qui le travail scolaire est devenu une source de stress.',
+    title: 'Décrocher en classe',
+    text: 'Devant son manuel, l’élève regarde ailleurs pendant que les autres écrivent. Son enseignante lui présente alors le manuel numérique et sa manette.',
     panels: [
-      [sb11, 'Un élève en pleurs devant son manuel.'],
-      [sb12, 'Un élève seul sous la pluie, à l’écart d’autres élèves.'],
-      [sb13, 'Une classe qui s’endort pendant le cours.'],
-      [sb14, 'Un élève claque la porte, une pile de manuels derrière lui.'],
+      [story1, 'En classe, un élève rêvasse devant son manuel ouvert pendant que ses camarades écrivent.'],
+      [story2, 'Une enseignante lui présente un ordinateur portable et une manette posée sur la table.'],
     ],
   },
   {
     step: 'Ce qu’il utilise',
-    title: 'Une manette, un compagnon',
-    text: 'Il découvre la manette qui s’allume, choisit son compagnon à l’écran, puis répond à l’exercice : la manette vibre et le compagnon valide.',
+    title: 'Choisir un compagnon, prendre la manette',
+    text: 'Dans le manuel numérique, il choisit son compagnon parmi quatre. La manette s’allume : le joystick et les touches lui servent à parcourir le cours et à répondre.',
     panels: [
-      [sb21, 'La manette s’illumine en sortant de sa boîte, devant un ordinateur.'],
-      [sb22, 'À l’écran, les quatre compagnons ; l’élève en choisit un, un cœur s’affiche.'],
-      [sb23, 'L’élève appuie sur la manette, qui vibre ; une coche verte valide sa réponse.'],
+      [story3, 'À l’écran, quatre compagnons au choix ; l’élève sélectionne le panda.'],
+      [story4, 'Sa main sur le joystick de la manette, dont le liseré s’allume ; l’écran montre la manette et le cours.'],
     ],
   },
   {
     step: 'Ce qu’il obtient',
-    title: 'Progresser, et le partager',
-    text: 'Des niveaux visibles entre camarades, des échanges, de l’entraide : la révision redevient un moment partagé, jusque dans la classe.',
+    title: 'Montrer, expliquer, participer',
+    text: 'Il montre son compagnon à un camarade, puis prend la parole devant la classe : le manuel redevient un support d’échange.',
     panels: [
-      [sb31, 'Quatre élèves et leurs pseudonymes de niveau, de « Faker lvl.5 » à « Huffractal lvl.406 ».'],
-      [sb32, 'Un élève échange avec ses camarades, une bulle avec un cœur.'],
-      [sb33, 'Des élèves réunis et souriants.'],
-      [sb34, 'Une classe enthousiaste, les compagnons affichés au tableau.'],
+      [story5, 'L’élève montre son écran à un camarade, tous deux souriants.'],
+      [story6, 'L’élève explique quelque chose à ses camarades et à son enseignante, la manette posée devant lui.'],
     ],
   },
+];
+
+// Le lien entre les trois éléments de la solution.
+const system = [
+  { name: 'Le manuel numérique', role: 'Le contenu', text: 'Cours et exercices du lycée, dans le navigateur.' },
+  { name: 'Le compagnon', role: 'La voix', text: 'Il explique, encourage ou rassure, selon le caractère choisi par l’élève.' },
+  { name: 'La manette', role: 'Le corps', text: 'Elle fait ressentir les retours du compagnon — lumière, vibration — et sert à répondre.' },
+];
+
+// Les quatre parties annotées dans l'animation Blender.
+const manetteParts = [
+  ['Boutons haptiques', 'Trois appuis pour les doigts, liseré lumineux.'],
+  ['Joystick', 'Navigation à 360° sous le pouce.'],
+  ['Coussinet haptique', 'Vibrations ressenties sous la paume.'],
+  ['Jeux de lumière', 'Fente animée, liserés et témoin RVB.'],
 ];
 
 const companions = [
@@ -138,7 +143,7 @@ const personas = [
   </section>
 
   <!-- 01 — Parcours ------------------------------------------------------ -->
-  <CaseSection index="01" label="Parcours" title="De la révision subie au progrès partagé." layout="full" id="parcours">
+  <CaseSection index="01" label="Parcours" title="Du décrochage à la prise de parole." layout="full" id="parcours">
     <ol role="list" class="journey">
       {
         journey.map((j, i) => (
@@ -158,7 +163,7 @@ const personas = [
                     alt={alt}
                     widths={[320, 640]}
                     width={640}
-                    sizes="(min-width: 1024px) 22vw, 50vw"
+                    sizes="(min-width: 1024px) 30vw, 50vw"
                     format="webp"
                     quality={80}
                     loading="lazy"
@@ -171,7 +176,7 @@ const personas = [
         ))
       }
     </ol>
-    <p class="t-meta">Extraits du storyboard du dossier. Les écrans réels sont à découvrir dans la démo.</p>
+    <p class="t-meta">Storyboard du projet. Les écrans réels sont à découvrir dans la démo.</p>
   </CaseSection>
 
   <!-- 02 — Choix de conception ------------------------------------------ -->
@@ -209,7 +214,22 @@ const personas = [
   </CaseSection>
 
   <!-- 03 — Les compagnons ------------------------------------------------ -->
-  <CaseSection index="03" label="La solution" title="Comp-AI-gnons : quatre caractères, une même manette." layout="full" id="compagnons">
+  <CaseSection index="03" label="La solution" title="Un manuel, un compagnon, une manette." layout="full" id="compagnons">
+    <ol role="list" class="system" aria-label="Le lien entre le manuel, le compagnon et la manette">
+      {
+        system.map((n, i) => (
+          <li class="system__node" data-reveal style={`--i: ${i}`}>
+            <p class="t-meta">{n.role}</p>
+            <h3 class="system__name">{n.name}</h3>
+            <p>{n.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="system__loop" data-reveal>
+      La boucle : le manuel pose l’exercice → le compagnon l’accompagne → la manette le fait ressentir →
+      l’élève répond avec la manette → le manuel avance.
+    </p>
     <ul role="list" class="companions">
       {
         companions.map((c, i) => (
@@ -234,21 +254,25 @@ const personas = [
         ))
       }
     </ul>
-    <div class="split">
-      <Figure
-        src={manette}
-        alt="Rendu 3D de la manette, annoté : touches, lumières et joystick."
-        caption="La manette : touches, lumières, joystick"
-        sizes="(min-width: 768px) 50vw, 100vw"
-        lightbox={lb}
+    <div class="manette">
+      <Video
+        src="media/manette.mp4"
+        poster={manettePoster}
+        alt="Animation 3D de la manette : la caméra tourne autour de l’objet et s’arrête sur les boutons haptiques, le joystick, le coussinet haptique et les jeux de lumière."
+        caption="Animation Blender — la manette, partie par partie"
       />
-      <Figure
-        src={haptique}
-        alt="Vue de dessous de la manette en rendu 3D, avec le coussinet haptique."
-        caption="Le coussinet haptique, sous la paume"
-        sizes="(min-width: 768px) 50vw, 100vw"
-        lightbox={lb}
-      />
+      <dl class="manette__parts">
+        {
+          manetteParts.map(([term, text], i) => (
+            <div data-reveal style={`--i: ${i}`}>
+              <dt>
+                <span class="t-index">{String(i + 1).padStart(2, '0')}</span> {term}
+              </dt>
+              <dd>{text}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
     <div class="split">
       <Figure
@@ -406,16 +430,6 @@ const personas = [
     }
   }
 
-  .journey__panels--3 > li:last-child {
-    grid-column: 1 / -1;
-  }
-
-  @media (min-width: 768px) {
-    .journey__panels--3 > li:last-child {
-      grid-column: auto;
-    }
-  }
-
   .journey__panels li {
     padding: var(--space-2xs);
     background: #ffffff;
@@ -424,8 +438,111 @@ const personas = [
 
   .journey__panels :global(.journey__img) {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: contain;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  /* Système */
+  .system {
+    display: grid;
+    gap: var(--space-s);
+    counter-reset: node;
+  }
+
+  @media (min-width: 768px) {
+    .system {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+  }
+
+  .system__node {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+  }
+
+  .system__node:not(:last-child)::after {
+    content: '↓';
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--space-s) * -1);
+    translate: -50% 50%;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--c-ink);
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 768px) {
+    .system__node:not(:last-child)::after {
+      content: '→';
+      left: auto;
+      right: calc(var(--space-l) * -0.5);
+      top: 50%;
+      bottom: auto;
+      translate: 50% -50%;
+    }
+  }
+
+  .system__name {
+    font-size: var(--step-2);
+    font-stretch: 88%;
+    line-height: 1.05;
+  }
+
+  .system__loop {
+    padding-left: var(--space-s);
+    border-left: 3px solid var(--accent);
+    max-width: 70ch;
+    color: var(--fg-muted);
+  }
+
+  .manette {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .manette {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    }
+  }
+
+  .manette__parts {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .manette__parts > div {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .manette__parts dt {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: baseline;
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+
+  .manette__parts dd {
+    color: var(--fg-muted);
   }
 
   /* Choix */
