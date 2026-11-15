@@ -118,8 +118,8 @@ const personLd = {
                   sizes="(min-width: 1024px) 34vw, 100vw"
                   format="webp"
                   quality={78}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  fetchpriority={i === 0 ? 'high' : undefined}
+                  loading="eager"
+                  fetchpriority={i === 0 ? 'high' : 'low'}
                   style={`object-position: ${r.position}`}
                 />
               </a>
