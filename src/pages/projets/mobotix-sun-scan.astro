@@ -5,6 +5,7 @@ import Numbered from '@/components/case/Numbered.astro';
 import Statement from '@/components/case/Statement.astro';
 import Feature from '@/components/case/Feature.astro';
 import Figure from '@/components/Figure.astro';
+import SunScanDemo from '@/components/demos/SunScanDemo.astro';
 import { decks, slide, getProject } from '@/data/projects';
 
 const project = getProject('mobotix-sun-scan');
@@ -13,6 +14,29 @@ const lb = 'mobotix';
 ---
 
 <CaseStudy slug={project.slug} surface="light">
+  <!-- En bref + démo ---------------------------------------------------- -->
+  <section class="brief container" aria-labelledby="brief-title">
+    <h2 id="brief-title" class="sr-only">Le projet en bref</h2>
+    <dl class="brief__grid">
+      <div data-reveal>
+        <dt class="t-meta">Constat</dt>
+        <dd>Une caméra est perçue comme un outil de surveillance, pas comme une aide.</dd>
+      </div>
+      <div data-reveal style="--i: 1">
+        <dt class="t-meta">Réponse</dt>
+        <dd>
+          <strong>Sun Scan</strong> : la caméra devient une bouée fixée au poste du maître-nageur, reliée à
+          une application qui alerte et laisse décider.
+        </dd>
+      </div>
+      <div data-reveal style="--i: 2">
+        <dt class="t-meta">Ce qui existe</dt>
+        <dd>Un POC mené en piscine, l’habillage de la caméra et les maquettes de l’application.</dd>
+      </div>
+    </dl>
+    <SunScanDemo />
+  </section>
+
   <!-- 01 — Contexte ---------------------------------------------------- -->
   <CaseSection index="01" label="Contexte" title="De la surveillance à la bienveillance." id="contexte">
     <p class="t-lead lead" data-reveal>
@@ -223,6 +247,41 @@ const lb = 'mobotix';
 </CaseStudy>
 
 <style>
+  .brief {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-xl) var(--space-m);
+  }
+
+  .brief__grid {
+    display: grid;
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .brief__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .brief__grid > div {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .brief__grid dd {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--fg-muted);
+  }
+
+  .brief__grid dd strong {
+    color: var(--fg);
+  }
+
   .lead {
     max-width: 46ch;
   }
