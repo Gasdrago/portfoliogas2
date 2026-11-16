@@ -1,0 +1,148 @@
+---
+/**
+ * Essai comparatif pour « Ma démarche » : fils tendus et blocs modulaires
+ * sur une seule transition, Observer → Définir. Page hors navigation, non indexée.
+ */
+import Base from '@/layouts/Base.astro';
+import { href } from '@/lib/url';
+---
+
+<Base
+  title="Essai — fils ou blocs"
+  description="Deux essais Three.js sur la transition Observer → Définir."
+  theme="paper"
+  bareFooter
+>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <article class="trial container">
+    <p class="t-meta">
+      <a class="link link--quiet" href={href('prototypes/ma-demarche/')}>← Ma démarche</a> · Essai de travail
+    </p>
+    <h1 class="trial__title">Fils <em class="t-serif">ou</em> blocs</h1>
+    <p class="t-lead trial__lead">
+      La même transition, Observer → Définir, avec deux sculptures. Déplacez le curseur pour passer d’un état
+      à l’autre.
+    </p>
+
+    <div class="trial__control">
+      <label class="t-meta" for="trial-range">Observer</label>
+      <input id="trial-range" type="range" min="0" max="1" step="0.001" value="0" aria-label="Progression d’Observer à Définir" />
+      <span class="t-meta">Définir</span>
+    </div>
+
+    <div class="trial__grid">
+      <figure class="trial__item">
+        <canvas data-trial="threads" aria-hidden="true"></canvas>
+        <figcaption>
+          <strong>Fils tendus — direction retenue.</strong> Les fils épars passent tous par un œillet : on lit
+          le cadrage d’un problème sans légende.
+        </figcaption>
+      </figure>
+      <figure class="trial__item">
+        <canvas data-trial="blocks" aria-hidden="true"></canvas>
+        <figcaption>
+          <strong>Blocs modulaires — écartés.</strong> Les blocs épars s’assemblent en un volume : on lit une
+          construction, plutôt qu’une question qui se resserre.
+        </figcaption>
+      </figure>
+    </div>
+    <p class="trial__fallback t-meta" hidden>La 3D n’a pas pu démarrer dans ce navigateur.</p>
+  </article>
+</Base>
+
+<script>
+  import { hasWebGL } from '@/scripts/demarche/support';
+
+  const range = document.querySelector<HTMLInputElement>('#trial-range');
+  const canvases = document.querySelectorAll<HTMLCanvasElement>('[data-trial]');
+
+  async function start() {
+    const [{ createStage }, { createThreads }, { createBlocks }] = await Promise.all([
+      import('@/scripts/demarche/stage'),
+      import('@/scripts/demarche/threads'),
+      import('@/scripts/demarche/blocks'),
+    ]);
+    const stages = [...canvases].map((canvas) => {
+      const stage = createStage(canvas, { parallax: false });
+      stage.add(canvas.dataset.trial === 'threads' ? createThreads(1) : createBlocks());
+      stage.setTarget(0, true);
+      return stage;
+    });
+    range?.addEventListener('input', () => stages.forEach((s) => s.setTarget(Number(range.value))));
+    const initial = Number(new URLSearchParams(location.search).get('p'));
+    if (range && initial > 0) {
+      range.value = String(initial);
+      stages.forEach((s) => s.setTarget(initial, true));
+    }
+  }
+
+  if (hasWebGL()) start().catch(() => document.querySelector('.trial__fallback')?.removeAttribute('hidden'));
+  else document.querySelector('.trial__fallback')?.removeAttribute('hidden');
+</script>
+
+<style>
+  .trial {
+    padding-block: calc(var(--header-h) + var(--space-xl)) var(--space-2xl);
+  }
+
+  .trial__title {
+    margin-block: var(--space-m) var(--space-s);
+    font-size: var(--step-4);
+    font-weight: 600;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .trial__title em {
+    font-weight: 400;
+  }
+
+  .trial__lead {
+    max-width: var(--measure);
+  }
+
+  .trial__control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    max-width: 34rem;
+    margin-block: var(--space-l) var(--space-m);
+  }
+
+  .trial__control input {
+    flex: 1;
+    accent-color: var(--accent);
+    min-height: 2.75rem;
+  }
+
+  .trial__grid {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 900px) {
+    .trial__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .trial__item canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--border);
+  }
+
+  .trial__item figcaption {
+    margin-top: var(--space-xs);
+    max-width: 46ch;
+    color: var(--fg-muted);
+    font-size: var(--step--1);
+    line-height: var(--lh-body);
+  }
+
+  .trial__item strong {
+    color: var(--fg);
+  }
+</style>
