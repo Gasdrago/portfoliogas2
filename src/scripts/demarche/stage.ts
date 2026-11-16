@@ -33,13 +33,16 @@ interface StageOptions {
   halfWidth?: number;
   halfHeight?: number;
   centerY?: number;
+  /** Marge de cadrage (1 = au plus juste) et hauteur de la vue, en radians. */
+  fit?: number;
+  elevation?: number;
   /** Suivi discret du pointeur. */
   parallax?: boolean;
   onContextLost?: () => void;
 }
 
 export function createStage(canvas: HTMLCanvasElement, options: StageOptions = {}): Stage {
-  const { halfWidth = 2.75, halfHeight = 1.5, centerY = 0.95, parallax = true, onContextLost } = options;
+  const { halfWidth = 2.75, halfHeight = 1.5, centerY = 0.95, fit = 1.12, elevation = 0.3, parallax = true, onContextLost } = options;
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -83,14 +86,14 @@ export function createStage(canvas: HTMLCanvasElement, options: StageOptions = {
 
   // Vue de trois quarts, légèrement plongeante.
   const AZIMUTH = -0.5;
-  const ELEVATION = 0.3;
+  const ELEVATION = elevation;
 
   function placeCamera() {
     const az = AZIMUTH + pointer.cx * 0.1 + (current > 0 ? current : 0) * 0.035;
     const el = ELEVATION - pointer.cy * 0.05;
     const vFov = THREE.MathUtils.degToRad(camera.fov);
     const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
-    const dist = Math.max(halfHeight / Math.tan(vFov / 2), halfWidth / Math.tan(hFov / 2)) * 1.12;
+    const dist = Math.max(halfHeight / Math.tan(vFov / 2), halfWidth / Math.tan(hFov / 2)) * fit;
     camera.position.set(
       target.x + dist * Math.sin(az) * Math.cos(el),
       target.y + dist * Math.sin(el),
