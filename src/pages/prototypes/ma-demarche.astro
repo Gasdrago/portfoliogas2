@@ -1,0 +1,621 @@
+---
+/**
+ * Page test « Ma démarche » — hors navigation, non indexée.
+ * Une sculpture de fils tendus (Three.js) traverse quatre temps au défilement :
+ * elle s'ouvre, converge, s'ouvre à nouveau, puis se stabilise.
+ * Sans WebGL ou en mouvement réduit, chaque temps affiche une vue fixe de la sculpture.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import { getProject } from '@/data/projects';
+import { href } from '@/lib/url';
+
+// Vues fixes rendues depuis la scène (voir scripts/demarche-stills.mjs).
+const stillFiles = import.meta.glob<{ default: ImageMetadata }>('@/assets/demarche/etape-*.png', { eager: true });
+const stills = Object.keys(stillFiles)
+  .sort()
+  .map((k) => stillFiles[k].default);
+
+const steps = [
+  {
+    id: 'observer',
+    verb: 'Observer',
+    slug: 'inrae',
+    client: 'INRAE',
+    intent: 'Partir du terrain avant de proposer.',
+    shape: 'Les fils partent dans toutes les directions : rien n’est encore trié.',
+    stillAlt: 'Sculpture, premier état : sept fils tendus entre un banc et un portique, qui se croisent en désordre.',
+  },
+  {
+    id: 'definir',
+    verb: 'Définir',
+    slug: 'renault-center-view',
+    client: 'Renault',
+    intent: 'Ramener le sujet à une seule question.',
+    shape: 'Tous les fils passent par un seul œillet.',
+    stillAlt: 'Sculpture, deuxième état : les sept fils convergent vers un œillet orange, puis repartent en éventail.',
+  },
+  {
+    id: 'explorer',
+    verb: 'Explorer',
+    slug: 'mobotix-sun-scan',
+    client: 'Mobotix',
+    intent: 'Rouvrir, pour comparer plusieurs réponses.',
+    shape: 'Trois faisceaux traversent un cadre, puis se rejoignent.',
+    stillAlt: 'Sculpture, troisième état : les fils se séparent en trois faisceaux à travers un cadre intermédiaire, puis se rejoignent.',
+  },
+  {
+    id: 'eprouver',
+    verb: 'Éprouver',
+    slug: 'manuels-scolaires-numeriques',
+    client: 'Comp-AI-gnons',
+    intent: 'Mettre à l’essai, et dire ce que l’essai permet d’affirmer.',
+    shape: 'Les fils se rangent en parallèle, tenus par une cage.',
+    stillAlt: 'Sculpture, quatrième état : les fils, parallèles, montent d’un même mouvement dans une cage.',
+  },
+].map((s, i) => ({ ...s, n: String(i + 1).padStart(2, '0'), slug: getProject(s.slug).slug, still: stills[i] }));
+---
+
+<Base
+  title="Ma démarche"
+  description="Observer, définir, explorer, éprouver : quatre temps de travail, racontés par une sculpture 3D qui se transforme au défilement."
+  theme="paper"
+  bareFooter
+>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <article class="dm" data-demarche>
+    <header class="dm__intro container">
+      <p class="t-meta">
+        <a class="link link--quiet" href={href('')}>← Portfolio</a> · Page test, hors menu
+      </p>
+      <h1 class="dm__title">Ma <em class="t-serif">démarche</em></h1>
+      <p class="t-lead dm__lead">
+        Design, conseil ou ingénierie : je travaille en quatre temps. Une même sculpture les traverse. Elle
+        s’ouvre, converge, s’ouvre à nouveau, puis se stabilise. Chaque temps renvoie à un projet où il a
+        compté.
+      </p>
+      <p class="dm__hint t-meta" data-hint aria-hidden="true">Faites défiler ↓</p>
+    </header>
+
+    <div class="dm__scrolly container">
+      <!-- Sculpture -->
+      <div class="dm__stage" data-stage>
+        <canvas
+          class="dm__canvas"
+          role="img"
+          aria-label="Sculpture de fils tendus entre un banc et un portique. Elle change de forme à chaque temps de la démarche ; chaque temps est décrit dans le texte."
+        ></canvas>
+        <nav class="dm__rail" aria-label="Les quatre temps">
+          <ol role="list">
+            {
+              steps.map((s) => (
+                <li>
+                  <a href={`#${s.id}`} data-rail={s.id}>
+                    <span class="dm__rail-n">{s.n}</span>
+                    <span class="dm__rail-name">{s.verb}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+      </div>
+
+      <!-- Les quatre temps -->
+      <div class="dm__steps">
+        {
+          steps.map((s) => (
+            <section class="step" id={s.id} data-step aria-labelledby={`${s.id}-title`}>
+              <div class="step__inner">
+                {s.still && (
+                  <figure class="step__still">
+                    <Image
+                      src={s.still}
+                      alt={s.stillAlt}
+                      widths={[480, 800, 1200]}
+                      width={1200}
+                      sizes="(min-width: 900px) 46rem, 100vw"
+                      format="webp"
+                      quality={84}
+                      loading="lazy"
+                    />
+                  </figure>
+                )}
+                <p class="step__kicker t-meta">
+                  <span>{s.n} / 04</span>
+                  <span>{s.intent}</span>
+                </p>
+                <h2 class="step__title" id={`${s.id}-title`}>
+                  {s.verb}
+                  <em class="t-serif">{s.client}</em>
+                </h2>
+                <p class="step__shape">{s.shape}</p>
+
+                {s.id === 'observer' && (
+                  <div class="fact">
+                    <p class="t-meta">Constat de terrain</p>
+                    <p class="fact__main">
+                      Réticence au numérique, méconnaissance des outils, peur de l’endettement.
+                    </p>
+                    <p class="fact__note">
+                      Trois freins relevés en quatre entretiens. Ils éclairent une décision précise : celle d’un
+                      agriculteur qui envisage d’adopter une technologie numérique.
+                    </p>
+                  </div>
+                )}
+
+                {s.id === 'definir' && (
+                  <div class="fact">
+                    <p class="t-meta">La question que j’ai cherché à résoudre</p>
+                    <p class="fact__main fact__main--quote">
+                      Comment une IA peut-elle proposer sans s’imposer, quand je conduis ?
+                    </p>
+                    <p class="fact__note">
+                      Point de départ : un tableau de bord surchargé, alors que 87&nbsp;% des usages tiennent en
+                      trois applications.
+                    </p>
+                  </div>
+                )}
+
+                {s.id === 'explorer' && (
+                  <div class="fact">
+                    <p class="t-meta">Les pistes envisagées avant Sun Scan</p>
+                    <ol class="fact__list" role="list">
+                      <li><span><strong>Un gadget pour téléphone</strong> — relier le téléphone à la caméra.</span></li>
+                      <li><span><strong>Un mini-vigile assistant</strong> — mettre l’intelligence du robot au service de l’usager.</span></li>
+                      <li><span><strong>Un habillage de caméra</strong> — rendre la caméra plus discrète.</span></li>
+                    </ol>
+                    <p class="fact__note">
+                      Les pistes ont fusionné : une application fait la jonction. Sun Scan est une caméra-bouée
+                      et son application.
+                    </p>
+                  </div>
+                )}
+
+                {s.id === 'eprouver' && (
+                  <div class="fact">
+                    <p class="t-meta">Ce qui a été mis à l’essai</p>
+                    <p class="fact__main">
+                      Une affiche à QR code dans trois lieux : 55 scans. Puis une démo web, essayée par des élèves.
+                    </p>
+                    <p class="fact__note">
+                      <strong>Ce que le dossier permet d’en dire :</strong> le dispositif et le nombre de scans
+                      sont documentés. Il ne présente pas de résultats chiffrés du test, ni de manette physique :
+                      la manette est modélisée en 3D.
+                    </p>
+                  </div>
+                )}
+
+                <a class="step__link link" href={href(`projets/${s.slug}/`)}>
+                  Lire l’étude {s.client}
+                  <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+
+    <footer class="dm__outro container">
+      <p class="dm__outro-text">
+        Les quatre temps ne se suivent pas toujours dans cet ordre. Ils se retrouvent dans chaque projet.
+      </p>
+      <p class="dm__outro-links">
+        <a class="btn" href={href('projets/')}>Voir les projets</a>
+        <a class="btn btn--ghost" href={href('a-propos/')}>À propos</a>
+        <a class="link link--quiet" href={href('prototypes/ma-demarche-essais/')}>Essai : fils ou blocs</a>
+      </p>
+    </footer>
+  </article>
+</Base>
+
+<script>
+  import { hasWebGL } from '@/scripts/demarche/support';
+
+  const root = document.querySelector<HTMLElement>('[data-demarche]');
+  const canvas = root?.querySelector<HTMLCanvasElement>('.dm__canvas');
+  const stageEl = root?.querySelector<HTMLElement>('[data-stage]');
+  const stepEls = root ? [...root.querySelectorAll<HTMLElement>('[data-step]')] : [];
+  const railEls = root ? [...root.querySelectorAll<HTMLAnchorElement>('[data-rail]')] : [];
+
+  const params = new URLSearchParams(location.search);
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wantsStatic = params.has('fixe') || reduced;
+
+  /**
+   * Progression continue (0 → 3). Une étape devient courante quand son titre atteint la ligne de lecture ;
+   * la sculpture tient sa forme pendant la lecture, puis se transforme à l'approche du titre suivant.
+   */
+  function progress(): number {
+    const wide = window.matchMedia('(min-width: 900px)').matches;
+    // Sur téléphone la sculpture occupe le haut de l'écran : la ligne de lecture est plus basse.
+    const focus = window.innerHeight * (wide ? 0.5 : 0.62);
+    const [hold, span] = wide ? [0.38, 0.5] : [0.55, 0.4];
+    const anchors = stepEls.map((el) => (el.firstElementChild ?? el).getBoundingClientRect().top);
+    if (focus <= anchors[0]) return 0;
+    for (let i = 0; i < anchors.length - 1; i++) {
+      if (focus <= anchors[i + 1]) {
+        const f = (focus - anchors[i]) / (anchors[i + 1] - anchors[i]);
+        return i + Math.min(Math.max((f - hold) / span, 0), 1);
+      }
+    }
+    return anchors.length - 1;
+  }
+
+  function markCurrent(p: number) {
+    const i = Math.round(p);
+    railEls.forEach((a, k) => {
+      if (k === i) a.setAttribute('aria-current', 'step');
+      else a.removeAttribute('aria-current');
+    });
+    stepEls.forEach((el, k) => el.classList.toggle('is-current', k === i));
+  }
+
+  async function start() {
+    if (!root || !canvas || !stageEl) return;
+    const [{ createStage }, { createThreads }] = await Promise.all([
+      import('@/scripts/demarche/stage'),
+      import('@/scripts/demarche/threads'),
+    ]);
+
+    const toStatic = () => root.classList.remove('is-3d');
+    root.classList.add('is-3d');
+    const stage = createStage(canvas, { onContextLost: toStatic });
+    stage.add(createThreads());
+
+    let ticking = false;
+    const update = (immediate = false) => {
+      ticking = false;
+      const p = progress();
+      stage.setTarget(p, immediate);
+      markCurrent(p);
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => update());
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update(true);
+
+    // Pause du rendu quand la sculpture est hors écran.
+    new IntersectionObserver(([entry]) => stage.setActive(entry.isIntersecting)).observe(stageEl);
+  }
+
+  if (root && !wantsStatic && hasWebGL()) {
+    start().catch(() => root.classList.remove('is-3d'));
+  }
+</script>
+
+<style>
+  .dm {
+    padding-top: var(--header-h);
+  }
+
+  /* ---- Introduction ---------------------------------------------------- */
+  .dm__intro {
+    padding-block: var(--space-xl) var(--space-l);
+  }
+
+  .dm__title {
+    margin-block: var(--space-m) var(--space-s);
+    font-size: var(--step-5);
+    font-weight: 600;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .dm__title em,
+  .step__title em {
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .dm__lead {
+    max-width: 44ch;
+  }
+
+  .dm__hint {
+    display: none;
+    margin-top: var(--space-l);
+  }
+
+  .is-3d .dm__hint {
+    display: block;
+  }
+
+  /* ---- Défilement ------------------------------------------------------ */
+  .dm__stage {
+    display: none;
+  }
+
+  .is-3d .dm__stage {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: block;
+    /* Le haut de la scène reste libre pour l'en-tête, qui revient quand on remonte. */
+    height: calc(42svh + var(--header-h));
+    min-height: 15rem;
+    padding-top: var(--header-h);
+    margin-inline: calc(var(--gutter) * -1);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .dm__canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Repères des quatre temps */
+  .dm__rail {
+    position: absolute;
+    inset: auto var(--gutter) var(--space-2xs);
+  }
+
+  .dm__rail ol {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+
+  .dm__rail li {
+    flex: 1;
+  }
+
+  .dm__rail a {
+    display: flex;
+    gap: 0.5em;
+    align-items: baseline;
+    min-height: 2.75rem;
+    padding-top: var(--space-2xs);
+    border-top: 2px solid var(--border);
+    color: var(--fg-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-caps);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      color 0.3s,
+      border-color 0.3s;
+  }
+
+  .dm__rail a[aria-current] {
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+
+  .dm__rail-name {
+    display: none;
+  }
+
+  @media (min-width: 480px) {
+    .dm__rail-name {
+      display: inline;
+    }
+  }
+
+  /* ---- Étapes ---------------------------------------------------------- */
+  .step {
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--border);
+    scroll-margin-top: var(--header-h);
+  }
+
+  .is-3d .step {
+    display: flex;
+    align-items: flex-start;
+    min-height: 82svh;
+    padding-block: var(--space-l) var(--space-xl);
+    border-top: 0;
+    scroll-margin-top: calc(38svh + var(--header-h));
+  }
+
+  .step__inner {
+    width: 100%;
+    max-width: 34rem;
+  }
+
+  .is-3d .step__inner {
+    opacity: 0.4;
+    transition: opacity 0.5s;
+  }
+
+  .is-3d .step.is-current .step__inner,
+  .is-3d .step:focus-within .step__inner {
+    opacity: 1;
+  }
+
+  .step__still {
+    margin: 0 0 var(--space-m);
+  }
+
+  .is-3d .step__still {
+    display: none;
+  }
+
+  .step__still img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .step__kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1.25em;
+  }
+
+  .step__kicker span:first-child {
+    color: var(--accent-text);
+  }
+
+  .step__title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+    margin-block: var(--space-s);
+    font-size: var(--step-4);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+  }
+
+  .step__title em {
+    align-self: flex-start;
+    padding-bottom: 0.08em;
+    border-bottom: 2px solid var(--accent);
+    font-size: 0.5em;
+    line-height: 1.1;
+  }
+
+  .step__shape {
+    color: var(--fg-subtle);
+    font-size: var(--step--1);
+  }
+
+  .fact {
+    margin-block: var(--space-m);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .fact__main {
+    margin-block: var(--space-2xs) var(--space-xs);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: var(--tracking-title);
+    text-wrap: balance;
+  }
+
+  .fact__main--quote {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.15;
+  }
+
+  .fact__list {
+    display: grid;
+    gap: var(--space-2xs);
+    margin-block: var(--space-xs);
+    counter-reset: piste;
+  }
+
+  .fact__list li {
+    display: grid;
+    grid-template-columns: 1.75rem 1fr;
+    counter-increment: piste;
+    line-height: 1.4;
+  }
+
+  .fact__list li::before {
+    content: counter(piste);
+    color: var(--accent-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .fact__note {
+    color: var(--fg-muted);
+    line-height: var(--lh-body);
+  }
+
+  .fact__note strong {
+    color: var(--fg);
+  }
+
+  .step__link {
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 500;
+  }
+
+  /* ---- Fin ------------------------------------------------------------- */
+  .dm__outro {
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-top: 1px solid var(--border);
+  }
+
+  .dm__outro-text {
+    max-width: 30ch;
+    font-size: var(--step-2);
+    font-weight: 500;
+    line-height: var(--lh-snug);
+    letter-spacing: var(--tracking-title);
+  }
+
+  .dm__outro-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s) var(--space-m);
+    align-items: center;
+    margin-top: var(--space-l);
+  }
+
+  /* ---- Grand écran : texte à gauche, sculpture fixe à droite ------------ */
+  @media (min-width: 900px) {
+    .is-3d .dm__scrolly {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--col-gap);
+    }
+
+    .is-3d .dm__steps {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .is-3d .dm__stage {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+      height: 100svh;
+      padding-top: 0;
+      margin-inline: 0;
+      border-bottom: 0;
+      background: none;
+    }
+
+    .dm__rail {
+      inset: auto 0 var(--space-m);
+    }
+
+    .is-3d .step {
+      align-items: center;
+      min-height: 100svh;
+      padding-block: var(--space-xl);
+      scroll-margin-top: 0;
+    }
+
+    /* Vues fixes : image et texte côte à côte. */
+    .dm:not(.is-3d) .step__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 0 var(--col-gap);
+      max-width: none;
+    }
+
+    .dm:not(.is-3d) .step__inner > * {
+      grid-column: 1;
+    }
+
+    .dm:not(.is-3d) .step__inner > .step__still {
+      grid-column: 2;
+      grid-row: 1 / span 6;
+      align-self: center;
+      margin: 0;
+    }
+  }
+</style>
