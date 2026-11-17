@@ -122,7 +122,7 @@ export const projects: Project[] = [
     client: 'Renault',
     title: 'Main levée',
     question: 'Comment créer le futur de l’interaction de la mobilité ?',
-    year: '2024 — 2026',
+    year: '2024',
     discipline: 'Design d’innovation',
     summary:
       'Un copilote qui propose, une conductrice qui décide : une boule donne un corps lisible à l’IA, l’écran explique, la voix et le volant décident.',
@@ -157,6 +157,7 @@ export const projects: Project[] = [
   {
     slug: 'la-poste',
     index: '02',
+    year: '2025',
     client: 'La Poste',
     title: 'Post-it',
     question: 'Quel avenir pour l’IA à La Poste ?',
@@ -187,6 +188,7 @@ export const projects: Project[] = [
   {
     slug: 'earth-to-earth',
     index: '03',
+    year: '2025',
     client: 'Earth to Earth',
     title: 'EvoBIM',
     question:
@@ -254,6 +256,7 @@ export const projects: Project[] = [
   {
     slug: 'manuels-scolaires-numeriques',
     index: '05',
+    year: '2025',
     client: 'Région Île-de-France',
     title: 'Manuels scolaires numériques',
     question:

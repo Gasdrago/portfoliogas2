@@ -1,142 +1,185 @@
 ---
+/**
+ * Page Projets : un index simple. Une ligne par projet, filtrable par lecture.
+ * Sur grand écran, le visuel du projet survolé suit le curseur ; sur téléphone, il est dans la ligne.
+ */
 import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import PageHead from '@/components/PageHead.astro';
-import SectionHead from '@/components/SectionHead.astro';
-import ProjectIndex from '@/components/ProjectIndex.astro';
 import { projects, selections } from '@/data/projects';
 import { href } from '@/lib/url';
+
+const lectureId = (name: string) => selections.find((sel) => sel.name === name)?.id ?? '';
 ---
 
 <Base
   title="Projets"
   description="Six études de cas de Gaspard Bayle, en deux lectures : conseil & innovation (La Poste, EvoBIM, INRAE) et produit & prototype (Main levée, Sun Scan, Comp-AI-gnons)."
 >
-  <PageHead kicker="(Projets) Études de cas" lines={['Du terrain', 'à l’interface.']} serifLine={1}>
+  <PageHead kicker="(Projets) Index" lines={['Six projets,', 'du terrain à la preuve.']} serifLine={1}>
     <p>
-      Six études de cas, de l’analyse d’usage au prototype. Chacune dit ce qui a été cherché, ce qui a
-      été produit et ce qui le prouve.
+      Chaque étude dit ce qui a été cherché, ce qui a été produit et ce qui le prouve. Filtrez par lecture,
+      ou ouvrez directement un projet.
     </p>
   </PageHead>
 
-  <section class="container works" aria-label="Études de cas">
-    <div class="filter" role="group" aria-label="Filtrer par lecture" data-filter>
-      <button class="filter__btn" type="button" aria-pressed="true" data-filter-value="all">
-        Tous <span class="filter__n">{projects.length}</span>
-      </button>
-      {
-        selections.map((sel) => (
-          <button class="filter__btn" type="button" aria-pressed="false" data-filter-value={sel.id}>
-            {sel.name} <span class="filter__n">{projects.filter((p) => p.selection === sel.name).length}</span>
-          </button>
-        ))
-      }
+  <section class="container idx" aria-label="Liste des projets" data-index>
+    <div class="idx__bar">
+      <div class="filter" role="group" aria-label="Filtrer par lecture" data-filter>
+        <button class="filter__btn" type="button" aria-pressed="true" data-filter-value="all">
+          Tous <span class="filter__n">{projects.length}</span>
+        </button>
+        {
+          selections.map((sel) => (
+            <button class="filter__btn" type="button" aria-pressed="false" data-filter-value={sel.id}>
+              {sel.name} <span class="filter__n">{projects.filter((p) => p.selection === sel.name).length}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="idx__cols t-meta" aria-hidden="true">
+        <span>N°</span>
+        <span>Projet</span>
+        <span>Discipline</span>
+        <span>Lecture</span>
+        <span>Année</span>
+      </p>
     </div>
-    <ol role="list" class="works__list">
+
+    <ol role="list" class="idx__list">
       {
         projects.map((p, i) => (
-          <li
-            class:list={['work', { 'work--reverse': i % 2 === 1 }]}
-            data-selection={selections.find((sel) => sel.name === p.selection)?.id}
-          >
-            <a
-              class="work__media media"
-              href={href(`projets/${p.slug}/`)}
-              data-reveal="mask"
-              data-cursor="Voir le projet"
-              tabindex="-1"
-              aria-hidden="true"
-            >
-              <Image
-                src={p.cover}
-                alt=""
-                widths={[768, 1080, 1440]}
-                width={1440}
-                sizes="(min-width: 1024px) 58vw, 100vw"
-                format="webp"
-                quality={80}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                style={`view-transition-name: cover-${p.slug}`}
-              />
+          <li class="row" data-selection={lectureId(p.selection)} data-reveal style={`--i: ${i}`}>
+            <a class="row__link" href={href(`projets/${p.slug}/`)} data-preview={p.slug} data-astro-prefetch>
+              <span class="row__n t-index">{p.index}</span>
+              <span class="row__thumb" aria-hidden="true">
+                <Image
+                  src={p.thumb}
+                  alt=""
+                  widths={[160, 320]}
+                  width={320}
+                  sizes="5.5rem"
+                  format="webp"
+                  quality={78}
+                  loading="lazy"
+                />
+              </span>
+              <span class="row__main">
+                <span class="row__title">{p.title}</span>
+                <span class="row__client t-serif">{p.client}</span>
+                <span class="row__proof">{p.proof}</span>
+              </span>
+              <span class="row__disc">{p.discipline}</span>
+              <span class="row__lecture">{p.selection}</span>
+              <span class="row__year t-meta">{p.year}</span>
+              <span class="row__arrow arrow" aria-hidden="true">→</span>
             </a>
-            <div class="work__text">
-              <p class="t-meta work__meta" data-reveal>
-                <span class="t-index">{p.index}</span>
-                <span>{p.client}</span>
-                {p.year && <span class="work__year">{p.year}</span>}
-              </p>
-              <h2 class="work__title" data-reveal style="--i: 1">
-                <a href={href(`projets/${p.slug}/`)} class="work__link" data-cursor="Voir le projet" data-astro-prefetch>
-                  {p.title}
-                </a>
-              </h2>
-              <p class="work__q t-serif" data-reveal style="--i: 2">{p.question}</p>
-              <dl class="work__facts" data-reveal style="--i: 3">
-                <div>
-                  <dt class="t-meta">Preuve</dt>
-                  <dd>{p.proof}</dd>
-                </div>
-                <div>
-                  <dt class="t-meta">Livrables</dt>
-                  <dd>{p.deliverables.join(' · ')}</dd>
-                </div>
-                {p.role && (
-                  <div>
-                    <dt class="t-meta">Rôle</dt>
-                    <dd>{p.role}</dd>
-                  </div>
-                )}
-              </dl>
-              <p class="work__foot" data-reveal style="--i: 4">
-                <span class="tag">{p.selection}</span>
-                {p.prototype && (
-                  <a class="link t-meta t-meta--fg" href={p.prototype.href} target="_blank" rel="noopener">
-                    {p.prototype.label} <span class="arrow arrow--ne" aria-hidden="true">↗</span>
-                    <span class="sr-only">— {p.title} (ouvre un nouvel onglet)</span>
-                  </a>
-                )}
-                <a class="link t-meta t-meta--fg work__more" href={href(`projets/${p.slug}/`)} data-astro-prefetch>
-                  Lire l’étude <span class="sr-only">{p.client} — {p.title}</span>
-                  <span class="arrow" aria-hidden="true">→</span>
-                </a>
-              </p>
-            </div>
           </li>
         ))
       }
     </ol>
-  </section>
+    <p class="idx__empty t-meta" hidden data-empty>Aucun projet dans cette lecture.</p>
 
-  <section class="section container" aria-labelledby="index-title">
-    <SectionHead index="+" label="Index" id="index-title" title="Tous les projets" />
-    <ProjectIndex headingLevel="h3" />
+    <!-- Aperçu qui suit le curseur (grand écran, souris) -->
+    <div class="pv" aria-hidden="true" data-pv>
+      {
+        projects.map((p) => (
+          <div class="pv__item" data-pv-item={p.slug}>
+            <Image
+              src={p.cover}
+              alt=""
+              widths={[480, 768]}
+              width={768}
+              sizes="26rem"
+              format="webp"
+              quality={78}
+              loading="lazy"
+            />
+          </div>
+        ))
+      }
+    </div>
   </section>
 </Base>
 
 <script>
-  // Filtre par lecture : masque les études hors sélection, sans recharger la page.
+  // Filtre par lecture : masque les projets hors sélection, sans recharger la page.
   document.querySelectorAll<HTMLElement>('[data-filter]').forEach((group) => {
     const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('[data-filter-value]'));
-    const items = Array.from(document.querySelectorAll<HTMLElement>('.work[data-selection]'));
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('.row[data-selection]'));
+    const empty = document.querySelector<HTMLElement>('[data-empty]');
     const apply = (value: string) => {
       buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filterValue === value)));
-      items.forEach((item) => {
-        item.hidden = value !== 'all' && item.dataset.selection !== value;
-        item.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-in'));
+      let shown = 0;
+      rows.forEach((row) => {
+        row.hidden = value !== 'all' && row.dataset.selection !== value;
+        if (!row.hidden) shown++;
+        row.classList.add('is-in');
       });
+      if (empty) empty.hidden = shown > 0;
     };
     buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filterValue ?? 'all')));
     const initial = new URLSearchParams(location.search).get('lecture');
     if (initial && buttons.some((b) => b.dataset.filterValue === initial)) apply(initial);
   });
+
+  // Aperçu au survol : seulement avec une souris, sur grand écran.
+  const pv = document.querySelector<HTMLElement>('[data-pv]');
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
+  if (pv && canHover.matches) {
+    const items = new Map(
+      Array.from(pv.querySelectorAll<HTMLElement>('[data-pv-item]')).map((el) => [el.dataset.pvItem, el]),
+    );
+    // Les visuels sont chargés dès qu'on approche de la liste.
+    pv.querySelectorAll('img').forEach((img) => (img.loading = 'eager'));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let x = 0;
+    let y = 0;
+    let cx = 0;
+    let cy = 0;
+    let raf = 0;
+    const loop = () => {
+      cx += (x - cx) * (reduced ? 1 : 0.18);
+      cy += (y - cy) * (reduced ? 1 : 0.18);
+      pv.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      raf = Math.abs(x - cx) + Math.abs(y - cy) > 0.5 ? requestAnimationFrame(loop) : 0;
+    };
+    document.querySelectorAll<HTMLAnchorElement>('[data-preview]').forEach((link) => {
+      link.addEventListener('pointerenter', (e) => {
+        items.forEach((el, key) => el.classList.toggle('is-active', key === link.dataset.preview));
+        if (!pv.classList.contains('is-on')) {
+          cx = x = e.clientX;
+          cy = y = e.clientY;
+          loop();
+        }
+        pv.classList.add('is-on');
+      });
+      link.addEventListener('pointerleave', () => pv.classList.remove('is-on'));
+      link.addEventListener('pointermove', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        if (!raf) raf = requestAnimationFrame(loop);
+      });
+    });
+  }
 </script>
 
 <style>
+  .idx {
+    padding-bottom: var(--space-2xl);
+  }
+
+  /* ---- Barre : filtres et en-têtes de colonnes ------------------------- */
+  .idx__bar {
+    display: grid;
+    gap: var(--space-m);
+    padding-bottom: var(--space-xs);
+  }
+
   .filter {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs);
-    padding-bottom: var(--space-l);
   }
 
   .filter__btn {
@@ -164,125 +207,223 @@ import { href } from '@/lib/url';
     opacity: 0.7;
   }
 
-  .work__facts {
-    display: grid;
-    gap: var(--space-2xs);
-    padding-top: var(--space-xs);
-    border-top: 1px solid var(--border);
-    font-size: var(--step--1);
+  .idx__cols {
+    display: none;
   }
 
-  .work__facts > div {
-    display: grid;
-    grid-template-columns: 5.5rem 1fr;
-    gap: var(--space-xs);
-    align-items: baseline;
+  /* ---- Lignes ---------------------------------------------------------- */
+  .idx__list {
+    border-bottom: 1px solid var(--border-strong);
   }
 
-  .work__facts dd {
+  .row__link {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr auto;
+    grid-template-areas:
+      'thumb main year'
+      'thumb main arrow';
+    gap: 0.15rem var(--space-s);
+    align-items: start;
+    padding-block: var(--space-s);
+    border-top: 1px solid var(--border-strong);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .row__n,
+  .row__disc,
+  .row__lecture {
+    display: none;
+  }
+
+  .row__thumb {
+    grid-area: thumb;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+
+  .row__thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .row__main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .row__title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    font-stretch: 80%;
+    line-height: 0.98;
+    letter-spacing: var(--tracking-display);
+    transition: color var(--dur-2);
+  }
+
+  .row__client {
+    font-size: var(--step-0);
     color: var(--fg-muted);
   }
 
-  .works__list {
-    display: grid;
-    gap: var(--space-2xl);
+  .row__proof {
+    color: var(--fg-subtle);
+    font-size: var(--step--1);
+    line-height: 1.4;
   }
 
-  .work {
-    display: grid;
-    gap: var(--space-m) var(--col-gap);
-    align-items: center;
-    padding-top: var(--space-l);
-    border-top: 1px solid var(--border);
+  .row__year {
+    grid-area: year;
+    justify-self: end;
   }
 
+  .row__arrow {
+    grid-area: arrow;
+    align-self: end;
+    justify-self: end;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .row__link:hover .row__title,
+  .row__link:focus-visible .row__title {
+    color: var(--accent-text);
+  }
+
+  .row__link:hover .row__arrow,
+  .row__link:focus-visible .row__arrow {
+    transform: translateX(0.3em);
+  }
+
+  .idx__empty {
+    padding-top: var(--space-m);
+  }
+
+  /* ---- Grand écran : un vrai index en colonnes ------------------------- */
   @media (min-width: 1024px) {
-    .work {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
+    .idx__bar {
+      grid-template-columns: 1fr;
     }
 
-    .work__media {
-      grid-column: 1 / 8;
+    .idx__cols,
+    .row__link {
+      display: grid;
+      grid-template-columns: 3.5rem minmax(0, 1fr) 13rem 11rem 4rem 1.5rem;
+      grid-template-areas: none;
+      gap: var(--col-gap);
+      align-items: baseline;
     }
 
-    .work__text {
-      grid-column: 9 / -1;
+    .idx__cols {
+      padding-top: var(--space-m);
+      color: var(--fg-subtle);
     }
 
-    .work--reverse .work__media {
-      grid-column: 6 / -1;
-      grid-row: 1;
+    .row__link {
+      padding-block: var(--space-m);
     }
 
-    .work--reverse .work__text {
-      grid-column: 1 / 5;
-      grid-row: 1;
+    .row__n,
+    .row__disc,
+    .row__lecture {
+      display: block;
+    }
+
+    .row__thumb {
+      display: none;
+    }
+
+    .row__main {
+      grid-area: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.25rem var(--space-s);
+    }
+
+    .row__title {
+      font-size: clamp(2rem, 0.6rem + 3vw, 3.75rem);
+    }
+
+    .row__client {
+      font-size: var(--step-1);
+    }
+
+    .row__proof {
+      flex-basis: 100%;
+      font-size: var(--step-0);
+    }
+
+    .row__disc,
+    .row__lecture {
+      color: var(--fg-muted);
+      font-size: var(--step--1);
+      line-height: 1.35;
+    }
+
+    .row__year,
+    .row__arrow {
+      grid-area: auto;
+    }
+
+    .row__arrow {
+      align-self: baseline;
+    }
+
+    /* Les autres lignes s'effacent quand on en survole une. */
+    .idx__list:has(.row__link:hover) .row__link:not(:hover) {
+      opacity: 0.35;
+    }
+
+    .row__link {
+      transition: opacity var(--dur-2);
     }
   }
 
-  .work__media {
-    display: block;
+  /* ---- Aperçu flottant ------------------------------------------------- */
+  .pv {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 26rem;
     aspect-ratio: 16 / 10;
+    pointer-events: none;
+    display: none;
   }
 
-  .work__media :global(img) {
-    transition: transform 1.2s var(--ease-out);
+  @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+    .pv {
+      display: block;
+      margin: 1.5rem 0 0 1.5rem;
+      opacity: 0;
+      transition: opacity var(--dur-2);
+    }
+
+    .pv.is-on {
+      opacity: 1;
+    }
   }
 
-  .work:has(a:hover) .work__media :global(img) {
-    transform: scale(1.035);
+  .pv__item {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0;
+    box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.18);
   }
 
-  .work__text {
-    display: grid;
-    gap: var(--space-s);
+  .pv__item.is-active {
+    opacity: 1;
   }
 
-  .work__meta {
-    display: flex;
-    gap: var(--space-s);
-  }
-
-  .work__year {
-    margin-left: auto;
-  }
-
-  .work__title {
-    font-size: var(--step-4);
-    font-weight: 600;
-    font-stretch: 80%;
-    letter-spacing: var(--tracking-display);
-    line-height: 0.95;
-  }
-
-  .work__link {
-    background-image: linear-gradient(var(--c-signal), var(--c-signal));
-    background-repeat: no-repeat;
-    background-size: 0% 0.06em;
-    background-position: 0 92%;
-    transition: background-size var(--dur-3) var(--ease-out);
-  }
-
-  .work__link:hover,
-  .work__link:focus-visible {
-    background-size: 100% 0.06em;
-  }
-
-  .work:has(a:hover) .work__more .arrow {
-    transform: translateX(0.25em);
-  }
-
-  .work__q {
-    font-size: var(--step-2);
-    line-height: 1.15;
-  }
-
-  .work__foot {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-s);
-    padding-top: var(--space-s);
+  .pv__item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>
