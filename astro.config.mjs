@@ -11,6 +11,8 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'always',
+  // Ancienne adresse de la page test.
+  redirects: { '/prototypes/ma-demarche/': `${base.replace(/\/$/, '')}/demarche/` },
   build: { format: 'directory', inlineStylesheets: 'auto' },
   image: {
     // Les planches font 1920px et les affiches typo 3840px : on plafonne la génération.
