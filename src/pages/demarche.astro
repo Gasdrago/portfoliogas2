@@ -1,6 +1,6 @@
 ---
 /**
- * Page test « Ma démarche » — hors navigation, non indexée.
+ * Page « Ma démarche ».
  * Une sculpture de fils tendus (Three.js) traverse quatre temps au défilement :
  * elle s'ouvre, converge, s'ouvre à nouveau, puis se stabilise.
  * Sans WebGL ou en mouvement réduit, chaque temps affiche une vue fixe de la sculpture.
@@ -8,6 +8,7 @@
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
+import PageHead from '@/components/PageHead.astro';
 import DoubleDiamond from '@/components/DoubleDiamond.astro';
 import { getProject } from '@/data/projects';
 import { href } from '@/lib/url';
@@ -72,25 +73,19 @@ const steps = [
   theme="paper"
   bareFooter
 >
-  <meta slot="head" name="robots" content="noindex" />
-
   <article class="dm" data-demarche>
-    <header class="dm__intro container">
-      <p class="t-meta">
-        <a class="link link--quiet" href={href('')}>← Portfolio</a> · Page test, hors menu
-      </p>
-      <h1 class="dm__title">Ma <em class="t-serif">démarche</em></h1>
-      <p class="t-lead dm__lead">
+<PageHead kicker="(Démarche) Méthode du double diamant" lines={['Ma', 'démarche.']} serifLine={1}>
+      <p>
         Design, conseil ou ingénierie : je travaille en quatre temps. Une même sculpture les traverse. Elle
         s’ouvre, converge, s’ouvre à nouveau, puis se stabilise. Chaque temps renvoie à un projet où il a
         compté.
       </p>
       <p class="dm__method">
         <DoubleDiamond />
-        <span>Méthode du double diamant : ouvrir, resserrer, deux fois.</span>
+        <span>Ouvrir, resserrer, deux fois.</span>
       </p>
       <p class="dm__hint t-meta" data-hint aria-hidden="true">Faites défiler ↓</p>
-    </header>
+    </PageHead>
 
     <div class="dm__scrolly container">
       <!-- Sculpture -->
@@ -252,7 +247,7 @@ const steps = [
       <p class="dm__outro-links">
         <a class="btn" href={href('projets/')}>Voir les projets</a>
         <a class="btn btn--ghost" href={href('a-propos/')}>À propos</a>
-        <a class="link link--quiet" href={href('prototypes/ma-demarche-essais/')}>Essai : fils ou blocs</a>
+        <a class="link link--quiet" href={href('prototypes/ma-demarche-essais/')}>Coulisses : fils ou blocs</a>
       </p>
     </footer>
   </article>
@@ -347,9 +342,6 @@ const steps = [
 </script>
 
 <style>
-  .dm {
-    padding-top: var(--header-h);
-  }
 
   /* ---- Introduction ---------------------------------------------------- */
   .dm__intro {

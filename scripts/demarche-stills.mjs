@@ -8,7 +8,7 @@
 import sharp from 'sharp';
 
 const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
-const url = process.env.URL ?? 'http://localhost:4400/prototypes/ma-demarche/';
+const url = process.env.URL ?? 'http://localhost:4400/demarche/';
 const steps = ['observer', 'definir', 'explorer', 'eprouver'];
 
 const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
